@@ -4,7 +4,7 @@
 "use strict";
 
 class ChinoAPIUsers {
-
+  constructor(auth);
 }
 
 module.exports = ChinoAPIUsers;
