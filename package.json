@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/danibix95/chino-nodejs/issues"
   },
-  "homepage": "https://github.com/danibix95/chino-nodejs#readme"
+  "homepage": "https://github.com/danibix95/chino-nodejs#readme",
+  "dependencies": {
+    "superagent": "^3.4.4"
+  }
 }
