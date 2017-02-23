@@ -4,8 +4,7 @@
 "use strict";
 
 const request = require("superagent");
-
-// TODO: test the Call class
+const GRANT_TYPES = require("./grantTypes");
 
 class Call {
   /** Create a Call object
@@ -25,76 +24,108 @@ class Call {
    * @param url
    * @param params
    */
-  get(url, params) {
-    // params parameter can be used in the future
-    request
-        .get(this.baseUrl + url)
-        .auth(this.id, this.secret)
-        .type("application/json")
-        .accept("application/json")
-        .then((result) => JSON.parse(result))
-        .catch((error) => {
-          console.log(`Error: ${error}`);
-          return JSON.parse(error);
-        });
+  get(url, params = {}) {
+    let makeCall = (resolve, reject) => {
+      /** Manage response from Chino API
+       *
+       * @param error
+       * @param response
+       */
+      function responseHandler(error, response) {
+        if (error) {
+          reject(error);
+        }
+        else {
+          resolve(response.body);
+        }
+      }
+      // call Chino API
+      request
+          .get(this.baseUrl + url)
+          .auth(this.id, this.secret)
+          .type("application/json")
+          .accept("application/json")
+          .end(responseHandler);
+    }
+
+    return new Promise(makeCall);
   }
 
   /** Make POST request to Chino APIs
    *
    * @param url
-   * @param params
    * @param data
    * @param form
    */
-  post(url, params, data = null, form = null) {
-    if (!data && form) {
-      if (form["grant_type"] === "authorization_code") {
-        request
-            .get(this.baseUrl + url)
-            .auth(this.id, this.secret)
-            .set("Content-Type", "multipart/form-data")
-            .accept("multipart/json")
-            .field("grant_type", form["grant_type"])
-            .field("code", form["code"])
-            .field("redirect_url", form["redirect_url"])
-            .field("client_id", form["client_id"])
-            .field("client_secret", form["client_secret"])
-            .field("scope", "read write")
-            .then((result) => JSON.parse(result))
-            .catch((error) => {
-              console.log(`Error: ${error}`);
-              return JSON.parse(error);
-            });
+  post(url, data = null, form = null) {
+    let makeCall = (resolve, reject) => {
+      /** Manage response from Chino API
+       *
+       * @param error
+       * @param response
+       */
+      function responseHandler(error, response) {
+        if (error) {
+          reject(error);
+        }
+        else {
+          resolve(response.body);
+        }
+      }
+
+      if (!data && form) {
+        if (form["grant_type"] === GRANT_TYPES.AUTH_CODE) {
+          console.log(form["grant_type"])
+          request
+              .post(this.baseUrl + url)
+              .auth(this.id, this.secret)
+              .set("Content-Type", "multipart/form-data")
+              .accept("multipart/json")
+              .field("grant_type", form["grant_type"])
+              .field("code", form["code"])
+              .field("redirect_url", form["redirect_url"])
+              .field("client_id", form["client_id"])
+              .field("client_secret", form["client_secret"])
+              .field("scope", "read write")
+              .end(responseHandler);
+        }
+        if (form["grant_type"] === GRANT_TYPES.RFS_TOKEN) {
+          request
+              .post(this.baseUrl + url)
+              .auth(this.id, this.secret)
+              .set("Content-Type", "multipart/form-data")
+              .accept("multipart/json")
+              .field("grant_type", "refresh_token")
+              .field("refresh_token", form["code"])
+              .field("client_id", form["client_id"])
+              .field("client_secret", form["client_secret"])
+              .field("scope", "read write")
+              .end(responseHandler);
+        }
+        else {
+          request
+              .post(this.baseUrl + url)
+              .auth(this.id, this.secret)
+              .set("Content-Type", "multipart/form-data")
+              .accept("multipart/json")
+              .field("grant_type", "password")
+              .field("username", form["username"])
+              .field("password", form["password"])
+              .end(responseHandler);
+        }
       }
       else {
         request
-            .get(this.baseUrl + url)
+            .post(this.baseUrl + url)
             .auth(this.id, this.secret)
-            .set("Content-Type", "multipart/form-data")
-            .accept("multipart/json")
-            .field("grant_type", form["grant_type"])
-            .field("username", form["username"])
-            .field("password", form["password"])
-            .then((result) => JSON.parse(result))
-            .catch((error) => {
-              console.log(`Error: ${error}`);
-              return JSON.parse(error);
-            });
+            .type("application/json")
+            .accept("application/json")
+            .send(data)
+            .end(responseHandler);
       }
     }
-    else {
-      request
-          .post(this.baseUrl + url)
-          .auth(this.id, this.secret)
-          .type("application/json")
-          .accept("application/json")
-          .send(data)
-          .then((result) => JSON.parse(result))
-          .catch((error) => {
-            console.log(`Error: ${error}`);
-            return JSON.parse(error);
-          });
-    }
+
+    return new Promise(makeCall);
   }
 
   /** Make PUT request to Chino APIs
@@ -103,17 +134,31 @@ class Call {
    * @param data
    */
   put(url, data = {}) {
-    request
-        .put(this.baseUrl + url)
-        .auth(this.id, this.secret)
-        .type("application/json")
-        .accept("application/json")
-        .send(data)
-        .then((result) => JSON.parse(result))
-        .catch((error) => {
-          console.log(`Error: ${error}`);
-          return JSON.parse(error);
-        });
+    let makeCall = (resolve, reject) => {
+      /** Manage response from Chino API
+       *
+       * @param error
+       * @param response
+       */
+      function responseHandler(error, response) {
+        if (error) {
+          reject(error);
+        }
+        else {
+          resolve(response.body);
+        }
+      }
+
+      request
+          .put(this.baseUrl + url)
+          .auth(this.id, this.secret)
+          .type("application/json")
+          .accept("application/json")
+          .send(data)
+          .end(responseHandler);
+    }
+
+    return new Promise(makeCall);
   }
 
   /** Make PATCH request to Chino APIs
@@ -122,18 +167,33 @@ class Call {
    * @param data
    */
   patch(url, data = {}) {
-    request
-        .patch(this.baseUrl + url)
-        .auth(this.id, this.secret)
-        .type("application/json")
-        .accept("application/json")
-        .send(data)
-        .then((result) => JSON.parse(result))
-        .catch((error) => {
-          console.log(`Error: ${error}`);
-          return JSON.parse(error);
-        });
+    let makeCall = (resolve, reject) => {
+      /** Manage response from Chino API
+       *
+       * @param error
+       * @param response
+       */
+      function responseHandler(error, response) {
+        if (error) {
+          reject(error);
+        }
+        else {
+          resolve(response.body);
+        }
+      }
+
+      request
+          .patch(this.baseUrl + url)
+          .auth(this.id, this.secret)
+          .type("application/json")
+          .accept("application/json")
+          .send(data)
+          .end(responseHandler);
+    }
+
+    return new Promise(makeCall);
   }
+
 
   /** Make DELETE request to Chino APIs
    *
@@ -141,16 +201,30 @@ class Call {
    * @param params
    */
   del(url, params) {
-    request
-        .del(this.baseUrl + url)
-        .auth(this.id, this.secret)
-        .type("application/json")
-        .accept("application/json")
-        .then((result) => JSON.parse(result))
-        .catch((error) => {
-          console.log(`Error: ${error}`);
-          return JSON.parse(error);
-        });
+    let makeCall = (resolve, reject) => {
+      /** Manage response from Chino API
+       *
+       * @param error
+       * @param response
+       */
+      function responseHandler(error, response) {
+        if (error) {
+          reject(error);
+        }
+        else {
+          resolve(response.body);
+        }
+      }
+
+      request
+          .del(this.baseUrl + url)
+          .auth(this.id, this.secret)
+          .type("application/json")
+          .accept("application/json")
+          .end(responseHandler);
+    }
+
+    return new Promise(makeCall);
   }
 }
 

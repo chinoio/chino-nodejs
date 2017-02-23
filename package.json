@@ -4,7 +4,7 @@
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,8 @@
   "homepage": "https://github.com/danibix95/chino-nodejs#readme",
   "dependencies": {
     "superagent": "^3.4.4"
+  },
+  "devDependencies": {
+    "should": "^11.2.0"
   }
 }
