@@ -9,7 +9,7 @@ ChinoAPIObjects.Group =
     class Group {
       constructor(response) {
         if (response && response.result_code === 200) {
-          let tmpInfo = response.data.user_schema;
+          let tmpInfo = response.data.group;
 
           for (let key in tmpInfo) {
             this[key] = tmpInfo[key];
@@ -41,24 +41,6 @@ ChinoAPIObjects.User =
             this[key] = tmpInfo[key];
           }
         }
-      }
-
-      /** Return user attributes, if they exists
-       *
-       * @returns {object}  user attributes
-       */
-      get attributes() {
-        if (this.attributes) return this.attributes;
-        return {};
-      }
-
-      /** Return user groups which he belongs to, if they exists
-       *
-       * @returns {object}  groups id list
-       */
-      get groups() {
-        if (this.groups) return this.groups;
-        return [];
       }
     };
 
