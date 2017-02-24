@@ -4,7 +4,7 @@
 "use strict";
 
 class ChinoAPIAuth {
-  constructor(baseUrl, customer_id, customer_key) {}
+  constructor(baseUrl, customerId, customerKey) {}
 }
 
 module.exports = ChinoAPIAuth;

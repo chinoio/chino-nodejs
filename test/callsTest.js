@@ -11,9 +11,8 @@ const baseUrl     = "https://api.test.chino.io/v1";
 const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
 const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
 
-const appId = process.env.APP_ID;
-const appKey = process.env.APP_KEY;
-
+const appId = process.env.APP_ID;     // insert here your Chino Application ID
+const appKey = process.env.APP_KEY;   // insert here your Chino Application KEY
 
 // utils functions
 function s200(res) {
