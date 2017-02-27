@@ -21,7 +21,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *  NOTE: need to be authenticated with bearer
    */
   current() {
-     this.call.get("/users/me")
+     return this.call.get("/users/me")
          .then((result) => new objects.User(result))
          .catch((error) => {
             /* TODO: log the error */
@@ -37,7 +37,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
   list(userSchemaId) {
     let users = [];
 
-    this.call.get(`/user_schemas/${userSchemaId}/users`)
+    return this.call.get(`/user_schemas/${userSchemaId}/users`)
         .then((result) => {
           for (let userInfo in result.data.users)
             users.push(new objects.User({ data : { user : userInfo } }));
@@ -57,10 +57,10 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param data          {object}
    */
   create(userSchemaId, data) {
-    this.call.post(`/user_schemas/${userSchemaId}/users`, data)
+    return this.call.post(`/user_schemas/${userSchemaId}/users`, data)
         .then((result) => new objects.User(result))
         .catch((error) => {
-          /* TODO: log the error */
+          /* TODO: log the error or THROW*/
           return new objects.User();
         });
   }
@@ -70,7 +70,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param userId  {string}
    */
   details(userId) {
-    this.call.get(`/users/${userId}`)
+    return this.call.get(`/users/${userId}`)
         .then((result) => new objects.User(result))
         .catch((error) => {
           /* TODO: log the error */
@@ -85,7 +85,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param data    {object}
    */
   update(userId, data) {
-    this.call.put(`/users/${userId}`, data)
+    return this.call.put(`/users/${userId}`, data)
         .then((result) => new objects.User(result))
         .catch((error) => {
           /* TODO: log the error */
@@ -100,7 +100,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param data    {object}
    */
   patch(userId, data) {
-    this.call.patch(`/users/${userId}`, data)
+    return this.call.patch(`/users/${userId}`, data)
         .then((result) => new objects.User(result))
         .catch((error) => {
           /* TODO: log the error */
@@ -120,7 +120,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
         ? `/users/${userId}?force=true`
         : `/users/${userId}`;
 
-    this.call.del(url)
+    return this.call.del(url)
         .then((result) => new objects.User(result))
         .catch((error) => {
           /* TODO: log the error */
