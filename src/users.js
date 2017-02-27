@@ -150,7 +150,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
     return this.call.del(url)
         .then((result) => {
           if (result.result_code === 200) {
-            return new objects.User(result);
+            return new objects.Success(result);
           }
           else {
             throw new objects.Error(result);

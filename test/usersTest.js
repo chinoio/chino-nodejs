@@ -79,9 +79,13 @@ describe('Chino Users API', function() {
       }
   );
   /* details */
-  it.skip("Test the retrieving of user information: should return 200",
+  it("Test the retrieving of user information: should return a User object",
       function () {
-
+        return userCaller.details(usrId)
+            .then((result) => {
+              result.should.be.an.instanceOf(objects.User);
+              Object.keys(result).length.should.be.above(0);
+            })
       }
   );
   /* list */
@@ -99,22 +103,51 @@ describe('Chino Users API', function() {
             });
       }
   );
-  /* update1 */
-  it.skip("Test the update of user information: should return 200",
+  /* update */
+  it("Test the update of user information: should return a User object",
       function () {
+        let user = {
+          username: "aThirdUser",
+          password: "aPassword3",
+          attributes: {
+            user: "Daniele"
+          },
+          is_active: true
+        }
 
+        return userCaller.update(usrId, user)
+            .then((result) => {
+              result.should.be.an.instanceOf(objects.User);
+              Object.keys(result).length.should.be.above(0);
+              result.username.should.be.equal("aThirdUser");
+            })
       }
   );
-  /* patch2 */
-  it.skip("Test the patch of user information: should return 200",
+  /* patch */
+  it("Test the patch of user information: should return a User object",
       function () {
+        let user = {
+          attributes: {
+            user: "Daniele Bissoli"
+          }
+        }
 
+        return userCaller.patch(usrId, user)
+            .then((result) => {
+              result.should.be.an.instanceOf(objects.User);
+              Object.keys(result).length.should.be.above(0);
+              result.attributes.user.should.be.equal("Daniele Bissoli");
+            })
       }
   );
   /* delete */
-  it.skip("Test the deletion of a user: should return 200",
+  it("Test the deletion of a user: should a success message",
       function () {
-
+        return userCaller.delete(usrId, true)
+            .then((result) => {
+              result.should.be.an.instanceOf(objects.Success);
+              result.result_code.should.be.equal(200);
+            })
       }
   );
 

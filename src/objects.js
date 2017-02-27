@@ -121,4 +121,15 @@ ChinoAPIObjects.Error =
       }
     }
 
+ChinoAPIObjects.Success =
+    class Success {
+      constructor(response) {
+        if (response) {
+          for (let key in response) {
+            this[key] = response[key];
+          }
+        }
+      }
+    }
+
 module.exports = ChinoAPIObjects;
