@@ -39,15 +39,26 @@ class ChinoAPIUsers extends ChinoAPIBase {
 
     return this.call.get(`/user_schemas/${userSchemaId}/users`)
         .then((result) => {
-          for (let userInfo in result.data.users)
-            users.push(new objects.User({ data : { user : userInfo } }));
+          if (result.result_code === 200) {
+            result.data.users.forEach((userInfo) => {
+              let userData = {
+                data : {
+                  user: userInfo
+                },
+                result_code : result.result_code
+              };
 
-          return users;
+              users.push(new objects.User(userData));
+            })
+
+            return users;
+          }
+          else {
+            throw new objects.Error(result);
+          }
         })
-        .catch((error) => {
-          /* TODO: log the error */
-          return users;
-        });
+
+        .catch((error) => { throw new objects.Error(error); });
   }
 
   /** Create a new user inside selected user schema by its id
@@ -58,11 +69,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   create(userSchemaId, data) {
     return this.call.post(`/user_schemas/${userSchemaId}/users`, data)
-        .then((result) => new objects.User(result))
-        .catch((error) => {
-          /* TODO: log the error or THROW*/
-          return new objects.User();
-        });
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.User(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
   }
 
   /** Return information about selected user by its id
@@ -71,11 +86,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   details(userId) {
     return this.call.get(`/users/${userId}`)
-        .then((result) => new objects.User(result))
-        .catch((error) => {
-          /* TODO: log the error */
-          return new objects.User();
-        });
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.User(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
   }
 
   /** Update information about selected user by its id
@@ -86,11 +105,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   update(userId, data) {
     return this.call.put(`/users/${userId}`, data)
-        .then((result) => new objects.User(result))
-        .catch((error) => {
-          /* TODO: log the error */
-          return new objects.User();
-        });
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.User(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
   }
 
   /** Update a specific part of information about
@@ -101,11 +124,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   patch(userId, data) {
     return this.call.patch(`/users/${userId}`, data)
-        .then((result) => new objects.User(result))
-        .catch((error) => {
-          /* TODO: log the error */
-          return new objects.User();
-        });
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.User(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
   }
 
   /** Deactivate (or delete) selected user by its id
@@ -121,11 +148,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
         : `/users/${userId}`;
 
     return this.call.del(url)
-        .then((result) => new objects.User(result))
-        .catch((error) => {
-          /* TODO: log the error */
-          return new objects.User();
-        });
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.User(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
   }
 }
 

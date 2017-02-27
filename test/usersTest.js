@@ -14,6 +14,9 @@ const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer I
 const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
 
 describe('Chino Users API', function() {
+  // change timeout for slow network
+  this.timeout(5000);
+
   let apiCall = new Call(baseUrl, customerId, customerKey);
   let userCaller = new Users(baseUrl, customerId, customerKey);
   // keep track of ids to delete them later
@@ -48,46 +51,52 @@ describe('Chino Users API', function() {
           usrSchemaId = res.data.user_schema.user_schema_id;
 
           if (usrSchemaId) {
-            console.log(usrSchemaId)
-            apiCall.post(`/user_schemas/${usrSchemaId}/users`, user)
-                .then((res) => { usrId = res.data.user.user_id; console.log("User inserted");})
-                .catch((err) => console.log(err + "\nNo user inserted"));
+            return apiCall.post(`/user_schemas/${usrSchemaId}/users`, user)
+                .then((res) => { usrId = res.data.user.user_id; })
+                .catch((err) => console.log(`No user inserted\n${err}`));
           }
         })
         .catch((err) => console.log(err + "\nNo user schema created"));
   });
 
   /* create */
-  it.skip("Test the creation of a user: should return 200",
+  it("Test the creation of a user: should return a object",
       function () {
         let user = {
-          username: "aUser",
-          password: "aPassword",
+          username: "aSecondUser",
+          password: "aPassword2",
           attributes: {
-            name: "Daniele"
+            user: "Daniele"
           },
           is_active: true
         }
 
-        /* THIS DOESN'T WORK! */
         return userCaller.create(usrSchemaId, user)
             .then((result) => {
-              result.should.instanceOf(objects.User);
-              (Object.keys(result).length).should.be.above(0);
+              result.should.be.an.instanceOf(objects.User);
+              Object.keys(result).length.should.be.above(0);
             })
-            .catch((error) => { error.should.be.equal(400); });
       }
   );
   /* details */
-  it("Test the retrieving of user information: should return 200",
+  it.skip("Test the retrieving of user information: should return 200",
       function () {
 
       }
   );
   /* list */
-  it.skip("Test the listing of users contained into a schema: should return 200",
+  it("Test the listing of users contained into a schema: should return a list of Users",
       function () {
-
+        assert(usrSchemaId, "User schema not defined");
+        return userCaller.list(usrSchemaId)
+            .then((result) => {
+              result.should.be.an.instanceOf(Array);
+              result.forEach((user) => {
+                user.should.be.an.instanceOf(objects.User);
+              });
+              // in this case we have inserted 2 user so it should have 2 users
+              result.length.should.equal(2);
+            });
       }
   );
   /* update1 */
@@ -111,10 +120,19 @@ describe('Chino Users API', function() {
 
   // clean the envinronment
   after("Remove test resources", function () {
-    if (usrSchemaId) {
-      return apiCall.del(`/user_schemas/${usrSchemaId}?force=true`)
-          .then(res => { /*console.log("Removed stub stuff")*/ })
-          .catch(err => { console.log("Error removing test resources") });
+    // be sure to have enough
+    this.timeout(10000);
+
+    function sleep (time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
     }
+
+    return sleep(1000).then(() => {
+      if (usrSchemaId !== "" && usrId !== "") {
+        return apiCall.del(`/user_schemas/${usrSchemaId}?force=true`)
+            .then(res => { /*console.log("Removed stub stuff")*/ })
+            .catch(err => { console.log(`Error removing test resources`) });
+      }
+    });
   });
 });
