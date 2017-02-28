@@ -59,6 +59,7 @@ class Call {
           .auth(id, secret)
           .type("application/json")
           .accept("application/json")
+          .query(params)
           .end(responseHandler);
     }
 
@@ -214,7 +215,7 @@ class Call {
    * @param url
    * @param params
    */
-  del(url, params) {
+  del(url, params = {}) {
     let makeCall = (resolve, reject) => {
       /** Manage response from Chino API
        *
@@ -235,6 +236,7 @@ class Call {
           .auth(id, secret)
           .type("application/json")
           .accept("application/json")
+          .query(params)
           .end(responseHandler);
     }
 
