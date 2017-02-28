@@ -14,18 +14,22 @@ const ChinoBlobs        = require("./blobs.js");
 const ChinoCollections  = require("./collections.js");
 const ChinoSearch       = require("./search.js");
 
-class ChinoAPIBase {
+class Chino {
   /**
    * @constructor
    * @param {string} baseUrl
    * @param {string} customerId
    * @param {string} customerKey
    */
+
   constructor(baseUrl, customerId, customerKey) {
     this.baseUrl = baseUrl;
-    this.customerId = customerId;
-    this.customerKey = customerKey;
+    // save as private data
+    const customerId = customerId;
+    const customerKey = customerKey;
+
+    // create other objects
   }
 }
 
-module.exports = ChinoAPIBase;
+module.exports = Chino;

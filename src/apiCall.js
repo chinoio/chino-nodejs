@@ -6,6 +6,20 @@
 const request = require("superagent");
 const GRANT_TYPES = require("./grantTypes");
 
+// module internal variables
+let id;
+let secret;
+
+/** Set Chino authentication as private information
+ *
+ * @param authId      the customer id or the bearer token
+ * @param authSecret  the customer key or the auth type as object
+ */
+function setAuth(authId, authSecret) {
+  id = authId;
+  secret = authSecret;
+}
+
 class Call {
   /** Create a Call object
    * @constructor
@@ -13,10 +27,10 @@ class Call {
    * @param id
    * @param secret
    */
-  constructor(baseUrl, id, secret) {
+  constructor(baseUrl, authId, authSecret) {
     this.baseUrl = baseUrl;
-    this.id = id;
-    this.secret = secret;
+
+    setAuth(authId, authSecret);
   }
 
   /** Make GET request to Chino APIs
@@ -42,7 +56,7 @@ class Call {
       // call Chino API
       request
           .get(this.baseUrl + url)
-          .auth(this.id, this.secret)
+          .auth(id, secret)
           .type("application/json")
           .accept("application/json")
           .end(responseHandler);
@@ -78,7 +92,7 @@ class Call {
           console.log(form["grant_type"])
           request
               .post(this.baseUrl + url)
-              .auth(this.id, this.secret)
+              .auth(id, secret)
               .set("Content-Type", "multipart/form-data")
               .accept("multipart/json")
               .field("grant_type", form["grant_type"])
@@ -92,7 +106,7 @@ class Call {
         if (form["grant_type"] === GRANT_TYPES.RFS_TOKEN) {
           request
               .post(this.baseUrl + url)
-              .auth(this.id, this.secret)
+              .auth(id, secret)
               .set("Content-Type", "multipart/form-data")
               .accept("multipart/json")
               .field("grant_type", "refresh_token")
@@ -105,7 +119,7 @@ class Call {
         else {
           request
               .post(this.baseUrl + url)
-              .auth(this.id, this.secret)
+              .auth(id, secret)
               .set("Content-Type", "multipart/form-data")
               .accept("multipart/json")
               .field("grant_type", "password")
@@ -117,7 +131,7 @@ class Call {
       else {
         request
             .post(this.baseUrl + url)
-            .auth(this.id, this.secret)
+            .auth(id, secret)
             .type("application/json")
             .accept("application/json")
             .send(data)
@@ -151,7 +165,7 @@ class Call {
 
       request
           .put(this.baseUrl + url)
-          .auth(this.id, this.secret)
+          .auth(id, secret)
           .type("application/json")
           .accept("application/json")
           .send(data)
@@ -184,7 +198,7 @@ class Call {
 
       request
           .patch(this.baseUrl + url)
-          .auth(this.id, this.secret)
+          .auth(id, secret)
           .type("application/json")
           .accept("application/json")
           .send(data)
@@ -218,7 +232,7 @@ class Call {
 
       request
           .del(this.baseUrl + url)
-          .auth(this.id, this.secret)
+          .auth(id, secret)
           .type("application/json")
           .accept("application/json")
           .end(responseHandler);

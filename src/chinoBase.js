@@ -12,12 +12,12 @@ class ChinoAPIBase {
    * @param customerId  {string}  The Chino customer id or bearer token
    * @param customerKey {string}  The Chino customer key or null (not provided)
    */
-  constructor(baseUrl, customerId, customerKey = null) {
+  constructor(baseUrl, customer_id, customer_key = null) {
     this.baseUrl = baseUrl;
-    this.customerId = customerId;
+    const customerId = customer_id;
     // select between basic or bearer auth
-    this.customerKey = (customerKey !== null)
-        ? customerKey
+    const customerKey = (customer_key !== null)
+        ? customer_key
         : {type: "bearer"};
 
     this.call = new Call(baseUrl, customerId, customerKey);
