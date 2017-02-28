@@ -19,16 +19,17 @@ function s200(res) {
   return res["result_code"].should.be.equal(200);
 }
 function e400(res) {
-  return res["status"].should.be.equal(400);
+  return res["result_code"].should.be.equal(400);
 }
 function e401(err) {
-  return err["status"].should.be.equal(401);
+  return err["result_code"].should.be.equal(401);
 }
 function e404(err) {
-  return err["status"].should.be.equal(404);
+  return err["result_code"].should.be.equal(404);
 }
 
 describe('Chino API Call', function() {
+  this.timeout(5000);
   let repId = "";
 
   // keep track of ids to delete them later
@@ -221,12 +222,21 @@ describe('Chino API Call', function() {
 
   /* ==================================== */
   after("Remove stub user schema and inserted user", function () {
+    // be sure to have enough time
+    this.timeout(10000);
+
+    function sleep (time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
     let apiCall = new Call(baseUrl, customerId, customerKey);
 
-    if (ushId) {
-      return apiCall.del(`/user_schemas/${ushId}?force=true`)
-          .then(res => { /*console.log("Removed stub stuff")*/ })
-          .catch(err => { console.log("Error during the removal of unuseful things") });
-    }
+    return sleep(1000).then(() => {
+      if (ushId !== "" && usrId !== "") {
+        return apiCall.del(`/user_schemas/${ushId}?force=true`)
+            .then(res => { /*console.log("Removed stub stuff")*/ })
+            .catch(err => { console.log(`Error removing test resources`) });
+      }
+    });
   })
 });
