@@ -110,4 +110,26 @@ ChinoAPIObjects.Collection =
       }
     };
 
+ChinoAPIObjects.Error =
+    class Error {
+      constructor(response) {
+        if (response) {
+          for (let key in response) {
+            this[key] = response[key];
+          }
+        }
+      }
+    }
+
+ChinoAPIObjects.Success =
+    class Success {
+      constructor(response) {
+        if (response) {
+          for (let key in response) {
+            this[key] = response[key];
+          }
+        }
+      }
+    }
+
 module.exports = ChinoAPIObjects;
