@@ -12,8 +12,8 @@ let secret;
 
 /** Set Chino authentication as private information
  *
- * @param authId      the customer id or the bearer token
- * @param authSecret  the customer key or the auth type as object
+ * @param authId     {string}           the customer id or the bearer token
+ * @param authSecret {string | object}  the customer key or the auth type as object
  */
 function setAuth(authId, authSecret) {
   id = authId;
@@ -23,9 +23,9 @@ function setAuth(authId, authSecret) {
 class Call {
   /** Create a Call object
    * @constructor
-   * @param baseUrl
-   * @param id
-   * @param secret
+   * @param baseUrl {string}
+   * @param id      {string}
+   * @param secret  {string | object}
    */
   constructor(baseUrl, authId, authSecret) {
     this.baseUrl = baseUrl;
@@ -88,8 +88,8 @@ class Call {
 
   /** Make POST request to Chino APIs
    *
-   * @param url   {string}
-   * @param data  {object}
+   * @param url         {string}
+   * @param data        {object}
    * @param acceptType  {string | null}
    * @return {Promise}
    */
@@ -166,10 +166,10 @@ class Call {
 
   /** Make PUT request to Chino APIs
    *
-   * @param url
-   * @param data
-   * @param acceptType
-   * @param params
+   * @param url         {string}
+   * @param data        {object}
+   * @param acceptType  {string | null}
+   * @param params      {object}
    * @return {Promise}
    */
   put(url, data = {}, acceptType = null, params = {}) {
@@ -188,7 +188,7 @@ class Call {
         }
       }
 
-      if (acceptType == this.TYPES.OCT_STREAM) {
+      if (acceptType === this.TYPES.OCT_STREAM) {
         request
             .put(this.baseUrl + url)
             .auth(id, secret)
@@ -215,8 +215,8 @@ class Call {
 
   /** Make PATCH request to Chino APIs
    *
-   * @param url
-   * @param data
+   * @param url   {string}
+   * @param data  {object}
    * @return {Promise}
    */
   patch(url, data = {}) {
@@ -250,8 +250,8 @@ class Call {
 
   /** Make DELETE request to Chino APIs
    *
-   * @param url
-   * @param params
+   * @param url     {string}
+   * @param params  {object}
    * @return {Promise}
    */
   del(url, params = {}) {

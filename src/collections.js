@@ -124,7 +124,7 @@ class ChinoAPICollections extends ChinoAPIBase {
    *                              otherwise only deactivate it.
    *                              Default value is false (deactivate)
    * @return {Promise.<objects.Success, objects.Error>}
-   *         A promise that return a Success object if resolved,X
+   *         A promise that return a Success object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
@@ -207,7 +207,7 @@ class ChinoAPICollections extends ChinoAPIBase {
    * @param filter    {object}
    * @return {Promise.<objects.Document, objects.Error>}
    *         A promise that return a list of Collection object
-   *         matching filterif resolved, otherwise throw an Error
+   *         matching filter if resolved, otherwise throw an Error
    *         object if rejected or was not retrieved a success status
    */
   search(filter) {
