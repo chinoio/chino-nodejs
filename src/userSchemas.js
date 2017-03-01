@@ -11,7 +11,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string}  The Chino customer key or null (not provided)
+   * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
@@ -128,11 +128,9 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    *         or was not retrieved a success status
    */
   delete(userSchemaId, force = false) {
-    const url = force
-        ? `/user_schemas/${userSchemaId}?force=true`
-        : `/user_schemas/${userSchemaId}`;
+    const params = { force : force };
 
-    return this.call.del(url)
+    return this.call.del(`/user_schemas/${userSchemaId}`, params)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);

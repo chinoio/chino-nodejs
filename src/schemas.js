@@ -11,7 +11,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string}  The Chino customer key or null (not provided)
+   * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
@@ -25,7 +25,6 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *         A promise that return a list of Schema object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
-   *
    */
   list(repositoryId) {
     let schemas = [];
@@ -102,7 +101,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *  with data as new schema information
    *
    * @param schemaId  {string}
-   * @param data    {object}
+   * @param data      {object}
    * @return {Promise.<objects.Schema, objects.Error>}
    *         A promise that return a Schema object if resolved,
    *         otherwise throw an Error object if rejected
@@ -124,21 +123,21 @@ class ChinoAPISchemas extends ChinoAPIBase {
   /** Deactivate (or delete) schema selected by its id
    *
    * @param schemaId    {string}
-   * @param force       {bool}   If true delete schema information
-   *                             otherwise only deactivate it.
-   *                             Default value is false (deactivate)
-   * @param all_content {bool}   If true all the documents inside
-   *                             the schema otherwise keep them without a schema.
-   *                             Default value is false.
+   * @param force       {boolean} If true delete schema information
+   *                              otherwise only deactivate it.
+   *                              Default value is false (deactivate)
+   * @param all_content {boolean} If true all the documents inside
+   *                              the schema otherwise keep them without a schema.
+   *                              Default value is false.
    * @return {Promise.<objects.Success, objects.Error>}
-   *         A promise that return a Success object if resolved,
+   *         A promise that return a Success object if resolved,X
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  delete(schemaId, force = false, all_content = false) {
+  delete(schemaId, force = false, allContent = false) {
     const params = {
       force : force,
-      all_content : all_content
+      all_content : allContent
     };
 
     return this.call.del(`/schemas/${schemaId}`, params)

@@ -11,7 +11,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string}  The Chino customer key or null (not provided)
+   * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
@@ -119,20 +119,18 @@ class ChinoAPIRepositories extends ChinoAPIBase {
   /** Deactivate (or delete) repository selected by its id
    *
    * @param repositoryId {string}
-   * @param force        {bool}   If true delete repository information
-   *                              otherwise only deactivate it.
-   *                              Default value is false (deactivate)
+   * @param force        {boolean} If true delete repository information
+   *                               otherwise only deactivate it.
+   *                               Default value is false (deactivate)
    * @return {Promise.<objects.Success, objects.Error>}
    *         A promise that return a Success object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
   delete(repositoryId, force = false) {
-    const url = force
-        ? `/repositories/${repositoryId}?force=true`
-        : `/repositories/${repositoryId}`;
+    const params = { force : force };
 
-    return this.call.del(url)
+    return this.call.del(`/repositories/${repositoryId}`, params)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);

@@ -5,108 +5,73 @@
 
 let ChinoAPIObjects = {}
 
-ChinoAPIObjects.Group =
-    class Group {
-      constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.group;
+/** Js object for wrapping Chino Api objects */
+class BaseObject {
+  constructor(response, type = "") {
+    if (response && response.result_code === 200) {
+      let tmpInfo = response.data[type];
 
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+      for (let key in tmpInfo) {
+        this[key] = tmpInfo[key];
+      }
+    }
+  }
+}
+
+ChinoAPIObjects.Group =
+    class Group extends BaseObject {
+      constructor(response) {
+        super(response, "group")
       }
     };
 
 ChinoAPIObjects.UserSchema =
-    class UserSchema {
+    class UserSchema extends BaseObject {
       constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.user_schema;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+        super(response, "user_schema")
       }
     };
 
 ChinoAPIObjects.User =
-    class User {
-      constructor(response = undefined) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.user;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+    class User extends BaseObject {
+      constructor(response) {
+        super(response, "user")
       }
     };
 
 ChinoAPIObjects.Application =
-    class Application {
+    class Application extends BaseObject {
       constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.application;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+        super(response, "application")
       }
     };
 
 
 ChinoAPIObjects.Repository =
-    class Repository {
+    class Repository extends BaseObject {
       constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.repository;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+        super(response, "repository")
       }
     };
 
 ChinoAPIObjects.Schema =
-    class Schema {
+    class Schema extends BaseObject {
       constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.schema;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+        super(response, "schema")
       }
     };
 
 ChinoAPIObjects.Document =
-    class Document {
+    class Document extends BaseObject {
       constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.document;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+        super(response, "document")
       }
     };
 
 ChinoAPIObjects.Collection =
-    class Collection {
+    class Collection extends BaseObject {
       constructor(response) {
-        if (response && response.result_code === 200) {
-          let tmpInfo = response.data.collection;
-
-          for (let key in tmpInfo) {
-            this[key] = tmpInfo[key];
-          }
-        }
+        super(response, "collection")
       }
     };
 

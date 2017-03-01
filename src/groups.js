@@ -119,20 +119,18 @@ class ChinoAPIGroups extends ChinoAPIBase {
   /** Deactivate (or delete) group selected by its id
    *
    * @param groupId {string}
-   * @param force   {bool}   If true delete group information
-   *                         otherwise only deactivate it.
-   *                         Default value is false (deactivate)
+   * @param force   {boolean} If true delete group information
+   *                          otherwise only deactivate it.
+   *                          Default value is false (deactivate)
    * @return {Promise.<objects.Success, objects.Error>}
    *         A promise that return a Success object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
   delete(groupId, force = false) {
-    const url = force
-        ? `/groups/${groupId}?force=true`
-        : `/groups/${groupId}`;
+    const params = { force : force };
 
-    return this.call.del(url)
+    return this.call.del(`/groups/${groupId}`, params)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
