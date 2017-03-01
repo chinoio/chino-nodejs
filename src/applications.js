@@ -1,48 +1,48 @@
 /**
- * Created by daniele on 23/02/17.
+ * Created by daniele on 28/02/17.
  */
 "use strict";
 
 const objects = require("./objects");
 const ChinoAPIBase = require("./chinoBase");
 
-class ChinoAPIUserSchemas extends ChinoAPIBase {
-  /** Create a caller for User Schemas Chino APIs
+class ChinoAPIApplication extends ChinoAPIBase {
+  /** Create a caller for Applications Chino APIs
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string | null}  The Chino customer key or null (not provided)
+ * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
   }
 
-  /** Return the list of current user schemas
+  /** Return the list of existing applications
    *
    * @return {Promise.<Array, objects.Error>}
-   *         A promise that return a list of UserSchema object if resolved,
+   *         A promise that return a list of Application object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    *
    */
   list() {
-    let userSchemas = [];
+    let applications = [];
 
-    return this.call.get(`/user_schemas`)
+    return this.call.get(`/auth/applications`)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.user_schemas.forEach((usInfo) => {
-              let usData = {
+            result.data.applications.forEach((aInfo) => {
+              let aData = {
                 data : {
-                  user_schema : usInfo
+                  application : aInfo
                 },
                 result_code : result.result_code
               };
 
-              userSchemas.push(new objects.UserSchema(usData));
+              applications.push(new objects.Application(aData));
             })
 
-            return userSchemas;
+            return applications;
           }
           else {
             throw new objects.Error(result);
@@ -51,19 +51,19 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
         .catch((error) => { throw new objects.Error(error); });
   }
 
-  /** Create a new user schema
+  /** Create a new application
    *
    * @param data          {object}
-   * @return {Promise.<objects.UserSchema, objects.Error>}
-   *         A promise that return a UserSchema object if resolved,
+   * @return {Promise.<objects.Application, objects.Error>}
+   *         A promise that return a Application object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
   create(data) {
-    return this.call.post(`/user_schemas`, data)
+    return this.call.post(`/auth/applications`, data)
         .then((result) => {
           if (result.result_code === 200) {
-            return new objects.User(result);
+            return new objects.Application(result);
           }
           else {
             throw new objects.Error(result);
@@ -72,19 +72,19 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
         .catch((error) => { throw new objects.Error(error); });
   }
 
-  /** Return information about user schema selected by its id
+  /** Return information about application selected by its id
    *
-   * @param userSchemaId  {string}
-   * @return {Promise.<objects.UserSchema, objects.Error>}
-   *         A promise that return a User object if resolved,
+   * @param applicationId  {string}
+   * @return {Promise.<objects.Application, objects.Error>}
+   *         A promise that return a Application object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  details(userSchemaId) {
-    return this.call.get(`/user_schemas/${userSchemaId}`)
+  details(applicationId) {
+    return this.call.get(`/auth/applications/${applicationId}`)
         .then((result) => {
           if (result.result_code === 200) {
-            return new objects.UserSchema(result);
+            return new objects.Application(result);
           }
           else {
             throw new objects.Error(result);
@@ -93,21 +93,21 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
         .catch((error) => { throw new objects.Error(error); });
   }
 
-  /** Update information about user schema selected by its id
-   *  with data as new user schema information
+  /** Update information about application selected by its id
+   *  with data as new application information
    *
-   * @param userSchemaId  {string}
-   * @param data          {object}
-   * @return {Promise.<objects.UserSchema, objects.Error>}
-   *         A promise that return a User object if resolved,
+   * @param applicationId  {string}
+   * @param data           {object}
+   * @return {Promise.<objects.Application, objects.Error>}
+   *         A promise that return a Application object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  update(userSchemaId, data) {
-    return this.call.put(`/user_schemas/${userSchemaId}`, data)
+  update(applicationId, data) {
+    return this.call.put(`/auth/applications/${applicationId}`, data)
         .then((result) => {
           if (result.result_code === 200) {
-            return new objects.UserSchema(result);
+            return new objects.Application(result);
           }
           else {
             throw new objects.Error(result);
@@ -116,21 +116,16 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
         .catch((error) => { throw new objects.Error(error); });
   }
 
-  /** Deactivate (or delete) user schema selected by its id
+  /** Delete application selected by its id
    *
-   * @param userSchemaId  {string}
-   * @param force         {bool}   If true delete user schema information
-   *                               otherwise only deactivate it.
-   *                               Default value is false (deactivate)
+   * @param applicationId {string}
    * @return {Promise.<objects.Success, objects.Error>}
    *         A promise that return a Success object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  delete(userSchemaId, force = false) {
-    const params = { force : force };
-
-    return this.call.del(`/user_schemas/${userSchemaId}`, params)
+  delete(applicationId) {
+    return this.call.del(`/auth/applications/${applicationId}`)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
@@ -143,4 +138,4 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
   }
 }
 
-module.exports = ChinoAPIUserSchemas;
+module.exports = ChinoAPIApplication;

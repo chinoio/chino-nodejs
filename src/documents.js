@@ -11,10 +11,144 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string}  The Chino customer key or null (not provided)
+   * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
+  }
+
+  /** Return a list of current documents inside the schema
+   *  selected by its id
+   *
+   * @param schemaId      {string}
+   * @param fullDocument  {boolean} It specify if the documents inside
+   *                                the list should show their content (true)
+   *                                or not (false). By default it show only
+   *                                documents information (false)
+   * @return {Promise.<Array, objects.Error>}
+   *         A promise that return a list of Document object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  list(schemaId, fullDocument = false) {
+    const params = { full_document : fullDocument };
+    let documents = [];
+
+    return this.call.get(`/schemas/${schemaId}/documents`, params)
+        .then((result) => {
+          if (result.result_code === 200) {
+            result.data.documents.forEach((dInfo) => {
+              let dData = {
+                data : {
+                  document : dInfo
+                },
+                result_code : result.result_code
+              };
+
+              documents.push(new objects.Document(dData));
+            })
+
+            return documents;
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Create a new document inside schema selected by its id
+   *  with data as document information
+   *
+   * @param schemaId  {string}
+   * @param data      {object}
+   * @return {Promise.<objects.Document, objects.Error>}
+   *         A promise that return a Document object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  create(schemaId, data) {
+    return this.call.post(`/schemas/${schemaId}/documents`, data)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Document(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Return information about document selected by its id
+   *
+   * @param documentId  {string}
+   * @return {Promise.<objects.Document, objects.Error>}
+   *         A promise that return a Document object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  details(documentId) {
+    return this.call.get(`/documents/${documentId}`)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Document(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Update information about document selected by its id
+   *  with data as new document information
+   *
+   * @param documentId  {string}
+   * @param data        {object}
+   * @return {Promise.<objects.Document, objects.Error>}
+   *         A promise that return a Document object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  update(documentId, data) {
+    return this.call.put(`/documents/${documentId}`, data)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Document(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Deactivate (or delete) document selected by its id
+   *
+   * @param documentId  {string}
+   * @param force       {boolean} If true delete document information
+   *                              otherwise only deactivate it.
+   *                              Default value is false (deactivate)
+   * @return {Promise.<objects.Success, objects.Error>}
+   *         A promise that return a Success object if resolved,X
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  delete(documentId, force = false) {
+    const params = { force : force };
+
+    return this.call.del(`/documents/${documentId}`, params)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Success(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
   }
 }
 

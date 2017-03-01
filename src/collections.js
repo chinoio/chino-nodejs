@@ -11,10 +11,229 @@ class ChinoAPICollections extends ChinoAPIBase {
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string}  The Chino customer key or null (not provided)
+   * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
+  }
+
+  /** Return a list of existing collections
+   *
+   * @return {Promise.<Array, objects.Error>}
+   *         A promise that return a list of Collection object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  list() {
+    const params = {};
+    let collections = [];
+
+    return this.call.get(`/collections`, params)
+        .then((result) => {
+          if (result.result_code === 200) {
+            result.data.collections.forEach((cInfo) => {
+              let cData = {
+                data : {
+                  collection : cInfo
+                },
+                result_code : result.result_code
+              };
+
+              collections.push(new objects.Collection(cData));
+            })
+
+            return collections;
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Create a new collection
+   *
+   * @param data      {object}
+   * @return {Promise.<objects.Collection, objects.Error>}
+   *         A promise that return a Collection object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  create(data) {
+    return this.call.post(`/collections`, data)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Collection(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Return information about collection selected by its id
+   *
+   * @param collectionId  {string}
+   * @return {Promise.<objects.Collection, objects.Error>}
+   *         A promise that return a Collection object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  details(collectionId) {
+    return this.call.get(`/collections/${collectionId}`)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Collection(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Update information about collection selected by its id
+   *  with data as new collection information
+   *
+   * @param collectionId  {string}
+   * @param data        {object}
+   * @return {Promise.<objects.Collection, objects.Error>}
+   *         A promise that return a Collection object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  update(collectionId, data) {
+    return this.call.put(`/collections/${collectionId}`, data)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Collection(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Deactivate (or delete) collection selected by its id
+   *
+   * @param collectionId  {string}
+   * @param force       {boolean} If true delete collection information
+   *                              otherwise only deactivate it.
+   *                              Default value is false (deactivate)
+   * @return {Promise.<objects.Success, objects.Error>}
+   *         A promise that return a Success object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  delete(collectionId, force = false) {
+    const params = { force : force };
+
+    return this.call.del(`/collections/${collectionId}`, params)
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Success(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Return a list of documents inside the collections
+   *  selected by its id
+   *
+   * @param collectionId  {string}
+   * @return {Promise.<Array, objects.Error>}
+   *         A promise that return a list of Documents object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  listDocuments(collectionId) {
+    const params = {};
+    let documents = [];
+
+    return this.call.get(`/collections/${collectionId}/documents`, params)
+        .then((result) => {
+          if (result.result_code === 200) {
+            result.data.documents.forEach((dInfo) => {
+              let dData = {
+                data : {
+                  document : dInfo
+                },
+                result_code : result.result_code
+              };
+
+              documents.push(new objects.Document(dData));
+            })
+
+            return documents;
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Insert a new document inside collection selected by their id
+   *
+   * @param collectionId  {string}
+   * @param documentId    {string}
+   * @return {Promise.<objects.Document, objects.Error>}
+   *         A promise that return a Success object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  insertDocument(collectionId, documentId) {
+    return this.call.post(`/collections/${collectionId}/documents/${documentId}`, {})
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Success(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
+  /** Search between collections filtering on name
+   *
+   * @param filter    {object}
+   * @return {Promise.<objects.Document, objects.Error>}
+   *         A promise that return a list of Collection object
+   *         matching filter if resolved, otherwise throw an Error
+   *         object if rejected or was not retrieved a success status
+   */
+  search(filter) {
+    let collections = [];
+    return this.call.post(`/collections/search`, filter)
+        .then((result) => {
+          if (result.result_code === 200) {
+            result.data.collections.forEach((cInfo) => {
+              let cData = {
+                data : {
+                  collection : cInfo
+                },
+                result_code : result.result_code
+              };
+
+              collections.push(new objects.Collection(cData));
+            })
+
+            return collections;
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+
+        .catch((error) => { throw new objects.Error(error); });
   }
 }
 

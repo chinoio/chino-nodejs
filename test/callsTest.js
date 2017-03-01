@@ -142,7 +142,7 @@ describe('Chino API Call', function() {
 
       it('Auth with password: should return 200', function () {
         let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", null, form1).then(s200);
+        return apiCall.post("/auth/token/", form1, apiCall.TYPES.FORM_DATA).then(s200);
       });
 
       it('Wrong auth with password: should return 401', function () {
@@ -150,18 +150,18 @@ describe('Chino API Call', function() {
         form1.password = "wrongPassword";
 
         let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", null, form1).catch(e401);
+        return apiCall.post("/auth/token/", form1, apiCall.TYPES.FORM_DATA).catch(e401);
       });
 
       // NEED A CODE TO BE USED
       it.skip('Auth with auth_code: should return 200', function () {
         let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", null, form2).then(s200);
+        return apiCall.post("/auth/token/", form2, apiCall.TYPES.FORM_DATA).then(s200);
       });
 
       it.skip('Refresh token: should return 200', function () {
         let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", null, form3).then(s200);
+        return apiCall.post("/auth/token/", form3, apiCall.TYPES.FORM_DATA).then(s200);
       });
     });
   });

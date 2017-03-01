@@ -11,7 +11,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param baseUrl     {string}  The url endpoint for APIs
    * @param customerId  {string}  The Chino customer id or bearer token
-   * @param customerKey {string}  The Chino customer key or null (not provided)
+   * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
     super(baseUrl, customerId, customerKey);
@@ -168,20 +168,18 @@ class ChinoAPIUsers extends ChinoAPIBase {
   /** Deactivate (or delete) selected user by its id
    *
    * @param userId  {string}
-   * @param force   {bool}   If true delete user information
-   *                         otherwise only deactivate it.
-   *                         Default value is false (deactivate)
+   * @param force   {boolean} If true delete user information
+   *                          otherwise only deactivate it.
+   *                          Default value is false (deactivate)
    * @return {Promise.<objects.Success, objects.Error>}
    *         A promise that return a Success object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
   delete(userId, force = false) {
-    const url = force
-        ? `/users/${userId}?force=true`
-        : `/users/${userId}`;
+    const params = { force : force };
 
-    return this.call.del(url)
+    return this.call.del(`/users/${userId}`, params)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
