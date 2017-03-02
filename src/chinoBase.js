@@ -14,13 +14,12 @@ class ChinoAPIBase {
    */
   constructor(baseUrl, customerId, customerKey = null) {
     this.baseUrl = baseUrl;
-    const _customerId = customerId;
     // select between basic or bearer auth
     const _customerKey = (customerKey !== null)
         ? customerKey
         : {type: "bearer"};
 
-    this.call = new Call(baseUrl, _customerId, _customerKey);
+    this.call = new Call(baseUrl, customerId, _customerKey);
   }
 }
 

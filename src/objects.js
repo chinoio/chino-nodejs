@@ -86,12 +86,23 @@ ChinoAPIObjects.BlobUncommitted =
 // this must be used to store blob information
 // only when it is confirmed on the server
 ChinoAPIObjects.Blob =
-    class Blob extends BlobUncommitted {};
+    class Blob extends ChinoAPIObjects.BlobUncommitted {};
 
 ChinoAPIObjects.Perms =
     class Perms extends BaseObject {
       constructor(response) {
         super(response, "permissions")
+      }
+    };
+
+ChinoAPIObjects.Auth =
+    class Auth {
+      constructor(response) {
+        if (response && response.result_code === 200) {
+          for (let key in response.data) {
+            this[key] = response.data[key];
+          }
+        }
       }
     };
 

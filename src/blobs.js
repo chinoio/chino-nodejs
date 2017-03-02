@@ -38,20 +38,20 @@ class ChinoAPIBlobs extends ChinoAPIBase {
         .catch((error) => { throw new objects.Error(error); });
   }
 
-  /** Create a new blob
+  /** Upload data to blob using its upload id
    *
-   * @param blobId      {string}
+   * @param uploadId      {string}
    * @return {Promise.<objects.BlobUncommitted, objects.Error>}
    *         A promise that return a BlobUncommitted object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  upload(blobId, octetStream, offset, length) {
+  upload(uploadId, octetStream, offset, length) {
     const params = {
       blob_offset : offset,
       blob_length : length
     }
-    return this.call.put(`/blobs/${blobId}`, octetStream, this.call.TYPES.OCT_STREAM, params)
+    return this.call.put(`/blobs/${uploadId}`, octetStream, this.call.TYPES.OCT_STREAM, params)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.BlobUncommitted(result);
@@ -65,17 +65,18 @@ class ChinoAPIBlobs extends ChinoAPIBase {
 
   /** Commit the upload and return the blob information
    *
-   * @param blobId  {string}
+   * @param uploadId  {string}
    * @return {Promise.<objects.Blob, objects.Error>}
    *         A promise that return a Blob object if resolved,
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  commit(blobId) {
-    // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //  What is commiting (on the API there is no blob id,
-    //    so how tell which blob commit)
-    return this.call.post(`/blobs/${blobId}/commit`)
+  commit(uploadId) {
+    const params = {
+      upload_id : uploadId
+    };
+
+    return this.call.post(`/blobs/commit`, params)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Blob(result);

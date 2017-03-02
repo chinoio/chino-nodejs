@@ -26,12 +26,8 @@ class Chino {
 
   constructor(baseUrl, customerId, customerKey) {
     this.baseUrl = baseUrl;
-    // save as private data
-    const customerId = customerId;
-    const customerKey = customerKey;
 
     // create Chino objects
-    this.auth         = new ChinoAuth(this.baseUrl, customerId, customerKey);
     this.users        = new ChinoUsers(this.baseUrl, customerId, customerKey);
     this.userSchemas  = new ChinoUserSchemas(this.baseUrl, customerId, customerKey);
     this.groups       = new ChinoGroups(this.baseUrl, customerId, customerKey);
@@ -43,6 +39,16 @@ class Chino {
     this.blobs        = new ChinoBlobs(this.baseUrl, customerId, customerKey);
     this.collections  = new ChinoCollections(this.baseUrl, customerId, customerKey);
     this.search       = new ChinoSearch(this.baseUrl, customerId, customerKey);
+  }
+
+  /** Set up for Chino object an Auth object
+   *  using previous created application id & secret
+   *
+   * @param appId     {string}
+   * @param appSecret {string}
+   */
+  setAuth(appId, appSecret) {
+    this.auth = new ChinoAuth(this.baseUrl, appId, appKey);
   }
 }
 

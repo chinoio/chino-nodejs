@@ -127,8 +127,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *                              otherwise only deactivate it.
    *                              Default value is false (deactivate)
    * @param all_content {boolean} If true all the documents inside
-   *                              the schema otherwise keep them without a schema.
-   *                              Default value is false.
+   *                              the schema will deleted otherwise
+   *                              it is not possible to delete a schema
+   *                              unless is empty. Default value is false.
    * @return {Promise.<objects.Success, objects.Error>}
    *         A promise that return a Success object if resolved,X
    *         otherwise throw an Error object if rejected
