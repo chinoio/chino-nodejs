@@ -5,9 +5,9 @@
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("../src/apiCall");
-const objects = require("../src/objects");
-const Users = require("../src/users");
+const Call = require("./src/apiCall");
+const objects = require("./src/objects");
+const Users = require("./src/users");
 
 const baseUrl     = "https://api.test.chino.io/v1";
 const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
@@ -23,7 +23,7 @@ describe('Chino Users API', function() {
   let usrSchemaId = "";
   let usrId = "";
 
-  // prepare the envinronment
+  // prepare the environment
   before("Set up resources to test the lib", function () {
     /* create user schema and insert a user */
     let userSchema = {
@@ -60,7 +60,7 @@ describe('Chino Users API', function() {
   });
 
   /* create */
-  it("Test the creation of a user: should return a object",
+  it("Test the creation of a user: should return a User object",
       function () {
         let user = {
           username: "aSecondUser",

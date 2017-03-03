@@ -5,7 +5,7 @@
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("../src/apiCall.js");
+const Call = require("./src/apiCall.js");
 
 const baseUrl     = "https://api.test.chino.io/v1";
 const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID

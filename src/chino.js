@@ -48,7 +48,7 @@ class Chino {
    * @param appSecret {string}
    */
   setAuth(appId, appSecret) {
-    this.auth = new ChinoAuth(this.baseUrl, appId, appKey);
+    this.auth = new ChinoAuth(this.baseUrl, appId, appSecret);
   }
 }
 

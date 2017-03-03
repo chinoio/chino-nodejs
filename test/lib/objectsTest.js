@@ -5,7 +5,7 @@
 const assert = require("assert");
 const should = require('should');
 
-const objects = require("../src/objects");
+const objects = require("./src/objects");
 
 describe("Chino API Objects", function() {
   describe("Group object", function() {
