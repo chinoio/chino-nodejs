@@ -56,7 +56,9 @@ describe('Chino Groups API', function() {
 
           if (usrSchemaId) {
             return Promise.all(ids.map(id => apiCall.post(`/user_schemas/${usrSchemaId}/users`, user(id))))
-                .then((res) => { usersId.push(res.user_id); })
+                .then((res) => {
+                  res.forEach(r => { usersId.push(r.data.user.user_id); });
+                })
                 .catch((err) => console.log(`Error inserting user\n${err}`));
           }
         })
@@ -134,10 +136,11 @@ describe('Chino Groups API', function() {
 
               return apiCall.get(`/users/${usersId[0]}`)
                   .then((result) => {
-                    result.data.groups.should.containDeep(usersId[0])
+                    result.data.user.groups.should.containEql(gId)
                   })
                   .catch((err) => { console.log(`${err} Error retrieving user`); });
             })
+            .catch((err) => {console.log(JSON.stringify((err))); });
       }
   );
 
