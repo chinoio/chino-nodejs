@@ -7,11 +7,12 @@ const should = require('should');
 
 const Call = require("./src/apiCall");
 const objects = require("./src/objects");
+const credentials = require("./testCredentials");
 const Users = require("./src/users");
 
 const baseUrl     = "https://api.test.chino.io/v1";
-const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
-const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
+const customerId  = credentials.customerId;
+const customerKey = credentials.customerKey;
 
 describe('Chino Users API', function() {
   // change timeout for slow network

@@ -6,12 +6,13 @@ const assert = require("assert");
 const should = require('should');
 
 const Call = require("./src/apiCall");
+const credentials = require("./testCredentials");
 const objects = require("./src/objects");
 const Groups = require("./src/groups");
 
 const baseUrl     = "https://api.test.chino.io/v1";
-const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
-const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
+const customerId  = credentials.customerId;
+const customerKey = credentials.customerKey;
 
 describe('Chino Groups API', function() {
   // change timeout for slow network

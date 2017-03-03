@@ -1,19 +1,17 @@
 /**
  * Created by daniele on 02/03/17.
  */
-/**
- * Created by daniele on 24/02/17.
- */
 
 const assert = require("assert");
 const should = require('should');
 
 const objects = require("./src/objects");
+const credentials = require("./testCredentials");
 const UserSchemas = require("./src/userSchemas");
 
 const baseUrl     = "https://api.test.chino.io/v1";
-const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
-const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
+const customerId  = credentials.customerId;
+const customerKey = credentials.customerKey;
 
 describe('Chino User Schemas API', function() {
   // change timeout for slow network
