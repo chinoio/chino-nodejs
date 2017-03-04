@@ -5,13 +5,14 @@
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("../src/apiCall");
-const objects = require("../src/objects");
-const Users = require("../src/users");
+const Call = require("./src/apiCall");
+const objects = require("./src/objects");
+const credentials = require("./testsSettings");
+const Users = require("./src/users");
 
-const baseUrl     = "https://api.test.chino.io/v1";
-const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
-const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
+const baseUrl     = credentials.baseUrl;
+const customerId  = credentials.customerId;
+const customerKey = credentials.customerKey;
 
 describe('Chino Users API', function() {
   // change timeout for slow network
@@ -23,7 +24,7 @@ describe('Chino Users API', function() {
   let usrSchemaId = "";
   let usrId = "";
 
-  // prepare the envinronment
+  // prepare the environment
   before("Set up resources to test the lib", function () {
     /* create user schema and insert a user */
     let userSchema = {
@@ -60,7 +61,7 @@ describe('Chino Users API', function() {
   });
 
   /* create */
-  it("Test the creation of a user: should return a object",
+  it("Test the creation of a user: should return a User object",
       function () {
         let user = {
           username: "aSecondUser",
@@ -141,7 +142,7 @@ describe('Chino Users API', function() {
       }
   );
   /* delete */
-  it("Test the deletion of a user: should a success message",
+  it("Test the deletion of a user: should return a success message",
       function () {
         return userCaller.delete(usrId, true)
             .then((result) => {

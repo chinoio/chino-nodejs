@@ -63,7 +63,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
     return this.call.post(`/user_schemas`, data)
         .then((result) => {
           if (result.result_code === 200) {
-            return new objects.User(result);
+            return new objects.UserSchema(result);
           }
           else {
             throw new objects.Error(result);
@@ -119,9 +119,9 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
   /** Deactivate (or delete) user schema selected by its id
    *
    * @param userSchemaId  {string}
-   * @param force         {bool}   If true delete user schema information
-   *                               otherwise only deactivate it.
-   *                               Default value is false (deactivate)
+   * @param force         {boolean} If true delete user schema information
+   *                                otherwise only deactivate it.
+   *                                Default value is false (deactivate)
    * @return {Promise.<objects.Success, objects.Error>}
    *         A promise that return a Success object if resolved,
    *         otherwise throw an Error object if rejected

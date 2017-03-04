@@ -5,14 +5,12 @@
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("../src/apiCall.js");
+const credentials = require("./testsSettings");
+const Call = require("./src/apiCall.js");
 
-const baseUrl     = "https://api.test.chino.io/v1";
-const customerId  = process.env.CHINO_ID;   // insert here your Chino Customer ID
-const customerKey = process.env.CHINO_KEY;  // insert here your Chino Customer KEY
-
-const appId = process.env.APP_ID;     // insert here your Chino Application ID
-const appKey = process.env.APP_KEY;   // insert here your Chino Application KEY
+const baseUrl     = credentials.baseUrl;
+const customerId  = credentials.customerId;
+const customerKey = credentials.customerKey;
 
 // utils functions
 function s200(res) {
@@ -36,10 +34,16 @@ describe('Chino API Call', function() {
   let ushId = "";
   let usrId = "";
 
+  // application credentials
+  let appId;
+  let appKey;
+
   /* ==================================== */
-  before("Create user schema and insert user", function () {
-    let apiCall = new Call(baseUrl, customerId, customerKey);
-    let userSchema = {
+  before("Set up resources to test the lib", function () {
+    // here we are assuming things work (otherwise we need an environment already set up)
+    const apiCall = new Call(baseUrl, customerId, customerKey);
+
+    const userSchema = {
       description: "Test User Schema",
       structure: {
         fields: [
@@ -50,7 +54,7 @@ describe('Chino API Call', function() {
         ]
       }
     };
-    let user = {
+    const user = {
       username: "aUser",
       password: "aPassword",
       attributes: {
@@ -58,15 +62,28 @@ describe('Chino API Call', function() {
       },
       is_active: true
     };
+    const app = {
+      name: "App for testing",
+      grant_type: "password",
+    };
 
     return apiCall.post("/user_schemas", userSchema)
         .then((res) => {
           ushId = res.data.user_schema.user_schema_id;
 
           if (ushId) {
-            apiCall.post(`/user_schemas/${ushId}/users`, user)
-              .then((res) => { usrId = res.data.user.user_id; })
-              .catch((err) => console.log("No user inserted"));
+            return apiCall.post(`/user_schemas/${ushId}/users`, user)
+                .then((res) => {
+                  usrId = res.data.user.user_id;
+
+                  return apiCall.post("/auth/applications", app)
+                      .then((res) => {
+                        appId = res.data.application.app_id;
+                        appKey = res.data.application.app_secret;
+                      })
+                      .catch((err) => console.log("No application created"));
+                })
+                .catch((err) => console.log("No user inserted"));
           }
         })
         .catch((err) => console.log("No user schema created"));
@@ -117,12 +134,26 @@ describe('Chino API Call', function() {
 
     describe("Multipart/form-data calls", function () {
       // forms for authentication
-      let form1 = {
+      let form = {
         grant_type : "password",
         username : "aUser",
         password : "aPassword"
       };
 
+      it('Auth with password: should return 200', function () {
+        let authCall = new Call(baseUrl, appId, appKey);
+        return authCall.post("/auth/token/", form, authCall.TYPES.FORM_DATA).then(s200);
+      });
+
+      it('Wrong auth with password: should return 401', function () {
+        // change password to test wrong auth
+        form.password = "wrongPassword";
+
+        let authCall = new Call(baseUrl, appId, appKey);
+        return authCall.post("/auth/token/", form, authCall.TYPES.FORM_DATA).catch(e401);
+      });
+
+      /*
       // NEED A CODE TO BE USED
       // let form2 = {
       //   grant_type : "authorization_code",
@@ -132,26 +163,13 @@ describe('Chino API Call', function() {
       //   client_secret : appKey2,
       //   scope : "read write"
       // };
-      
+
       // let form3 = {
       //   grant_type : "refresh_token",
       //   refresh_token : "",
       //   client_id: appId2,
       //   client_key : appKey2
       // }
-
-      it('Auth with password: should return 200', function () {
-        let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", form1, apiCall.TYPES.FORM_DATA).then(s200);
-      });
-
-      it('Wrong auth with password: should return 401', function () {
-        // change password to test wrong auth
-        form1.password = "wrongPassword";
-
-        let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", form1, apiCall.TYPES.FORM_DATA).catch(e401);
-      });
 
       // NEED A CODE TO BE USED
       it.skip('Auth with auth_code: should return 200', function () {
@@ -163,6 +181,7 @@ describe('Chino API Call', function() {
         let apiCall = new Call(baseUrl, appId, appKey);
         return apiCall.post("/auth/token/", form3, apiCall.TYPES.FORM_DATA).then(s200);
       });
+      */
     });
   });
 
@@ -234,7 +253,11 @@ describe('Chino API Call', function() {
     return sleep(1000).then(() => {
       if (ushId !== "" && usrId !== "") {
         return apiCall.del(`/user_schemas/${ushId}?force=true`)
-            .then(res => { /*console.log("Removed stub stuff")*/ })
+            .then(res => {
+              return apiCall.del(`/auth/applications/${appId}`)
+                  .then( /* Removal of resources with success */ )
+                  .catch(err => { console.log(`Error removing application`) })
+            })
             .catch(err => { console.log(`Error removing test resources`) });
       }
     });

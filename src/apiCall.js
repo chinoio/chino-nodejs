@@ -4,21 +4,8 @@
 "use strict";
 
 const request = require("superagent");
+const _ = require('private-parts').createKey();
 const GRANT_TYPES = require("./grantTypes");
-
-// module internal variables
-let id;
-let secret;
-
-/** Set Chino authentication as private information
- *
- * @param authId     {string}           the customer id or the bearer token
- * @param authSecret {string | object}  the customer key or the auth type as object
- */
-function setAuth(authId, authSecret) {
-  id = authId;
-  secret = authSecret;
-}
 
 class Call {
   /** Create a Call object
@@ -36,7 +23,9 @@ class Call {
       OCT_STREAM : "application/octet-stream"
     }
 
-    setAuth(authId, authSecret);
+    // set private properties
+    _(this).id = authId;
+    _(this).secret = authSecret;
   }
 
   /** Make GET request to Chino APIs
@@ -66,7 +55,7 @@ class Call {
       if(acceptType === this.TYPES.OCT_STREAM) {
         request
             .get(this.baseUrl + url)
-            .auth(id, secret)
+            .auth(_(this).id, _(this).secret)
             .type("application/json")
             .accept("application/octet-stream")
             .query(params)
@@ -75,7 +64,7 @@ class Call {
       else {
         request
             .get(this.baseUrl + url)
-            .auth(id, secret)
+            .auth(_(this).id, _(this).secret)
             .type("application/json")
             .accept("application/json")
             .query(params)
@@ -94,6 +83,7 @@ class Call {
    * @return {Promise}
    */
   post(url, data = {}, acceptType = null) {
+    // TODO: review post function => split it into smaller and private functions
     let makeCall = (resolve, reject) => {
       /** Manage response from Chino API
        *
@@ -114,7 +104,7 @@ class Call {
           // console.log(data["grant_type"])
           request
               .post(this.baseUrl + url)
-              .auth(id, secret)
+              .auth(_(this).id, _(this).secret)
               .set("Content-Type", "multipart/form-data")
               .accept("multipart/json")
               .field("grant_type", data["grant_type"])
@@ -128,7 +118,7 @@ class Call {
         if (data["grant_type"] === GRANT_TYPES.RFS_TOKEN) {
           request
               .post(this.baseUrl + url)
-              .auth(id, secret)
+              .auth(_(this).id, _(this).secret)
               .set("Content-Type", "multipart/form-data")
               .accept("multipart/json")
               .field("grant_type", "refresh_token")
@@ -141,7 +131,7 @@ class Call {
         else {
           request
               .post(this.baseUrl + url)
-              .auth(id, secret)
+              .auth(_(this).id, _(this).secret)
               .set("Content-Type", "multipart/form-data")
               .accept("multipart/json")
               .field("grant_type", "password")
@@ -153,7 +143,7 @@ class Call {
       else {
         request
             .post(this.baseUrl + url)
-            .auth(id, secret)
+            .auth(_(this).id, _(this).secret)
             .type("application/json")
             .accept("application/json")
             .send(data)
@@ -191,7 +181,7 @@ class Call {
       if (acceptType === this.TYPES.OCT_STREAM) {
         request
             .put(this.baseUrl + url)
-            .auth(id, secret)
+            .auth(_(this).id, _(this).secret)
             .set("offset", params.blob_offset)
             .set("length", params.blob_length)
             .type("application/octet-stream")
@@ -202,7 +192,7 @@ class Call {
       else {
         request
             .put(this.baseUrl + url)
-            .auth(id, secret)
+            .auth(_(this).id, _(this).secret)
             .type("application/json")
             .accept("application/json")
             .send(data)
@@ -237,7 +227,7 @@ class Call {
 
       request
           .patch(this.baseUrl + url)
-          .auth(id, secret)
+          .auth(_(this).id, _(this).secret)
           .type("application/json")
           .accept("application/json")
           .send(data)
@@ -272,7 +262,7 @@ class Call {
 
       request
           .del(this.baseUrl + url)
-          .auth(id, secret)
+          .auth(_(this).id, _(this).secret)
           .type("application/json")
           .accept("application/json")
           .query(params)
