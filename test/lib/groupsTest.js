@@ -6,11 +6,11 @@ const assert = require("assert");
 const should = require('should');
 
 const Call = require("./src/apiCall");
-const credentials = require("./testCredentials");
+const credentials = require("./testsSettings");
 const objects = require("./src/objects");
 const Groups = require("./src/groups");
 
-const baseUrl     = "https://api.test.chino.io/v1";
+const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
 const customerKey = credentials.customerKey;
 
@@ -146,7 +146,7 @@ describe('Chino Groups API', function() {
   );
 
   /* remove user */
-  it("Test the removal of a user from a group: should a success message",
+  it("Test the removal of a user from a group: should return a Success message",
       function () {
         return groupCaller.removeUser(gId, usersId[0])
             .then((result) => {
@@ -157,7 +157,7 @@ describe('Chino Groups API', function() {
   );
 
   /* delete */
-  it("Test the deletion of a group: should a success message",
+  it("Test the deletion of a group: should return a Success message",
       function () {
         return groupCaller.delete(gId, true)
             .then((result) => {

@@ -7,10 +7,10 @@ const should = require('should');
 
 const Call = require("./src/apiCall");
 const objects = require("./src/objects");
-const credentials = require("./testCredentials");
+const credentials = require("./testsSettings");
 const Users = require("./src/users");
 
-const baseUrl     = "https://api.test.chino.io/v1";
+const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
 const customerKey = credentials.customerKey;
 
@@ -142,7 +142,7 @@ describe('Chino Users API', function() {
       }
   );
   /* delete */
-  it("Test the deletion of a user: should a success message",
+  it("Test the deletion of a user: should return a success message",
       function () {
         return userCaller.delete(usrId, true)
             .then((result) => {

@@ -11,4 +11,5 @@ require("./lib/userSchemasTest");
 require("./lib/groupsTest");
 require("./lib/applicationsTest");
 require("./lib/repositoriesTest");
-//require("./lib/schemasTest");
+require("./lib/schemasTest");
+require("./lib/documentsTest");

@@ -6,10 +6,10 @@ const assert = require("assert");
 const should = require('should');
 
 const objects = require("./src/objects");
-const credentials = require("./testCredentials");
+const credentials = require("./testsSettings");
 const UserSchemas = require("./src/userSchemas");
 
-const baseUrl     = "https://api.test.chino.io/v1";
+const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
 const customerKey = credentials.customerKey;
 
@@ -109,7 +109,7 @@ describe('Chino User Schemas API', function() {
   );
 
   /* delete */
-  it("Test the deletion of a user: should a success message",
+  it("Test the deletion of a user: should return a success message",
       function () {
         assert(usrSchemaID !== "", "Selected user schema doesn't exist.")
 

@@ -6,10 +6,10 @@ const assert = require("assert");
 const should = require('should');
 
 const objects = require("./src/objects");
-const credentials = require("./testCredentials");
+const credentials = require("./testsSettings");
 const Applications = require("./src/applications");
 
-const baseUrl     = "https://api.test.chino.io/v1";
+const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
 const customerKey = credentials.customerKey;
 
@@ -90,6 +90,8 @@ describe('Chino Applications API', function() {
       }
   );
   /* update */
+  // NOTE: the following 2 test doesn't work at the moment (04/03/2017),
+  // because server doesn't update the application information
   it("Test the update of application information: should return an Application object",
       function () {
         let appUpdate = {
@@ -126,7 +128,7 @@ describe('Chino Applications API', function() {
   );
 
   /* delete */
-  it("Test the deletion of a application: should a success message",
+  it("Test the deletion of a application: should return a success message",
       function () {
         assert(appId1 !== "", "Application undefined");
         return appCaller.delete(appId1, true)
@@ -136,7 +138,7 @@ describe('Chino Applications API', function() {
             })
       }
   );
-  it("Test the deletion of a application: should a success message",
+  it("Test the deletion of a application: should return a success message",
       function () {
         assert(appId2 !== "", "Application undefined");
         return appCaller.delete(appId2, true)

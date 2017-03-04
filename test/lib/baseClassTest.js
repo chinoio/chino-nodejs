@@ -5,10 +5,10 @@
 const assert = require("assert");
 const should = require('should');
 
-const credentials = require("./testCredentials");
+const credentials = require("./testsSettings");
 const ChinoAPIBase = require("./src/chinoBase");
 
-const baseUrl     = "https://api.test.chino.io/v1";
+const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
 const customerKey = credentials.customerKey;
 

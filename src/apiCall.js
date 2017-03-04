@@ -83,6 +83,7 @@ class Call {
    * @return {Promise}
    */
   post(url, data = {}, acceptType = null) {
+    // TODO: review post function => split it into smaller and private functions
     let makeCall = (resolve, reject) => {
       /** Manage response from Chino API
        *

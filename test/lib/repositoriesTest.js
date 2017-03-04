@@ -6,10 +6,10 @@ const assert = require("assert");
 const should = require('should');
 
 const objects = require("./src/objects");
-const credentials = require("./testCredentials");
+const credentials = require("./testsSettings");
 const Repositories = require("./src/repositories");
 
-const baseUrl     = "https://api.test.chino.io/v1";
+const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
 const customerKey = credentials.customerKey;
 
@@ -79,7 +79,7 @@ describe('Chino Repositories API', function() {
   );
 
   /* delete */
-  it("Test the deletion of a repository: should a success message",
+  it("Test the deletion of a repository: should return  a success message",
       function () {
         assert(repoId !== "", "Repository undefined");
         return repoCaller.delete(repoId, true)
