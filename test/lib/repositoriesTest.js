@@ -5,9 +5,9 @@
 const assert = require("assert");
 const should = require('should');
 
-const objects = require("./src/objects");
+const objects = require("../../src/objects");
 const credentials = require("./testsSettings");
-const Repositories = require("./src/repositories");
+const Repositories = require("../../src/repositories");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;

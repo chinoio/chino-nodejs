@@ -5,10 +5,10 @@
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("./src/apiCall");
-const objects = require("./src/objects");
+const Call = require("../../src/apiCall");
+const objects = require("../../src/objects");
 const credentials = require("./testsSettings");
-const Users = require("./src/users");
+const Users = require("../../src/users");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
@@ -152,7 +152,7 @@ describe('Chino Users API', function() {
       }
   );
 
-  // clean the envinronment
+  // clean the environment
   after("Remove test resources", function () {
     // be sure to have enough
     this.timeout(10000);
