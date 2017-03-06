@@ -5,7 +5,7 @@
 const assert = require("assert");
 const should = require('should');
 
-const objects = require("./src/objects");
+const objects = require("../../src/objects");
 const credentials = require("./testsSettings");
 const Call = require("./src/apiCall");
 const Documents = require("./src/documents");
@@ -74,7 +74,7 @@ describe('Chino Documents API', function() {
           }
         };
 
-        assert(schemaId !== "", "Document undefined");
+        assert(schemaId !== "", "Schema undefined");
         return documentCaller.create(schemaId, doc)
             .then((result) => {
               documentId = result.document_id;
@@ -101,8 +101,8 @@ describe('Chino Documents API', function() {
         return documentCaller.list(schemaId)
             .then((result) => {
               result.should.be.an.instanceOf(Array);
-              result.forEach((repo) => {
-                repo.should.be.an.instanceOf(objects.Document);
+              result.forEach((doc) => {
+                doc.should.be.an.instanceOf(objects.Document);
               });
               // in this case we have inserted 1 document so it should have only 1
               result.length.should.equal(1);
@@ -149,9 +149,9 @@ describe('Chino Documents API', function() {
       }
   );
 
-  // clean the envinronment
+  // clean the environment
   after("Remove test resources", function () {
-    // be sure to have enough
+    // be sure to have enough time
     this.timeout(10000);
 
     function sleep (time) {
@@ -160,7 +160,7 @@ describe('Chino Documents API', function() {
 
     return sleep(1000).then(() => {
       if (schemaId !== "") {
-        return apiCall.del(`/schemas/${schemaId}?force=true`)
+        return apiCall.del(`/schemas/${schemaId}?force=true&all_content=true`)
             .then(res => {
               if (repoId !== "") {
                 return apiCall.del(`/repositories/${repoId}?force=true`)

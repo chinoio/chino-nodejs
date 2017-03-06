@@ -202,6 +202,28 @@ class ChinoAPICollections extends ChinoAPIBase {
         .catch((error) => { throw new objects.Error(error); });
   }
 
+  /** Insert a new document inside collection selected by their id
+   *
+   * @param collectionId  {string}
+   * @param documentId    {string}
+   * @return {Promise.<objects.Document, objects.Error>}
+   *         A promise that return a Success object if resolved,
+   *         otherwise throw an Error object if rejected
+   *         or was not retrieved a success status
+   */
+  removeDocument(collectionId, documentId) {
+    return this.call.del(`/collections/${collectionId}/documents/${documentId}`, {})
+        .then((result) => {
+          if (result.result_code === 200) {
+            return new objects.Success(result);
+          }
+          else {
+            throw new objects.Error(result);
+          }
+        })
+        .catch((error) => { throw new objects.Error(error); });
+  }
+
   /** Search between collections filtering on name
    *
    * @param filter    {object}

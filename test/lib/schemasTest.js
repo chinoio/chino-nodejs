@@ -5,10 +5,10 @@
 const assert = require("assert");
 const should = require('should');
 
-const objects = require("./src/objects");
+const objects = require("../../src/objects");
 const credentials = require("./testsSettings");
-const Call = require("./src/apiCall");
-const Schemas = require("./src/schemas");
+const Call = require("../../src/apiCall");
+const Schemas = require("../../src/schemas");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
@@ -94,8 +94,8 @@ describe('Chino Schemas API', function() {
         return schemaCaller.list(repoId)
             .then((result) => {
               result.should.be.an.instanceOf(Array);
-              result.forEach((repo) => {
-                repo.should.be.an.instanceOf(objects.Schema);
+              result.forEach((schema) => {
+                schema.should.be.an.instanceOf(objects.Schema);
               });
               // in this case we have inserted 1 schema so it should have only 1
               result.length.should.equal(1);
@@ -159,7 +159,7 @@ describe('Chino Schemas API', function() {
       }
   );
 
-  // clean the envinronment
+  // clean the environment
   after("Remove test resources", function () {
     // be sure to have enough
     this.timeout(10000);

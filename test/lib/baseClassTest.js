@@ -6,7 +6,7 @@ const assert = require("assert");
 const should = require('should');
 
 const credentials = require("./testsSettings");
-const ChinoAPIBase = require("./src/chinoBase");
+const ChinoAPIBase = require("../../src/chinoBase");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;

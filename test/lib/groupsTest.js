@@ -5,10 +5,10 @@
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("./src/apiCall");
+const Call = require("../../src/apiCall");
 const credentials = require("./testsSettings");
-const objects = require("./src/objects");
-const Groups = require("./src/groups");
+const objects = require("../../src/objects");
+const Groups = require("../../src/groups");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
@@ -167,9 +167,9 @@ describe('Chino Groups API', function() {
       }
   );
 
-  // clean the envinronment
+  // clean the environment
   after("Remove test resources", function () {
-    // be sure to have enough
+    // be sure to have enough time
     this.timeout(10000);
 
     function sleep (time) {
