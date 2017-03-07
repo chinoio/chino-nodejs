@@ -6,6 +6,7 @@
 const request = require("superagent");
 const _ = require('private-parts').createKey();
 const GRANT_TYPES = require("./grantTypes");
+const CONT_TYPES = require("./callTypes");
 
 class Call {
   /** Create a Call object
@@ -20,14 +21,6 @@ class Call {
     // set private properties
     _(this).id = authId;
     _(this).secret = authSecret;
-  }
-
-  static TYPES() {
-    return {
-      JSON: "application/json",
-      FORM_DATA: "multipart/form-data",
-      OCT_STREAM: "application/octet-stream"
-    }
   }
 
   /** Make GET request to Chino APIs
@@ -54,7 +47,7 @@ class Call {
       }
 
       // call Chino API
-      if(acceptType === Call.TYPES.OCT_STREAM) {
+      if(acceptType === CONT_TYPES.OCT_STREAM) {
         request
             .get(this.baseUrl + url)
             .auth(_(this).id, _(this).secret)
@@ -101,7 +94,7 @@ class Call {
         }
       }
 
-      if (acceptType === Call.TYPES.FORM_DATA) {
+      if (acceptType === CONT_TYPES.FORM_DATA) {
         if (data["grant_type"] === GRANT_TYPES.AUTH_CODE) {
           // console.log(data["grant_type"])
           request
@@ -180,7 +173,7 @@ class Call {
         }
       }
 
-      if (acceptType === Call.TYPES.OCT_STREAM) {
+      if (acceptType === CONT_TYPES.OCT_STREAM) {
         request
             .put(this.baseUrl + url)
             .auth(_(this).id, _(this).secret)

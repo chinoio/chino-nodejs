@@ -7,6 +7,7 @@ const should = require('should');
 
 const credentials = require("./testsSettings");
 const Call = require("../../src/apiCall.js");
+const CONT_TYPES = require("../../src/callTypes.js");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
@@ -142,7 +143,7 @@ describe('Chino API Call', function() {
 
       it('Auth with password: should return 200', function () {
         let authCall = new Call(baseUrl, appId, appKey);
-        return authCall.post("/auth/token/", form, authCall.TYPES.FORM_DATA).then(s200);
+        return authCall.post("/auth/token/", form, CONT_TYPES.FORM_DATA).then(s200);
       });
 
       it('Wrong auth with password: should return 401', function () {
@@ -150,7 +151,7 @@ describe('Chino API Call', function() {
         form.password = "wrongPassword";
 
         let authCall = new Call(baseUrl, appId, appKey);
-        return authCall.post("/auth/token/", form, authCall.TYPES.FORM_DATA).catch(e401);
+        return authCall.post("/auth/token/", form, CONT_TYPES.FORM_DATA).catch(e401);
       });
 
       /*
@@ -174,12 +175,12 @@ describe('Chino API Call', function() {
       // NEED A CODE TO BE USED
       it.skip('Auth with auth_code: should return 200', function () {
         let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", form2, apiCall.TYPES.FORM_DATA).then(s200);
+        return apiCall.post("/auth/token/", form2, CONT_TYPES.FORM_DATA).then(s200);
       });
 
       it.skip('Refresh token: should return 200', function () {
         let apiCall = new Call(baseUrl, appId, appKey);
-        return apiCall.post("/auth/token/", form3, apiCall.TYPES.FORM_DATA).then(s200);
+        return apiCall.post("/auth/token/", form3, CONT_TYPES.FORM_DATA).then(s200);
       });
       */
     });

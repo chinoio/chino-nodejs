@@ -7,8 +7,8 @@ const should = require('should');
 
 const objects = require("../../src/objects");
 const credentials = require("./testsSettings");
-const Call = require("./src/apiCall");
-const Documents = require("./src/documents");
+const Call = require("../../src/apiCall");
+const Documents = require("../../src/documents");
 
 const baseUrl     = credentials.baseUrl;
 const customerId  = credentials.customerId;
