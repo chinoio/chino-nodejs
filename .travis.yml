@@ -1,5 +1,6 @@
 language: node_js
-  - "7"
+node_js:
+  - "node"
 
 branches:
   only:
@@ -7,7 +8,6 @@ branches:
 
 install:
   npm install
-  npm install -g codecov
 
-after success:
-  codecov
+after_success:
+  ./node_modules/.bin/codecov

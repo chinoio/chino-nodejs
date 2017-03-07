@@ -13,3 +13,6 @@ require("./lib/applicationsTest");
 require("./lib/repositoriesTest");
 require("./lib/schemasTest");
 require("./lib/documentsTest");
+require("./lib/collectionsTest");
+require("./lib/searchTest");
+

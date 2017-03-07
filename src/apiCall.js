@@ -17,15 +17,17 @@ class Call {
   constructor(baseUrl, authId, authSecret) {
     this.baseUrl = baseUrl;
 
-    this.TYPES = {
-      JSON : "application/json",
-      FORM_DATA : "multipart/form-data",
-      OCT_STREAM : "application/octet-stream"
-    }
-
     // set private properties
     _(this).id = authId;
     _(this).secret = authSecret;
+  }
+
+  static TYPES() {
+    return {
+      JSON: "application/json",
+      FORM_DATA: "multipart/form-data",
+      OCT_STREAM: "application/octet-stream"
+    }
   }
 
   /** Make GET request to Chino APIs
@@ -52,7 +54,7 @@ class Call {
       }
 
       // call Chino API
-      if(acceptType === this.TYPES.OCT_STREAM) {
+      if(acceptType === Call.TYPES.OCT_STREAM) {
         request
             .get(this.baseUrl + url)
             .auth(_(this).id, _(this).secret)
@@ -99,7 +101,7 @@ class Call {
         }
       }
 
-      if (acceptType === this.TYPES.FORM_DATA) {
+      if (acceptType === Call.TYPES.FORM_DATA) {
         if (data["grant_type"] === GRANT_TYPES.AUTH_CODE) {
           // console.log(data["grant_type"])
           request
@@ -178,7 +180,7 @@ class Call {
         }
       }
 
-      if (acceptType === this.TYPES.OCT_STREAM) {
+      if (acceptType === Call.TYPES.OCT_STREAM) {
         request
             .put(this.baseUrl + url)
             .auth(_(this).id, _(this).secret)
