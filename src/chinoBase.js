@@ -13,7 +13,6 @@ class ChinoAPIBase {
    * @param customerKey {string | null}  The Chino customer key or null (not provided)
    */
   constructor(baseUrl, customerId, customerKey = null) {
-    this.baseUrl = baseUrl;
     // select between basic or bearer auth
     const _customerKey = (customerKey !== null)
         ? customerKey
