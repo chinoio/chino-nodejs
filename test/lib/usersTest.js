@@ -1,27 +1,13 @@
-/**
- * Created by daniele on 24/02/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
-let baseUrl;
-let customerId;
-let customerKey;
-let Users;
-let objects;
-let usrSchemaId;
-let usersBefore;
-/** Users library test */
-module.exports.runTest = function (credentials, objectsChino, usersLib, data) {
-  baseUrl = credentials.baseUrl;
-  customerId = credentials.customerId;
-  customerKey = credentials.customerKey;
-  Users = usersLib;
-  objects = objectsChino;
-  usrSchemaId = data.usrSchemaId;
-  usersBefore = data.users;
-}
+const Users = require("../../src/users");
+const objects = require("../../src/objects");
+const settings = require("./../testsSettings");
+
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
 describe('Chino Users API', function () {
   // change timeout for slow network
@@ -29,16 +15,25 @@ describe('Chino Users API', function () {
 
   let userCaller = new Users(baseUrl, customerId, customerKey);
   // keep track of id to delete it later
-  let usrId = "";
+  let usrSchemaId = "";
+  let usrId2 = "";
+  let elements = 0;
+
+  before(function () {
+    const data = settings.data();
+
+    usrSchemaId = data.usrSchemaId;
+    elements = data.elements;
+  })
 
   /* create */
   it("Test the creation of a user: should return a User object",
       function () {
         const user = {
-          username: "aSecondUser",
-          password: "aPassword2",
+          username: "adminUser",
+          password: "aStrongPassword",
           attributes: {
-            user: "Daniele"
+            user: 3
           },
           is_active: true
         }
@@ -46,7 +41,7 @@ describe('Chino Users API', function () {
         return userCaller.create(usrSchemaId, user)
             .then((result) => {
               // save id
-              usrId = result.user_id;
+              usrId2 = result.user_id;
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
             })
@@ -55,7 +50,7 @@ describe('Chino Users API', function () {
   /* details */
   it("Test the retrieving of user information: should return a User object",
       function () {
-        return userCaller.details(usrId)
+        return userCaller.details(usrId2)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
@@ -73,7 +68,7 @@ describe('Chino Users API', function () {
                 user.should.be.an.instanceOf(objects.User);
               });
               // in this case we have inserted 1 user more than before
-              result.length.should.equal(usersBefore+1);
+              result.length.should.equal(elements+1);
             });
       }
   );
@@ -84,12 +79,12 @@ describe('Chino Users API', function () {
           username: "aThirdUser",
           password: "aPassword3",
           attributes: {
-            user: "Daniele"
+            user: 21
           },
           is_active: true
         }
 
-        return userCaller.update(usrId, newUser)
+        return userCaller.update(usrId2, newUser)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
@@ -102,22 +97,22 @@ describe('Chino Users API', function () {
       function () {
         let user = {
           attributes: {
-            user: "Daniele B"
+            user: 42
           }
         }
 
-        return userCaller.patch(usrId, user)
+        return userCaller.patch(usrId2, user)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
-              result.attributes.user.should.be.equal("Daniele B");
+              result.attributes.user.should.be.equal(42);
             })
       }
   );
   /* delete */
   it("Test the deletion of a user: should return a success message",
       function () {
-        return userCaller.delete(usrId, true)
+        return userCaller.delete(usrId2, true)
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);

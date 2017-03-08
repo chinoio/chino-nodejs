@@ -1,17 +1,13 @@
-/**
- * Created by daniele on 02/03/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
 const objects = require("../../src/objects");
-const credentials = require("./testsSettings");
+const settings = require("./../testsSettings");
 const UserSchemas = require("../../src/userSchemas");
 
-const baseUrl     = credentials.baseUrl;
-const customerId  = credentials.customerId;
-const customerKey = credentials.customerKey;
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
 describe('Chino User Schemas API', function() {
   // change timeout for slow network
@@ -69,9 +65,8 @@ describe('Chino User Schemas API', function() {
               result.forEach((userSchema) => {
                 userSchema.should.be.an.instanceOf(objects.UserSchema);
               });
-              // in this case we have inserted 1 user schema
-              // so it should have 1 user schema
-              result.length.should.equal(1);
+              // one inserted now and one already online
+              result.length.should.equal(2);
             });
       }
   );

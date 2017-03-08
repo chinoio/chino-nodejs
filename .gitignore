@@ -38,3 +38,6 @@ jspm_packages
 
 # webstorm files
 .idea
+
+# test files
+data.json

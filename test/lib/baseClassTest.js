@@ -1,25 +1,29 @@
 // testing libraries
 const assert = require("assert");
 const should = require('should');
+
+const settings = require("./../testsSettings");
 // Chino library
 const ChinoAPIBase = require("../../src/chinoBase");
 
-module.exports = function ({baseUrl, customerId, customerKey}) {
-    describe('Chino API Base class', function() {
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
-      it("Test Chino API Base class: should return corresponding object",
-          function (done) {
-            const baseClass = new ChinoAPIBase(baseUrl, customerId, customerKey);
+describe('Chino API Base class', function() {
 
-            baseClass.should.be.an.instanceOf(ChinoAPIBase);
-            Object.keys(baseClass).length.should.be.above(0);
-            should.equal(baseClass._customerKey, undefined);
-            should.equal(baseClass.call.baseUrl, baseUrl);
-            should.equal(baseClass.call.id, undefined);
-            should.equal(baseClass.call.secret, undefined);
+  it("Test Chino API Base class: should return corresponding object",
+      function (done) {
+        const baseClass = new ChinoAPIBase(baseUrl, customerId, customerKey);
 
-            done();
-          }
-      );
-    })
-}
+        baseClass.should.be.an.instanceOf(ChinoAPIBase);
+        Object.keys(baseClass).length.should.be.above(0);
+        should.equal(baseClass._customerKey, undefined);
+        should.equal(baseClass.call.baseUrl, baseUrl);
+        should.equal(baseClass.call.id, undefined);
+        should.equal(baseClass.call.secret, undefined);
+
+        done();
+      }
+  );
+})
