@@ -4,6 +4,7 @@
 "use strict";
 
 const objects = require("./objects");
+const RESULT_TYPES = require("./resultTypes");
 const ChinoAPIBase = require("./chinoBase");
 
 class ChinoAPISearch extends ChinoAPIBase {
@@ -29,27 +30,60 @@ class ChinoAPISearch extends ChinoAPIBase {
   documents(schemaId, searchParams) {
     let documents = [];
 
-    return this.call.post(`/search/documents/${schemaId}`, searchParams)
-        .then((result) => {
-          if (result.result_code === 200) {
-            result.data.documents.forEach((dInfo) => {
-              let dData = {
-                data : {
-                  document : dInfo
-                },
-                result_code : result.result_code
-              };
+    switch (searchParams.result_type) {
+      case RESULT_TYPES.FULL_CONTENT:
+      case RESULT_TYPES.NO_CONTENT:
+        return this.call.post(`/search/documents/${schemaId}`, searchParams)
+            .then((result) => {
+              if (result.result_code === 200) {
+                result.data.documents.forEach((dInfo) => {
+                  let dData = {
+                    data : {
+                      document : dInfo
+                    },
+                    result_code : result.result_code
+                  };
 
-              documents.push(new objects.Document(dData));
+                  documents.push(new objects.Document(dData));
+                })
+
+                return documents;
+              }
+              else {
+                throw new objects.Error(result);
+              }
             })
+            .catch((error) => { throw new objects.Error(error); });
 
-            return documents;
-          }
-          else {
-            throw new objects.Error(result);
-          }
-        })
-        .catch((error) => { throw new objects.Error(error); });
+      case RESULT_TYPES.ONLY_ID:
+        return this.call.post(`/search/documents/${schemaId}`, searchParams)
+            .then((result) => {
+              if (result.result_code === 200) {
+                return new objects.Success(result);
+              }
+              else {
+                throw new objects.Error(result);
+              }
+            })
+            .catch((error) => { throw new objects.Error(error); });
+
+      case RESULT_TYPES.COUNT:
+        return this.call.post(`/search/documents/${schemaId}`, searchParams)
+            .then((result) => {
+              if (result.result_code === 200) {
+                return new objects.Success(result);
+              }
+              else {
+                throw new objects.Error(result);
+              }
+            })
+            .catch((error) => { throw new objects.Error(error); });
+
+      default:
+        throw new objects.Error("Wrong result type used. See docs for further information.");
+    }
+
+
   }
 
   /** Return all matching user inside selected user schema
@@ -61,30 +95,67 @@ class ChinoAPISearch extends ChinoAPIBase {
    *         otherwise throw an Error object if rejected
    *         or was not retrieved a success status
    */
-  documents(userSchemaId, searchParams) {
+  users(userSchemaId, searchParams) {
     let users = [];
 
-    return this.call.post(`/search/users/${userSchemaId}`, searchParams)
-        .then((result) => {
-          if (result.result_code === 200) {
-            result.data.users.forEach((uInfo) => {
-              let uData = {
-                data : {
-                  user : uInfo
-                },
-                result_code : result.result_code
-              };
+    switch (searchParams.result_type) {
+      case RESULT_TYPES.FULL_CONTENT:
+        return this.call.post(`/search/users/${userSchemaId}`, searchParams)
+            .then((result) => {
+              if (result.result_code === 200) {
+                result.data.users.forEach((uInfo) => {
+                  let uData = {
+                    data: {
+                      user: uInfo
+                    },
+                    result_code: result.result_code
+                  };
 
-              users.push(new objects.Document(uData));
+                  users.push(new objects.Document(uData));
+                })
+
+                return users;
+              }
+              else {
+                throw new objects.Error(result);
+              }
             })
+            .catch((error) => {
+              throw new objects.Error(error);
+            });
 
-            return users;
-          }
-          else {
-            throw new objects.Error(result);
-          }
-        })
-        .catch((error) => { throw new objects.Error(error); });
+      case RESULT_TYPES.COUNT:
+        return this.call.post(`/search/users/${userSchemaId}`, searchParams)
+            .then((result) => {
+              if (result.result_code === 200) {
+                return new objects.Success(result);
+              }
+              else {
+                throw new objects.Error(result);
+              }
+            })
+            .catch((error) => {
+              throw new objects.Error(error);
+            });
+
+      case RESULT_TYPES.EXISTS:
+      case RESULT_TYPES.USERNAME_EXISTS:
+        return this.call.post(`/search/users/${userSchemaId}`, searchParams)
+            .then((result) => {
+              if (result.result_code === 200) {
+                return new objects.Success(result);
+              }
+              else {
+                throw new objects.Error(result);
+              }
+            }) // directly return true or false
+            .catch((error) => {
+              throw new objects.Error(error);
+            });
+
+      default:
+        throw new objects.Error("Wrong result type used. See docs for further information.");
+    }
   }
 }
 

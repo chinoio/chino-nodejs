@@ -1,24 +1,18 @@
-/**
- * Created by daniele on 03/03/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
-const objects = require("../../src/objects");
-const credentials = require("./testsSettings");
-const Call = require("../../src/apiCall");
 const Schemas = require("../../src/schemas");
+const objects = require("../../src/objects");
+const settings = require("./../testsSettings");
 
-const baseUrl     = credentials.baseUrl;
-const customerId  = credentials.customerId;
-const customerKey = credentials.customerKey;
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
 describe('Chino Schemas API', function() {
   // change timeout for slow network
   this.timeout(5000);
 
-  const apiCall = new Call(baseUrl, customerId, customerKey);
   const schemaCaller = new Schemas(baseUrl, customerId, customerKey);
   // keep track of ids to delete them later
   let repoId = "";
@@ -26,16 +20,7 @@ describe('Chino Schemas API', function() {
 
   // prepare the environment
   before("Set up resources to test the lib", function () {
-    /* create user schema and insert a user */
-    const repo = {
-      description : "Repository for testing Schema lib",
-    };
-
-    return apiCall.post("/repositories", repo)
-        .then((res) => {
-          repoId = res.data.repository.repository_id;
-        })
-        .catch((err) => console.log(err + "\nNo repository created"));
+    repoId = settings.data()["repoId"];
   });
 
   /* create */
@@ -97,8 +82,8 @@ describe('Chino Schemas API', function() {
               result.forEach((schema) => {
                 schema.should.be.an.instanceOf(objects.Schema);
               });
-              // in this case we have inserted 1 schema so it should have only 1
-              result.length.should.equal(1);
+              // one inserted now and one already online
+              result.length.should.equal(2);
             });
       }
   );
@@ -158,22 +143,4 @@ describe('Chino Schemas API', function() {
             })
       }
   );
-
-  // clean the environment
-  after("Remove test resources", function () {
-    // be sure to have enough
-    this.timeout(10000);
-
-    function sleep (time) {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    return sleep(1000).then(() => {
-      if (repoId !== "") {
-        return apiCall.del(`/repositories/${repoId}?force=true`)
-            .then(res => { /*console.log("Removed stub stuff")*/ })
-            .catch(err => { console.log(`Error removing test resources`) });
-      }
-    });
-  });
 });

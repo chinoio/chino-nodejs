@@ -1,22 +1,19 @@
-/**
- * Created by daniele on 24/02/17.
- */
-
+// testing libraries
 const assert = require("assert");
 const should = require('should');
 
 const objects = require("../../src/objects");
 
-describe("Chino API Objects", function() {
-  describe("Group object", function() {
-    it("Should return a correct Group object", function() {
+describe("Chino API Objects", function () {
+  describe("Group object", function () {
+    it("Should return a correct Group object", function () {
       let responseTest = {
         "result": "success",
         "result_code": 200,
         "message": null,
         "data": {
           "group": {
-            "groupname": "pysiciansXY",
+            "group_name": "physiciansXY",
             "group_id": "77de01d8-492d-4cc2-a2b2-d3e76edc0657",
             "insert_date": "2015-02-07T12:14:46.754",
             "is_active": true,
@@ -33,7 +30,7 @@ describe("Chino API Objects", function() {
       group.should.containEql(responseTest.data.group);
     });
 
-    it("Should return an empty Group object", function() {
+    it("Should return an empty Group object", function () {
       let emptyResponse = {}
 
       let group = new objects.Group(emptyResponse);
@@ -42,14 +39,14 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("User Schema object", function() {
-    it("Should return a correct User Schema object", function() {
+  describe("User Schema object", function () {
+    it("Should return a correct User Schema object", function () {
       let responseTest = {
         "message": null,
         "data": {
           "user_schema": {
             "user_schema_id": "c4021bd4-cf6a-4e81-bf3c-7dcb89fe84fb",
-            "description": "Encountersasda",
+            "description": "A user schema",
             "is_active": false,
             "last_update": "2016-02-05T15:47:44.884Z",
             "groups": [],
@@ -77,7 +74,7 @@ describe("Chino API Objects", function() {
       user_schema.should.containEql(responseTest.data.user_schema);
     });
 
-    it("Should return an empty User Schema object", function() {
+    it("Should return an empty User Schema object", function () {
       let emptyResponse = {}
 
       let user_schema = new objects.UserSchema(emptyResponse);
@@ -86,8 +83,8 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("User object", function() {
-    it("Should return a correct User object", function() {
+  describe("User object", function () {
+    it("Should return a correct User object", function () {
       let responseTest = {
         "result": "success",
         "result_code": 200,
@@ -117,7 +114,7 @@ describe("Chino API Objects", function() {
       user.should.containEql(responseTest.data.user);
     });
 
-    it("Should return an empty User object", function() {
+    it("Should return an empty User object", function () {
       let emptyResponse = {}
 
       let user = new objects.User(emptyResponse);
@@ -126,8 +123,8 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("Application object", function() {
-    it("Should return a correct Application object", function() {
+  describe("Application object", function () {
+    it("Should return a correct Application object", function () {
       let responseTest = {
         "message": null,
         "data": {
@@ -148,7 +145,7 @@ describe("Chino API Objects", function() {
       application.should.containEql(responseTest.data.application);
     });
 
-    it("Should return an empty Application object", function() {
+    it("Should return an empty Application object", function () {
       let emptyResponse = {}
 
       let application = new objects.Application(emptyResponse);
@@ -157,8 +154,8 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("Repository object", function() {
-    it("Should return a correct Repository object", function() {
+  describe("Repository object", function () {
+    it("Should return a correct Repository object", function () {
       let responseTest = {
         "result": "success",
         "result_code": 200,
@@ -179,7 +176,7 @@ describe("Chino API Objects", function() {
       repository.should.containEql(responseTest.data.repository);
     });
 
-    it("Should return an empty Repository object", function() {
+    it("Should return an empty Repository object", function () {
       let emptyResponse = {}
 
       let repository = new objects.Repository(emptyResponse);
@@ -188,8 +185,8 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("Schema object", function() {
-    it("Should return a correct Schema object", function() {
+  describe("Schema object", function () {
+    it("Should return a correct Schema object", function () {
       let responseTest = {
         "result": "success",
         "result_code": 200,
@@ -229,7 +226,7 @@ describe("Chino API Objects", function() {
       schema.should.containEql(responseTest.data.schema);
     });
 
-    it("Should return an empty Schema object", function() {
+    it("Should return an empty Schema object", function () {
       let emptyResponse = {}
 
       let schema = new objects.Schema(emptyResponse);
@@ -238,8 +235,8 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("Document object", function() {
-    it("Should return a correct Document object", function() {
+  describe("Document object", function () {
+    it("Should return a correct Document object", function () {
       let responseTest = {
         "result": "success",
         "result_code": 200,
@@ -267,7 +264,7 @@ describe("Chino API Objects", function() {
       document.should.containEql(responseTest.data.document);
     });
 
-    it("Should return an empty Document object", function() {
+    it("Should return an empty Document object", function () {
       let emptyResponse = {}
 
       let document = new objects.Document(emptyResponse);
@@ -276,8 +273,8 @@ describe("Chino API Objects", function() {
     });
   });
 
-  describe("Collection object", function() {
-    it("Should return a correct Collection object", function() {
+  describe("Collection object", function () {
+    it("Should return a correct Collection object", function () {
       let responseTest = {
         "message": null,
         "data": {
@@ -298,12 +295,124 @@ describe("Chino API Objects", function() {
       collection.should.containEql(responseTest.data.collection);
     });
 
-    it("Should return an empty Collection object", function() {
+    it("Should return an empty Collection object", function () {
       let emptyResponse = {}
 
       let collection = new objects.Collection(emptyResponse);
       collection.should.instanceOf(objects.Collection);
       collection.should.containEql(emptyResponse);
+    });
+  });
+
+  describe("Perms object", function () {
+    it("Should return a correct Perms object", function () {
+      let responseTest = {
+        "message": null,
+        "data": {
+          "permissions": [
+            {
+              "access": "Data",
+              "resource_id": "55f8b0e3-d1f1-4644-9d4d-672c5b362b26",
+              "resource_type": "User",
+              "permission": {
+                "Manage": [
+                  "R",
+                  "U"
+                ]
+              }
+            }
+          ]
+        },
+        "result": "success",
+        "result_code": 200
+      };
+
+      let permissions = new objects.Perms(responseTest);
+      permissions.should.instanceOf(objects.Perms);
+      permissions.should.containEql(responseTest.data.permissions);
+    });
+
+    it("Should return an empty Perms object", function () {
+      let emptyResponse = {}
+
+      let permissions = new objects.Perms(emptyResponse);
+      permissions.should.instanceOf(objects.Perms);
+      permissions.should.containEql(emptyResponse);
+    });
+  });
+
+  describe("Auth object", function () {
+    it("Should return a correct Auth object", function () {
+      let responseTest = {
+        "result": "success",
+        "result_code": 200,
+        "message": null,
+        "data": {
+          "access_token": "ans2fN08sliGpIOLMGg3fv4BpPhWRq",
+          "token_type": "Bearer",
+          "expires_in ": 36000,
+          "refresh_token": "vL0durAhdhNNYFI27F3zGGHXeNLwcO",
+          "scope": "read write"
+        }
+      };
+
+      let auth = new objects.Auth(responseTest);
+      auth.should.instanceOf(objects.Auth);
+      auth.should.containEql(responseTest.data);
+    });
+
+    it("Should return an empty Auth object", function () {
+      let emptyResponse = {}
+
+      let auth = new objects.Auth(emptyResponse);
+      auth.should.instanceOf(objects.Auth);
+      auth.should.containEql(emptyResponse);
+    });
+  });
+
+  describe("Error object", function () {
+    it("Should return a correct Error object", function () {
+      let responseTest = {
+        "data": null,
+        "message": "Schema not found",
+        "result": "error",
+        "result_code": 404
+      };
+
+      let error = new objects.Error(responseTest);
+      error.should.instanceOf(objects.Error);
+      error.should.containEql(responseTest);
+    });
+
+    it("Should return an empty Error object", function () {
+      let emptyResponse = {}
+
+      let error = new objects.Error(emptyResponse);
+      error.should.instanceOf(objects.Error);
+      error.should.containEql(emptyResponse);
+    });
+  });
+
+  describe("Success object", function () {
+    it("Should return a correct Success object", function () {
+      let responseTest = {
+        "result": "success",
+        "result_code": 200,
+        "data": null,
+        "message": null
+      };
+
+      let success = new objects.Success(responseTest);
+      success.should.instanceOf(objects.Success);
+      success.should.containEql(responseTest);
+    });
+
+    it("Should return an empty Success object", function () {
+      let emptyResponse = {}
+
+      let success = new objects.Success(emptyResponse);
+      success.should.instanceOf(objects.Success);
+      success.should.containEql(emptyResponse);
     });
   });
 });

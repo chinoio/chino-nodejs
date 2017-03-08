@@ -6,64 +6,33 @@ const assert = require("assert");
 const should = require('should');
 
 const Call = require("../../src/apiCall");
-const credentials = require("./testsSettings");
-const objects = require("../../src/objects");
 const Groups = require("../../src/groups");
+const objects = require("../../src/objects");
+const settings = require("./../testsSettings");
 
-const baseUrl     = credentials.baseUrl;
-const customerId  = credentials.customerId;
-const customerKey = credentials.customerKey;
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
 describe('Chino Groups API', function() {
   // change timeout for slow network
   this.timeout(5000);
 
-  let apiCall = new Call(baseUrl, customerId, customerKey);
+  let apiCaller = new Call(baseUrl, customerId, customerKey);
   let groupCaller = new Groups(baseUrl, customerId, customerKey);
   // keep track of ids to delete them later
   let usrSchemaId = "";
   let gId = "";
   let usersId = [];
+  let elements = 0;
 
   // prepare the environment
   before("Set up resources to test the lib", function () {
-    /* create user schema and insert a user */
-    const userSchema = {
-      description : "User Schema for testing Groups lib",
-      structure : {
-        fields : [
-          {
-            type : "integer",
-            name : "user"
-          }
-        ]
-      }
-    };
-    let user = (id) => ({
-      username: `aUser${id}`,
-      password: `aPassword+${id}`,
-      attributes: {
-        user: id
-      },
-      is_active: true
-    });
+    const data = settings.data();
 
-    const ids = [1,2,3];
-
-    // create a user schema and insert inside 3 user
-    return apiCall.post("/user_schemas", userSchema)
-        .then((res) => {
-          usrSchemaId = res.data.user_schema.user_schema_id;
-
-          if (usrSchemaId) {
-            return Promise.all(ids.map(id => apiCall.post(`/user_schemas/${usrSchemaId}/users`, user(id))))
-                .then((res) => {
-                  res.forEach(r => { usersId.push(r.data.user.user_id); });
-                })
-                .catch((err) => console.log(`Error inserting user\n${err}`));
-          }
-        })
-        .catch((err) => console.log(`{err}\nNo user schema created`));
+    usrSchemaId = data.usrSchemaId;
+    usersId = data.usrIds;
+    elements = data.elements;
   });
 
   /* create */
@@ -104,8 +73,8 @@ describe('Chino Groups API', function() {
               result.forEach((group) => {
                 group.should.be.an.instanceOf(objects.Group);
               });
-              // in this case we have inserted 1 group so it should have 1 group
-              result.length.should.equal(1);
+              // one inserted now and one already online
+              result.length.should.equal(2);
             });
       }
   );
@@ -131,24 +100,24 @@ describe('Chino Groups API', function() {
   /* insert user */
   it("Test the insertion of a user inside a group: should return a Success message",
       function () {
-        return groupCaller.insertUser(gId, usersId[0])
+        return groupCaller.insertUser(gId, usersId[elements-1])
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
 
-              return apiCall.get(`/users/${usersId[0]}`)
-                  .then((result) => {
-                    result.data.user.groups.should.containEql(gId)
+              return apiCaller.get(`/users/${usersId[elements-1]}`)
+                  .then((res) => {
+                    res.data.user.groups.should.containEql(gId);
                   })
-                  .catch((err) => { console.log(`${err} Error retrieving user`); });
+                  .catch((err) => { console.log(`${JSON.stringify((err))} Error retrieving user`); });
             })
-            .catch((err) => {console.log(JSON.stringify((err))); });
+            .catch((err) => {console.log(`${JSON.stringify((err))} Error inserting user into group`); });
       }
   );
 
   /* remove user */
   it("Test the removal of a user from a group: should return a Success message",
       function () {
-        return groupCaller.removeUser(gId, usersId[0])
+        return groupCaller.removeUser(gId, usersId[elements-1])
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
@@ -166,22 +135,4 @@ describe('Chino Groups API', function() {
             })
       }
   );
-
-  // clean the environment
-  after("Remove test resources", function () {
-    // be sure to have enough time
-    this.timeout(10000);
-
-    function sleep (time) {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    return sleep(1000).then(() => {
-      if (usrSchemaId !== "") {
-        return apiCall.del(`/user_schemas/${usrSchemaId}?force=true`)
-            .then(res => { /*console.log("Removed stub stuff")*/ })
-            .catch(err => { console.log(`Error removing test resources`) });
-      }
-    });
-  });
 });
