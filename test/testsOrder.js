@@ -1,8 +1,4 @@
-/**
- * Created by daniele on 02/03/17.
- */
-
-// Call all the test following a specific order
+// Call each test following a specific order
 require("./lib/baseClassTest");
 require("./lib/objectsTest");
 require("./lib/callsTest");
@@ -15,4 +11,3 @@ require("./lib/schemasTest");
 require("./lib/documentsTest");
 require("./lib/collectionsTest");
 require("./lib/searchTest");
-

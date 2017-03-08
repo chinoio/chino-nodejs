@@ -4,8 +4,9 @@
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec",
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && ./node_modules/.bin/codecov"
+    "test": "./test/runTests.sh --no-warning",
+    "jsTest": "node test/runTests.js --no-warning",
+    "_test": "nyc ./node_modules/mocha/bin/mocha test/testsOrder.js --report spec"
   },
   "repository": {
     "type": "git",
@@ -28,9 +29,11 @@
   "devDependencies": {
     "codecov": "^1.0.1",
     "install": "^0.8.7",
-    "istanbul": "^0.4.5",
+    "jsonfile": "^2.4.0",
     "mocha": "^3.2.0",
     "npm": "^4.3.0",
+    "nyc": "^10.1.2",
+    "path": "^0.12.7",
     "should": "^11.2.0"
   },
   "config": {}

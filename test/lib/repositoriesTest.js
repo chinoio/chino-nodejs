@@ -1,17 +1,13 @@
-/**
- * Created by daniele on 03/03/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
 const objects = require("../../src/objects");
-const credentials = require("./testsSettings");
+const settings = require("./../testsSettings");
 const Repositories = require("../../src/repositories");
 
-const baseUrl     = credentials.baseUrl;
-const customerId  = credentials.customerId;
-const customerKey = credentials.customerKey;
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
 describe('Chino Repositories API', function() {
   // change timeout for slow network
@@ -56,8 +52,8 @@ describe('Chino Repositories API', function() {
               result.forEach((repo) => {
                 repo.should.be.an.instanceOf(objects.Repository);
               });
-              // in this case we have inserted 1 repository so it should have only 1
-              result.length.should.equal(1);
+              // one inserted now and one already online
+              result.length.should.equal(2);
             });
       }
   );

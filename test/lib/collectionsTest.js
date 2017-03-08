@@ -1,24 +1,18 @@
-/**
- * Created by daniele on 06/03/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
 const objects = require("../../src/objects");
-const credentials = require("./testsSettings");
-const Call = require("../../src/apiCall");
+const settings = require("./../testsSettings");
 const Collections = require("../../src/collections");
 
-const baseUrl     = credentials.baseUrl;
-const customerId  = credentials.customerId;
-const customerKey = credentials.customerKey;
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
 describe('Chino Collections API', function() {
   // change timeout for slow network
   this.timeout(5000);
 
-  const apiCall = new Call(baseUrl, customerId, customerKey);
   const collectionCaller = new Collections(baseUrl, customerId, customerKey);
   // keep track of ids to delete them later
   let repoId = "";
@@ -28,63 +22,11 @@ describe('Chino Collections API', function() {
 
   // prepare the environment
   before("Set up resources to test the lib", function () {
-    /* create user schema and insert a user */
-    const repo = {
-      description : "Repository for testing Collections lib",
-    };
+    const data = settings.data();
 
-    const schema = {
-      description: "Schema for testing Collections lib",
-      structure: {
-        fields: [
-          {
-            name: "info",
-            type: "string",
-          },
-          {
-            name: "num",
-            type: "integer",
-            indexed: true
-          },
-        ]
-      }
-    };
-
-    // return a doc Js representation
-    let doc = (id) => ({
-      content: {
-        info : `document test ${id}`,
-        num : id
-      }
-    });
-
-    const ids = [1,2,3,4];
-
-    // create a repository with a schema that own 4 documents
-    return apiCall.post("/repositories", repo)
-    .then((res) => {
-      repoId = res.data.repository.repository_id;
-
-      if (repoId) {
-        return apiCall.post(`/repositories/${repoId}/schemas`, schema)
-            .then((res) => {
-              schemaId = res.data.schema.schema_id;
-
-              if (schemaId) {
-                return Promise.all(ids.map(id => apiCall.post(`/schemas/${schemaId}/documents`, doc(id))))
-                    .then((res) => {
-                      res.forEach(r => { documentIds.push(r.data.document.document_id); });
-                    })
-                    .catch((err) => console.log(`Error inserting documents\n${err}`));
-              }
-              else {
-                throw new Error("No schema created");
-              }
-            })
-            .catch((err) => console.log(`err\nNo schema created`));
-      }
-    })
-    .catch((err) => console.log(`err\nNo repository created`));
+    repoId = data.repoId;
+    schemaId = data.schemaId;
+    documentIds = data.docIds;
   });
 
   /* create */
@@ -122,8 +64,8 @@ describe('Chino Collections API', function() {
               result.forEach((coll) => {
                 coll.should.be.an.instanceOf(objects.Collection);
               });
-              // in this case we have inserted 1 collection so it should have only 1
-              result.length.should.equal(1);
+              // one collection inserted plus an existing one
+              result.length.should.equal(2);
             });
       }
   );
@@ -166,7 +108,7 @@ describe('Chino Collections API', function() {
               result.forEach((doc) => {
                 doc.should.be.an.instanceOf(objects.Document);
               });
-              // in this case we have inserted 1 collection so it should have only 1
+              // only one document inserted in this collection
               result.length.should.equal(1);
             });
       }
@@ -215,28 +157,4 @@ describe('Chino Collections API', function() {
             })
       }
   );
-
-  // clean the environment
-  after("Remove test resources", function () {
-    // be sure to have enough time
-    this.timeout(10000);
-
-    function sleep (time) {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    return sleep(1000).then(() => {
-      if (schemaId !== "") {
-        return apiCall.del(`/schemas/${schemaId}?force=true&all_content=true`)
-            .then(res => {
-              if (repoId !== "") {
-                return apiCall.del(`/repositories/${repoId}?force=true`)
-                    .then(res => { /*console.log("Removed stub stuff")*/ })
-                    .catch(err => { console.log(`Error removing repository resources`) });
-              }
-            })
-            .catch(err => { console.log(`Error removing test resources`) });
-      }
-    });
-  });
 });

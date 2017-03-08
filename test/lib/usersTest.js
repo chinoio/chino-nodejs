@@ -1,79 +1,47 @@
-/**
- * Created by daniele on 24/02/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
-const Call = require("../../src/apiCall");
-const objects = require("../../src/objects");
-const credentials = require("./testsSettings");
 const Users = require("../../src/users");
+const objects = require("../../src/objects");
+const settings = require("./../testsSettings");
 
-const baseUrl     = credentials.baseUrl;
-const customerId  = credentials.customerId;
-const customerKey = credentials.customerKey;
+const baseUrl     = settings.baseUrl;
+const customerId  = settings.customerId;
+const customerKey = settings.customerKey;
 
-describe('Chino Users API', function() {
+describe('Chino Users API', function () {
   // change timeout for slow network
   this.timeout(5000);
 
-  let apiCall = new Call(baseUrl, customerId, customerKey);
   let userCaller = new Users(baseUrl, customerId, customerKey);
-  // keep track of ids to delete them later
+  // keep track of id to delete it later
   let usrSchemaId = "";
-  let usrId = "";
+  let usrId2 = "";
+  let elements = 0;
 
-  // prepare the environment
-  before("Set up resources to test the lib", function () {
-    /* create user schema and insert a user */
-    let userSchema = {
-      description : "User Schema for testing Users lib",
-      structure : {
-        fields : [
-          {
-            type : "string",
-            name : "user"
-          }
-        ]
-      }
-    };
-    let user = {
-      username: "aUser",
-      password: "aPassword",
-      attributes: {
-        user: "TestUser"
-      },
-      is_active: true
-    };
+  before(function () {
+    const data = settings.data();
 
-    return apiCall.post("/user_schemas", userSchema)
-        .then((res) => {
-          usrSchemaId = res.data.user_schema.user_schema_id;
-
-          if (usrSchemaId) {
-            return apiCall.post(`/user_schemas/${usrSchemaId}/users`, user)
-                .then((res) => { usrId = res.data.user.user_id; })
-                .catch((err) => console.log(`No user inserted\n${err}`));
-          }
-        })
-        .catch((err) => console.log(err + "\nNo user schema created"));
-  });
+    usrSchemaId = data.usrSchemaId;
+    elements = data.elements;
+  })
 
   /* create */
   it("Test the creation of a user: should return a User object",
       function () {
-        let user = {
-          username: "aSecondUser",
-          password: "aPassword2",
+        const user = {
+          username: "adminUser",
+          password: "aStrongPassword",
           attributes: {
-            user: "Daniele"
+            user: 3
           },
           is_active: true
         }
 
         return userCaller.create(usrSchemaId, user)
             .then((result) => {
+              // save id
+              usrId2 = result.user_id;
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
             })
@@ -82,7 +50,7 @@ describe('Chino Users API', function() {
   /* details */
   it("Test the retrieving of user information: should return a User object",
       function () {
-        return userCaller.details(usrId)
+        return userCaller.details(usrId2)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
@@ -99,24 +67,24 @@ describe('Chino Users API', function() {
               result.forEach((user) => {
                 user.should.be.an.instanceOf(objects.User);
               });
-              // in this case we have inserted 2 user so it should have 2 users
-              result.length.should.equal(2);
+              // in this case we have inserted 1 user more than before
+              result.length.should.equal(elements+1);
             });
       }
   );
   /* update */
   it("Test the update of user information: should return a User object",
       function () {
-        let user = {
+        const newUser = {
           username: "aThirdUser",
           password: "aPassword3",
           attributes: {
-            user: "Daniele"
+            user: 21
           },
           is_active: true
         }
 
-        return userCaller.update(usrId, user)
+        return userCaller.update(usrId2, newUser)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
@@ -129,44 +97,26 @@ describe('Chino Users API', function() {
       function () {
         let user = {
           attributes: {
-            user: "Daniele Bissoli"
+            user: 42
           }
         }
 
-        return userCaller.patch(usrId, user)
+        return userCaller.patch(usrId2, user)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
-              result.attributes.user.should.be.equal("Daniele Bissoli");
+              result.attributes.user.should.be.equal(42);
             })
       }
   );
   /* delete */
   it("Test the deletion of a user: should return a success message",
       function () {
-        return userCaller.delete(usrId, true)
+        return userCaller.delete(usrId2, true)
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
             })
       }
   );
-
-  // clean the environment
-  after("Remove test resources", function () {
-    // be sure to have enough
-    this.timeout(10000);
-
-    function sleep (time) {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    return sleep(1000).then(() => {
-      if (usrSchemaId !== "" && usrId !== "") {
-        return apiCall.del(`/user_schemas/${usrSchemaId}?force=true`)
-            .then(res => { /*console.log("Removed stub stuff")*/ })
-            .catch(err => { console.log(`Error removing test resources`) });
-      }
-    });
-  });
 });
