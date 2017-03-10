@@ -31,13 +31,14 @@ let data = {
   groupId : "",
   appId : "",
   appKey : "",
-  elements : 7
+  elements : 8
 }
 
 console.log("Create resources for testing libs...")
 
-// create an array of elements from 1 to elements
-const ids = Array.from(new Array(data.elements), (val,index) => index+1);
+// create an array of elements-1 (one will be created manually later)
+// from 1 to elements
+const ids = Array.from(new Array(data.elements-1), (val,index) => index+1);
 
 // DEFINE RESOURCES
 const repo = {
@@ -91,6 +92,14 @@ let user = (id) => ({
   },
   is_active: true
 });
+const fixedUser = {
+  username: `theLoginUser`,
+  password: `This1CouldBe_a_StrongPassword!`,
+  attributes: {
+    user: data.elements + 1
+  },
+  is_active: true
+}
 
 const application = {
   name : `applicationTest+${Date.now()}`,
@@ -122,6 +131,8 @@ module.exports = Promise.all([
           )
           .then((res) => {
             res.forEach(r => { data.usrIds.push(r.data.user.user_id); });
+            return apiCall.post(`/user_schemas/${data.usrSchemaId}/users`, fixedUser)
+                .then((res) => data.usrIds.push(res.data.user.user_id))
           })
         }),
     /* create a group */

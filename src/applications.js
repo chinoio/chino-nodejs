@@ -19,9 +19,9 @@ class ChinoAPIApplication extends ChinoAPIBase {
 
   /** Return the list of existing applications
    *
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Application object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
@@ -45,18 +45,18 @@ class ChinoAPIApplication extends ChinoAPIBase {
             return applications;
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new application
    *
    * @param data          {object}
-   * @return {Promise.<objects.Application, objects.Error>}
+   * @return {Promise.<objects.Application, objects.ChinoError>}
    *         A promise that return a Application object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(data) {
@@ -66,18 +66,18 @@ class ChinoAPIApplication extends ChinoAPIBase {
             return new objects.Application(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about application selected by its id
    *
    * @param applicationId  {string}
-   * @return {Promise.<objects.Application, objects.Error>}
+   * @return {Promise.<objects.Application, objects.ChinoError>}
    *         A promise that return a Application object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(applicationId) {
@@ -87,10 +87,10 @@ class ChinoAPIApplication extends ChinoAPIBase {
             return new objects.Application(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about application selected by its id
@@ -98,9 +98,9 @@ class ChinoAPIApplication extends ChinoAPIBase {
    *
    * @param applicationId  {string}
    * @param data           {object}
-   * @return {Promise.<objects.Application, objects.Error>}
+   * @return {Promise.<objects.Application, objects.ChinoError>}
    *         A promise that return a Application object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(applicationId, data) {
@@ -110,18 +110,18 @@ class ChinoAPIApplication extends ChinoAPIBase {
             return new objects.Application(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Delete application selected by its id
    *
    * @param applicationId {string}
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(applicationId) {
@@ -131,10 +131,10 @@ class ChinoAPIApplication extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

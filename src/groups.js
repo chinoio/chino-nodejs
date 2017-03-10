@@ -19,9 +19,9 @@ class ChinoAPIGroups extends ChinoAPIBase {
 
   /** Return the list of existing groups
    *
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Group object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
@@ -45,18 +45,18 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return groups;
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new group
    *
    * @param data          {object}
-   * @return {Promise.<objects.Group, objects.Error>}
+   * @return {Promise.<objects.Group, objects.ChinoError>}
    *         A promise that return a Group object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(data) {
@@ -66,18 +66,18 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return new objects.Group(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about group selected by its id
    *
    * @param groupId  {string}
-   * @return {Promise.<objects.Group, objects.Error>}
+   * @return {Promise.<objects.Group, objects.ChinoError>}
    *         A promise that return a Group object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(groupId) {
@@ -87,10 +87,10 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return new objects.Group(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about group selected by its id
@@ -98,9 +98,9 @@ class ChinoAPIGroups extends ChinoAPIBase {
    *
    * @param groupId  {string}
    * @param data     {object}
-   * @return {Promise.<objects.Group, objects.Error>}
+   * @return {Promise.<objects.Group, objects.ChinoError>}
    *         A promise that return a Group object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(groupId, data) {
@@ -110,10 +110,10 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return new objects.Group(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Deactivate (or delete) group selected by its id
@@ -122,9 +122,9 @@ class ChinoAPIGroups extends ChinoAPIBase {
    * @param force   {boolean} If true delete group information
    *                          otherwise only deactivate it.
    *                          Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(groupId, force = false) {
@@ -136,19 +136,19 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Insert the selected user into the selected group
    *
    * @param groupId {string} The id of the selected group
    * @param userId  {string} The id of the selected user
-   * @returns {Promise.<objects.Success, objects.Error>}
+   * @returns {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   insertUser(groupId, userId) {
@@ -158,19 +158,19 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Remove the selected user from the selected
    *
    * @param groupId {string} The id of the selected group
    * @param userId  {string} The id of the selected user
-   * @returns {Promise.<objects.Success, objects.Error>}
+   * @returns {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   removeUser(groupId, userId) {
@@ -180,10 +180,10 @@ class ChinoAPIGroups extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

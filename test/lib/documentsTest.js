@@ -70,7 +70,7 @@ describe('Chino Documents API', function() {
                 doc.should.be.an.instanceOf(objects.Document);
               });
               // documents already inserted plus the new one
-              result.length.should.equal(elements+1);
+              result.length.should.equal(elements);
             });
       }
   );

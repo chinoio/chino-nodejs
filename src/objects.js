@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 23/02/17.
- */
 "use strict";
 
 let ChinoAPIObjects = {}
@@ -116,13 +113,13 @@ ChinoAPIObjects.Auth =
       }
     };
 
-ChinoAPIObjects.Error =
-    class Error {
+ChinoAPIObjects.ChinoError =
+    class ChinoError extends Error {
       constructor(response) {
+        super(response.message)
         if (response) {
-          for (let key in response) {
-            this[key] = response[key];
-          }
+          this.name = "ChinoAPIError";
+          this.result_code = response.result_code;
         }
       }
     }

@@ -22,9 +22,9 @@ class ChinoAPISearch extends ChinoAPIBase {
    *
    * @param schemaId      {string}
    * @param searchParams  {object}
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Document objects if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   documents(schemaId, searchParams) {
@@ -50,10 +50,10 @@ class ChinoAPISearch extends ChinoAPIBase {
                 return documents;
               }
               else {
-                throw new objects.Error(result);
+                throw new objects.ChinoError(result);
               }
             })
-            .catch((error) => { throw new objects.Error(error); });
+            .catch((error) => { throw new objects.ChinoError(error); });
 
       case RESULT_TYPES.ONLY_ID:
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
@@ -62,10 +62,10 @@ class ChinoAPISearch extends ChinoAPIBase {
                 return new objects.Success(result);
               }
               else {
-                throw new objects.Error(result);
+                throw new objects.ChinoError(result);
               }
             })
-            .catch((error) => { throw new objects.Error(error); });
+            .catch((error) => { throw new objects.ChinoError(error); });
 
       case RESULT_TYPES.COUNT:
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
@@ -74,13 +74,13 @@ class ChinoAPISearch extends ChinoAPIBase {
                 return new objects.Success(result);
               }
               else {
-                throw new objects.Error(result);
+                throw new objects.ChinoError(result);
               }
             })
-            .catch((error) => { throw new objects.Error(error); });
+            .catch((error) => { throw new objects.ChinoError(error); });
 
       default:
-        throw new objects.Error("Wrong result type used. See docs for further information.");
+        throw new objects.ChinoError("Wrong result type used. See docs for further information.");
     }
 
 
@@ -90,9 +90,9 @@ class ChinoAPISearch extends ChinoAPIBase {
    *
    * @param userSchemaId  {string}
    * @param searchParams  {object}
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Document objects if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   users(userSchemaId, searchParams) {
@@ -117,11 +117,11 @@ class ChinoAPISearch extends ChinoAPIBase {
                 return users;
               }
               else {
-                throw new objects.Error(result);
+                throw new objects.ChinoError(result);
               }
             })
             .catch((error) => {
-              throw new objects.Error(error);
+              throw new objects.ChinoError(error);
             });
 
       case RESULT_TYPES.COUNT:
@@ -131,11 +131,11 @@ class ChinoAPISearch extends ChinoAPIBase {
                 return new objects.Success(result);
               }
               else {
-                throw new objects.Error(result);
+                throw new objects.ChinoError(result);
               }
             })
             .catch((error) => {
-              throw new objects.Error(error);
+              throw new objects.ChinoError(error);
             });
 
       case RESULT_TYPES.EXISTS:
@@ -146,15 +146,15 @@ class ChinoAPISearch extends ChinoAPIBase {
                 return new objects.Success(result);
               }
               else {
-                throw new objects.Error(result);
+                throw new objects.ChinoError(result);
               }
             }) // directly return true or false
             .catch((error) => {
-              throw new objects.Error(error);
+              throw new objects.ChinoError(error);
             });
 
       default:
-        throw new objects.Error("Wrong result type used. See docs for further information.");
+        throw new objects.ChinoError("Wrong result type used. See docs for further information.");
     }
   }
 }

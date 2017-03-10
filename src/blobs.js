@@ -20,9 +20,9 @@ class ChinoAPIBlobs extends ChinoAPIBase {
   /** Create a new blob
    *
    * @param info      {object}
-   * @return {Promise.<objects.BlobUncommitted, objects.Error>}
+   * @return {Promise.<objects.BlobUncommitted, objects.ChinoError>}
    *         A promise that return a BlobUncommitted object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(info) {
@@ -32,18 +32,18 @@ class ChinoAPIBlobs extends ChinoAPIBase {
             return new objects.BlobUncommitted(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Upload data to blob using its upload id
    *
    * @param uploadId      {string}
-   * @return {Promise.<objects.BlobUncommitted, objects.Error>}
+   * @return {Promise.<objects.BlobUncommitted, objects.ChinoError>}
    *         A promise that return a BlobUncommitted object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   upload(uploadId, octetStream, offset, length) {
@@ -57,18 +57,18 @@ class ChinoAPIBlobs extends ChinoAPIBase {
             return new objects.BlobUncommitted(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Commit the upload and return the blob information
    *
    * @param uploadId  {string}
-   * @return {Promise.<objects.Blob, objects.Error>}
+   * @return {Promise.<objects.Blob, objects.ChinoError>}
    *         A promise that return a Blob object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   commit(uploadId) {
@@ -82,31 +82,31 @@ class ChinoAPIBlobs extends ChinoAPIBase {
             return new objects.Blob(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Retrieve selected blob data
    *
    * @param blobId      {object}
-   * @return {Promise.<Octet Stream, objects.Error>}
+   * @return {Promise.<Octet Stream, objects.ChinoError>}
    *         A promise that return Blob object as Octet stream if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    */
   download(blobId) {
     return this.call.get(`/blobs/${blobId}`, {}, this.call.TYPES.OCT_STREAM)
         .then((chunk) => chunk)
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Delete blob selected by its id
    *
    * @param blobId  {string}
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(blobId) {
@@ -118,10 +118,10 @@ class ChinoAPIBlobs extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

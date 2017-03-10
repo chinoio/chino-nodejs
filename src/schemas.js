@@ -21,9 +21,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *  selected by its id
    *
    * @param repositoryId  {string}
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Schema object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   list(repositoryId) {
@@ -46,11 +46,11 @@ class ChinoAPISchemas extends ChinoAPIBase {
             return schemas;
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
 
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new schema inside repository selected by its id
@@ -58,9 +58,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *
    * @param repositoryId  {string}
    * @param data          {object}
-   * @return {Promise.<objects.Schema, objects.Error>}
+   * @return {Promise.<objects.Schema, objects.ChinoError>}
    *         A promise that return a Schema object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(repositoryId, data) {
@@ -70,18 +70,18 @@ class ChinoAPISchemas extends ChinoAPIBase {
             return new objects.Schema(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about schema selected by its id
    *
    * @param schemaId  {string}
-   * @return {Promise.<objects.Schema, objects.Error>}
+   * @return {Promise.<objects.Schema, objects.ChinoError>}
    *         A promise that return a Schema object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(schemaId) {
@@ -91,10 +91,10 @@ class ChinoAPISchemas extends ChinoAPIBase {
             return new objects.Schema(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about schema selected by its id
@@ -102,9 +102,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *
    * @param schemaId  {string}
    * @param data      {object}
-   * @return {Promise.<objects.Schema, objects.Error>}
+   * @return {Promise.<objects.Schema, objects.ChinoError>}
    *         A promise that return a Schema object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(schemaId, data) {
@@ -114,10 +114,10 @@ class ChinoAPISchemas extends ChinoAPIBase {
             return new objects.Schema(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Deactivate (or delete) schema selected by its id
@@ -130,9 +130,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *                              the schema will deleted otherwise
    *                              it is not possible to delete a schema
    *                              unless is empty. Default value is false.
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,X
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(schemaId, force = false, allContent = false) {
@@ -147,10 +147,10 @@ class ChinoAPISchemas extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

@@ -1,17 +1,15 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const _ = require('private-parts').createKey();
 
 const Call = require("./apiCall");
 const objects = require("./objects");
-const grantTypes = require("./grantTypes");
+const CONT_TYPES = require("./callTypes");
+const GRANT_TYPES = require("./grantTypes");
 
-
-class ChinoAPIAuth{
+class ChinoAPIAuth {
   /** Create a caller for Authentication Chino APIs
+   *  This class is used to authenticate application users
    *
    * @param baseUrl            {string}  The url endpoint for APIs
    * @param applicationId      {string}  The Chino application id
@@ -31,45 +29,43 @@ class ChinoAPIAuth{
    *
    * @param username    {string}
    * @param password    {string}
-   * @returns {Promise.<objects.Auth, objects.Error>}
+   * @returns {Promise.<objects.Auth, objects.ChinoError>}
    *         A promise that return a Auth object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
-
    */
   login(username, password) {
     const form = {
-      grant_type : grantTypes.PASSWORD,
+      grant_type : GRANT_TYPES.PASSWORD,
       username : username,
       password : password
     }
 
-    return this.call.post(`/auth/token/`, form, this.call.TYPES.FORM_DATA)
+    return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Auth(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
-  /** Authenticate user through code returne at redirectUlr
+  /** Authenticate user through code returned at redirectUlr
    *  from Chino login service
    *
    * @param code           {string}
    * @param redirectUrl    {string}
-   * @returns {Promise.<objects.Auth, objects.Error>}
+   * @returns {Promise.<objects.Auth, objects.ChinoError>}
    *         A promise that return a Auth object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
-
    */
   loginWithCode(code, redirectUrl) {
     const form = {
-      grant_type : grantTypes.AUTH_CODE,
+      grant_type : GRANT_TYPES.AUTH_CODE,
       code: code,
       redirect_uri: redirectUrl,
       client_id: _(this).applicationId,
@@ -77,73 +73,72 @@ class ChinoAPIAuth{
       scope: "read write"
     }
 
-    return this.call.post(`/auth/token/`, form, this.call.TYPES.FORM_DATA)
+    return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Auth(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Get a new token using a old token
    *
    * @param token           {string}
-   * @returns {Promise.<objects.Auth, objects.Error>}
+   * @returns {Promise.<objects.Auth, objects.ChinoError>}
    *         A promise that return a Auth object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
-
    */
   refreshToken(token) {
     const form = {
-      grant_type : grantTypes.RFS_TOKEN,
+      grant_type : GRANT_TYPES.RFS_TOKEN,
       token : token,
       client_id: _(this).applicationId,
       client_secret: _(this).applicationSecret,
     }
 
-    return this.call.post(`/auth/token/`, form, this.call.TYPES.FORM_DATA)
+    return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Auth(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Revoke token authorization
    *
    * @param token           {string}
-   * @returns {Promise.<objects.Success, objects.Error>}
+   * @returns {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
-
    */
   logout(token) {
     const form = {
+      grant_type : "revoke",
       token : token,
       client_id: _(this).applicationId,
       client_secret: _(this).applicationSecret,
     }
 
-    return this.call.post(`/auth/revoke_token/`, form, this.call.TYPES.FORM_DATA)
+    return this.call.post(`/auth/revoke_token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

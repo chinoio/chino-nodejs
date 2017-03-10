@@ -2,6 +2,7 @@
 require("./lib/baseClassTest");
 require("./lib/objectsTest");
 require("./lib/callsTest");
+require("./lib/authTest");
 require("./lib/usersTest");
 require("./lib/userSchemasTest");
 require("./lib/groupsTest");

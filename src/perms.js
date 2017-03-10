@@ -41,9 +41,9 @@ class ChinoAPIPerms extends ChinoAPIBase {
    * @param subjectId      {string}
    * @param manage         {Array}
    * @param authorize      {Array}
-   * @returns {Promise.<objects.Success, objects.Error>}
+   * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
-   *          otherwise throw an Error object if rejected
+   *          otherwise throw a ChinoError object if rejected
    *          or was not retrieved a success status
    */
   onResources(action, resourcesType, subjectType, subjectId, manage = [], authorize = []) {
@@ -59,10 +59,10 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Grant or revoke permission on resource objects
@@ -74,9 +74,9 @@ class ChinoAPIPerms extends ChinoAPIBase {
    * @param subjectId     {string}
    * @param manage        {Array}
    * @param authorize     {Array}
-   * @returns {Promise.<objects.Success, objects.Error>}
+   * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
-   *          otherwise throw an Error object if rejected
+   *          otherwise throw a ChinoError object if rejected
    *          or was not retrieved a success status
    */
   onResource(action, resourceType, resourcesId, subjectType, subjectId, manage = [], authorize = []) {
@@ -92,10 +92,10 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Grant or revoke permission on resource children objects
@@ -108,9 +108,9 @@ class ChinoAPIPerms extends ChinoAPIBase {
    * @param subjectId     {string}
    * @param manage        {Array}
    * @param authorize     {Array}
-   * @returns {Promise.<objects.Success, objects.Error>}
+   * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
-   *          otherwise throw an Error object if rejected
+   *          otherwise throw a ChinoError object if rejected
    *          or was not retrieved a success status
    */
   onChildren(action, resourceType, resourcesId, childrenType, subjectType, subjectId,  manage = [], authorize = []) {
@@ -126,17 +126,17 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return permissions on all the resources
    *
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   getPermissions() {
@@ -147,18 +147,18 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return listPermissions(result.data.permissions, result.result_code);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return permissions on selected document
    *
    * @param documentId {string}
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   getDocumentPermissions(documentId) {
@@ -168,18 +168,18 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return listPermissions(result.data.permissions, result.result_code);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return permissions on selected user
    *
    * @param userId {string}
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   getUserPermissions(userId) {
@@ -189,18 +189,18 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return listPermissions(result.data.permissions, result.result_code);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return permissions on selected group
    *
    * @param groupId {string}
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   getGroupPermissions(groupId) {
@@ -210,10 +210,10 @@ class ChinoAPIPerms extends ChinoAPIBase {
             return listPermissions(result.data.permissions, result.result_code);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 
