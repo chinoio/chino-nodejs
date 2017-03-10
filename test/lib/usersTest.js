@@ -1,6 +1,7 @@
 const assert = require("assert");
 const should = require('should');
 
+const Auth = require("../../src/auth");
 const Users = require("../../src/users");
 const objects = require("../../src/objects");
 const settings = require("./../testsSettings");
@@ -14,6 +15,8 @@ describe('Chino Users API', function () {
   this.timeout(5000);
 
   let userCaller = new Users(baseUrl, customerId, customerKey);
+  let auth;
+
   // keep track of id to delete it later
   let usrSchemaId = "";
   let usrId2 = "";
@@ -23,7 +26,11 @@ describe('Chino Users API', function () {
     const data = settings.data();
 
     usrSchemaId = data.usrSchemaId;
+    appId = data.appId;
+    appKey = data.appKey;
     elements = data.elements;
+
+    auth = new Auth(baseUrl, appId, appKey);
   })
 
   /* create */
@@ -47,6 +54,25 @@ describe('Chino Users API', function () {
             })
       }
   );
+
+  /* current details */
+  it("Test the retrieving of current user details: should return a User object",
+      function () {
+        return auth.login("adminUser", "aStrongPassword")
+            .then((result) => {
+              // create a caller for the current logged in user
+              let currentUserCaller = new Users(baseUrl, result.access_token);
+
+              return currentUserCaller.current()
+                .then((result) => {
+                  result.should.be.an.instanceOf(objects.User);
+                  Object.keys(result).length.should.be.above(0);
+                })
+            })
+
+      }
+  );
+
   /* details */
   it("Test the retrieving of user information: should return a User object",
       function () {
@@ -92,8 +118,8 @@ describe('Chino Users API', function () {
             })
       }
   );
-  /* patch */
-  it("Test the patch of user information: should return a User object",
+  /* partialUpdate */
+  it("Test the partialUpdate of user information: should return a User object",
       function () {
         let user = {
           attributes: {
@@ -101,7 +127,7 @@ describe('Chino Users API', function () {
           }
         }
 
-        return userCaller.patch(usrId2, user)
+        return userCaller.partialUpdate(usrId2, user)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);

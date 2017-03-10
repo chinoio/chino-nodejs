@@ -370,25 +370,30 @@ describe("Chino API Objects", function () {
     });
   });
 
-  describe("Error object", function () {
-    it("Should return a correct Error object", function () {
-      let responseTest = {
+  describe("ChinoError object", function () {
+    it("Should return a correct ChinoError object", function () {
+      const responseTest = {
         "data": null,
         "message": "Schema not found",
         "result": "error",
         "result_code": 404
       };
+      const errorObject = {
+        "message": "Schema not found",
+        "result_code": 404
+      }
 
-      let error = new objects.Error(responseTest);
-      error.should.instanceOf(objects.Error);
-      error.should.containEql(responseTest);
+      let error = new objects.ChinoError(responseTest);
+      console.log(error.message)
+      error.should.instanceOf(objects.ChinoError);
+      error.should.containEql(errorObject);
     });
 
-    it("Should return an empty Error object", function () {
+    it("Should return an empty ChinoError object", function () {
       let emptyResponse = {}
 
-      let error = new objects.Error(emptyResponse);
-      error.should.instanceOf(objects.Error);
+      let error = new objects.ChinoError(emptyResponse);
+      error.should.instanceOf(objects.ChinoError);
       error.should.containEql(emptyResponse);
     });
   });

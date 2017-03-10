@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -20,9 +17,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
   /** Return information about current user
    *  NOTE: need to be authenticated with bearer token
    *
-   * @return {Promise.<objects.User, objects.Error>}
+   * @return {Promise.<objects.User, objects.ChinoError>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   current() {
@@ -32,47 +29,41 @@ class ChinoAPIUsers extends ChinoAPIBase {
              return new objects.User(result);
            }
            else {
-             throw new objects.Error(result);
+             throw new objects.ChinoError(result);
            }
          })
-         .catch((error) => { throw new objects.Error(error); });
+         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return a list of current users inside the selected
    *  user schema by its id
    *
    * @param userSchemaId  {string}
-   * @return {Promise.<Array, objects.Error>}
+   * @param offset        {int}
+   * @param limit         {int}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of User object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
-  list(userSchemaId) {
-    let users = [];
+  list(userSchemaId, offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
-    return this.call.get(`/user_schemas/${userSchemaId}/users`)
+    return this.call.get(`/user_schemas/${userSchemaId}/users`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.users.forEach((userInfo) => {
-              let userData = {
-                data : {
-                  user: userInfo
-                },
-                result_code : result.result_code
-              };
-
-              users.push(new objects.User(userData));
-            })
-
-            return users;
+            return objects.getList(result.data.users, "User");
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
 
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new user inside selected user schema by its id
@@ -80,9 +71,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param userSchemaId  {string}
    * @param data          {object}
-   * @return {Promise.<objects.User, objects.Error>}
+   * @return {Promise.<objects.User, objects.ChinoError>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(userSchemaId, data) {
@@ -92,18 +83,18 @@ class ChinoAPIUsers extends ChinoAPIBase {
             return new objects.User(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about selected user by its id
    *
    * @param userId  {string}
-   * @return {Promise.<objects.User, objects.Error>}
+   * @return {Promise.<objects.User, objects.ChinoError>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(userId) {
@@ -113,10 +104,10 @@ class ChinoAPIUsers extends ChinoAPIBase {
             return new objects.User(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about selected user by its id
@@ -124,9 +115,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param userId  {string}
    * @param data    {object}
-   * @return {Promise.<objects.User, objects.Error>}
+   * @return {Promise.<objects.User, objects.ChinoError>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(userId, data) {
@@ -136,10 +127,10 @@ class ChinoAPIUsers extends ChinoAPIBase {
             return new objects.User(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update a specific part of information about
@@ -147,22 +138,22 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param userId  {string}
    * @param data    {object}
-   * @return {Promise.<objects.User, objects.Error>}
+   * @return {Promise.<objects.User, objects.ChinoError>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  patch(userId, data) {
+  partialUpdate(userId, data) {
     return this.call.patch(`/users/${userId}`, data)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.User(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Deactivate (or delete) selected user by its id
@@ -171,9 +162,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param force   {boolean} If true delete user information
    *                          otherwise only deactivate it.
    *                          Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(userId, force = false) {
@@ -185,10 +176,10 @@ class ChinoAPIUsers extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

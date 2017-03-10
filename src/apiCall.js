@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const request = require("superagent");
@@ -39,7 +36,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -87,7 +84,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -95,44 +92,57 @@ class Call {
       }
 
       if (acceptType === CONT_TYPES.FORM_DATA) {
-        if (data["grant_type"] === GRANT_TYPES.AUTH_CODE) {
-          // console.log(data["grant_type"])
-          request
-              .post(this.baseUrl + url)
-              .auth(_(this).id, _(this).secret)
-              .set("Content-Type", "multipart/form-data")
-              .accept("multipart/json")
-              .field("grant_type", data["grant_type"])
-              .field("code", data["code"])
-              .field("redirect_url", data["redirect_url"])
-              .field("client_id", data["client_id"])
-              .field("client_secret", data["client_secret"])
-              .field("scope", "read write")
-              .end(responseHandler);
-        }
-        if (data["grant_type"] === GRANT_TYPES.RFS_TOKEN) {
-          request
-              .post(this.baseUrl + url)
-              .auth(_(this).id, _(this).secret)
-              .set("Content-Type", "multipart/form-data")
-              .accept("multipart/json")
-              .field("grant_type", "refresh_token")
-              .field("refresh_token", data["code"])
-              .field("client_id", data["client_id"])
-              .field("client_secret", data["client_secret"])
-              .field("scope", "read write")
-              .end(responseHandler);
-        }
-        else {
-          request
-              .post(this.baseUrl + url)
-              .auth(_(this).id, _(this).secret)
-              .set("Content-Type", "multipart/form-data")
-              .accept("multipart/json")
-              .field("grant_type", "password")
-              .field("username", data["username"])
-              .field("password", data["password"])
-              .end(responseHandler);
+        switch (data["grant_type"]) {
+          case GRANT_TYPES.PASSWORD:
+            request
+                .post(this.baseUrl + url)
+                .auth(_(this).id, _(this).secret)
+                .set("Content-Type", "multipart/form-data")
+                .accept("multipart/json")
+                .field("grant_type", "password")
+                .field("username", data["username"])
+                .field("password", data["password"])
+                .end(responseHandler);
+            break;
+          case GRANT_TYPES.AUTH_CODE:
+            request
+                .post(this.baseUrl + url)
+                .auth(_(this).id, _(this).secret)
+                .set("Content-Type", "multipart/form-data")
+                .accept("multipart/json")
+                .field("grant_type", data["grant_type"])
+                .field("code", data["code"])
+                .field("redirect_url", data["redirect_url"])
+                .field("client_id", data["client_id"])
+                .field("client_secret", data["client_secret"])
+                .field("scope", "read write")
+                .end(responseHandler);
+            break;
+          case GRANT_TYPES.RFS_TOKEN:
+            request
+                .post(this.baseUrl + url)
+                .auth(_(this).id, _(this).secret)
+                .set("Content-Type", "multipart/form-data")
+                .accept("multipart/json")
+                .field("grant_type", "refresh_token")
+                .field("refresh_token", data["token"])
+                .field("client_id", data["client_id"])
+                .field("client_secret", data["client_secret"])
+                .end(responseHandler);
+            break;
+          case GRANT_TYPES.REVOKE:
+            request
+                .post(this.baseUrl + url)
+                .auth(_(this).id, _(this).secret)
+                .set("Content-Type", "multipart/form-data")
+                .accept("multipart/json")
+                .field("token", data["token"])
+                .field("client_id", data["client_id"])
+                .field("client_secret", data["client_secret"])
+                .end(responseHandler);
+            break;
+          default:
+            throw new Error("No grant type selected.");
         }
       }
       else {
@@ -166,7 +176,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -174,6 +184,7 @@ class Call {
       }
 
       if (acceptType === CONT_TYPES.OCT_STREAM) {
+        // assume octect stream esistano offset and length
         request
             .put(this.baseUrl + url)
             .auth(_(this).id, _(this).secret)
@@ -213,7 +224,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -248,7 +259,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);

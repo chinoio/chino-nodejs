@@ -4,8 +4,9 @@
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
   "scripts": {
-    "test": "./test/runTests.sh --no-warning",
-    "jsTest": "node test/runTests.js --no-warning",
+    "test": "./test/runTests.sh",
+    "ci_test": "./test/runTests.sh --no-warning",
+    "js_test": "node test/runTests.js --no-warning",
     "_test": "nyc ./node_modules/mocha/bin/mocha test/testsOrder.js --report spec"
   },
   "repository": {

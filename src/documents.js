@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -21,41 +18,35 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *  selected by its id
    *
    * @param schemaId      {string}
+   * @param offset        {int}
+   * @param limit         {int}
    * @param fullDocument  {boolean} It specify if the documents inside
    *                                the list should show their content (true)
    *                                or not (false). By default it show only
    *                                documents information (false)
-   * @return {Promise.<Array, objects.Error>}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Document object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  list(schemaId, fullDocument = false) {
-    const params = { full_document : fullDocument };
-    let documents = [];
+  list(schemaId, offset = 0, limit = 10, fullDocument = false) {
+    const params = {
+      full_document : fullDocument,
+      offset : offset,
+      limit : limit
+    };
 
     return this.call.get(`/schemas/${schemaId}/documents`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.documents.forEach((dInfo) => {
-              let dData = {
-                data : {
-                  document : dInfo
-                },
-                result_code : result.result_code
-              };
-
-              documents.push(new objects.Document(dData));
-            })
-
-            return documents;
+            return objects.getList(result.data.documents, "Document");
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
 
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new document inside schema selected by its id
@@ -63,9 +54,9 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *
    * @param schemaId  {string}
    * @param data      {object}
-   * @return {Promise.<objects.Document, objects.Error>}
+   * @return {Promise.<objects.Document, objects.ChinoError>}
    *         A promise that return a Document object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(schemaId, data) {
@@ -75,18 +66,18 @@ class ChinoAPIDocuments extends ChinoAPIBase {
             return new objects.Document(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about document selected by its id
    *
    * @param documentId  {string}
-   * @return {Promise.<objects.Document, objects.Error>}
+   * @return {Promise.<objects.Document, objects.ChinoError>}
    *         A promise that return a Document object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(documentId) {
@@ -96,10 +87,10 @@ class ChinoAPIDocuments extends ChinoAPIBase {
             return new objects.Document(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about document selected by its id
@@ -107,9 +98,9 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *
    * @param documentId  {string}
    * @param data        {object}
-   * @return {Promise.<objects.Document, objects.Error>}
+   * @return {Promise.<objects.Document, objects.ChinoError>}
    *         A promise that return a Document object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(documentId, data) {
@@ -119,10 +110,10 @@ class ChinoAPIDocuments extends ChinoAPIBase {
             return new objects.Document(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Deactivate (or delete) document selected by its id
@@ -131,9 +122,9 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    * @param force       {boolean} If true delete document information
    *                              otherwise only deactivate it.
    *                              Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,X
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(documentId, force = false) {
@@ -145,10 +136,10 @@ class ChinoAPIDocuments extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

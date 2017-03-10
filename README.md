@@ -1,4 +1,6 @@
 # Chino.io NodeJs client
+[![Build Status](https://travis-ci.org/danibix95/chino-nodejs.svg?branch=master)](https://travis-ci.org/danibix95/chino-nodejs) [![codecov](https://codecov.io/gh/danibix95/chino-nodejs/branch/master/graph/badge.svg)](https://codecov.io/gh/danibix95/chino-nodejs)
+
 Unofficial NodeJs wrapper for Chino.io APIs.
 
 You can see official website here: https://chino.io/

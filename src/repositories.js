@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -19,44 +16,38 @@ class ChinoAPIRepositories extends ChinoAPIBase {
 
   /** Return the list of existing repositories
    *
-   * @return {Promise.<Array, objects.Error>}
+   * @param offset  {int}
+   * @param limit   {int}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Repository object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
-  list() {
-    let repositories = [];
+  list(offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
-    return this.call.get(`/repositories`)
+    return this.call.get(`/repositories`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.repositories.forEach((rInfo) => {
-              let rData = {
-                data : {
-                  repository : rInfo
-                },
-                result_code : result.result_code
-              };
-
-              repositories.push(new objects.Repository(rData));
-            })
-
-            return repositories;
+            return objects.getList(result.data.repositories, "Repository");
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new repository
    *
    * @param data          {object}
-   * @return {Promise.<objects.Repository, objects.Error>}
+   * @return {Promise.<objects.Repository, objects.ChinoError>}
    *         A promise that return a Repository object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(data) {
@@ -66,18 +57,18 @@ class ChinoAPIRepositories extends ChinoAPIBase {
             return new objects.Repository(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about repository selected by its id
    *
    * @param repositoryId  {string}
-   * @return {Promise.<objects.Repository, objects.Error>}
+   * @return {Promise.<objects.Repository, objects.ChinoError>}
    *         A promise that return a Repository object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(repositoryId) {
@@ -87,10 +78,10 @@ class ChinoAPIRepositories extends ChinoAPIBase {
             return new objects.Repository(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about repository selected by its id
@@ -98,9 +89,9 @@ class ChinoAPIRepositories extends ChinoAPIBase {
    *
    * @param repositoryId  {string}
    * @param data          {object}
-   * @return {Promise.<objects.Repository, objects.Error>}
+   * @return {Promise.<objects.Repository, objects.ChinoError>}
    *         A promise that return a Repository object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(repositoryId, data) {
@@ -110,10 +101,10 @@ class ChinoAPIRepositories extends ChinoAPIBase {
             return new objects.Repository(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Deactivate (or delete) repository selected by its id
@@ -122,9 +113,9 @@ class ChinoAPIRepositories extends ChinoAPIBase {
    * @param force        {boolean} If true delete repository information
    *                               otherwise only deactivate it.
    *                               Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(repositoryId, force = false) {
@@ -136,10 +127,10 @@ class ChinoAPIRepositories extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 

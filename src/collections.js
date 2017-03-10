@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -19,45 +16,38 @@ class ChinoAPICollections extends ChinoAPIBase {
 
   /** Return a list of existing collections
    *
-   * @return {Promise.<Array, objects.Error>}
+   * @param offset  {int}
+   * @param limit   {int}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Collection object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  list() {
-    const params = {};
-    let collections = [];
+  list(offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
     return this.call.get(`/collections`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.collections.forEach((cInfo) => {
-              let cData = {
-                data : {
-                  collection : cInfo
-                },
-                result_code : result.result_code
-              };
-
-              collections.push(new objects.Collection(cData));
-            })
-
-            return collections;
+            return objects.getList(result.data.collections, "Collection");
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
 
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Create a new collection
    *
    * @param data      {object}
-   * @return {Promise.<objects.Collection, objects.Error>}
+   * @return {Promise.<objects.Collection, objects.ChinoError>}
    *         A promise that return a Collection object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   create(data) {
@@ -67,18 +57,18 @@ class ChinoAPICollections extends ChinoAPIBase {
             return new objects.Collection(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return information about collection selected by its id
    *
    * @param collectionId  {string}
-   * @return {Promise.<objects.Collection, objects.Error>}
+   * @return {Promise.<objects.Collection, objects.ChinoError>}
    *         A promise that return a Collection object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   details(collectionId) {
@@ -88,10 +78,10 @@ class ChinoAPICollections extends ChinoAPIBase {
             return new objects.Collection(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Update information about collection selected by its id
@@ -99,9 +89,9 @@ class ChinoAPICollections extends ChinoAPIBase {
    *
    * @param collectionId  {string}
    * @param data        {object}
-   * @return {Promise.<objects.Collection, objects.Error>}
+   * @return {Promise.<objects.Collection, objects.ChinoError>}
    *         A promise that return a Collection object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   update(collectionId, data) {
@@ -111,10 +101,10 @@ class ChinoAPICollections extends ChinoAPIBase {
             return new objects.Collection(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Deactivate (or delete) collection selected by its id
@@ -123,9 +113,9 @@ class ChinoAPICollections extends ChinoAPIBase {
    * @param force       {boolean} If true delete collection information
    *                              otherwise only deactivate it.
    *                              Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.Error>}
+   * @return {Promise.<objects.Success, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   delete(collectionId, force = false) {
@@ -137,56 +127,49 @@ class ChinoAPICollections extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Return a list of documents inside the collections
    *  selected by its id
    *
    * @param collectionId  {string}
-   * @return {Promise.<Array, objects.Error>}
+   * @param offset        {int}
+   * @param limit         {int}
+   * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Documents object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  listDocuments(collectionId) {
-    const params = {};
-    let documents = [];
+  listDocuments(collectionId, offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
     return this.call.get(`/collections/${collectionId}/documents`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.documents.forEach((dInfo) => {
-              let dData = {
-                data : {
-                  document : dInfo
-                },
-                result_code : result.result_code
-              };
-
-              documents.push(new objects.Document(dData));
-            })
-
-            return documents;
+            return objects.getList(result.data.documents, "Document");
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
 
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Insert a new document inside collection selected by their id
    *
    * @param collectionId  {string}
    * @param documentId    {string}
-   * @return {Promise.<objects.Document, objects.Error>}
+   * @return {Promise.<objects.Document, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   insertDocument(collectionId, documentId) {
@@ -196,19 +179,19 @@ class ChinoAPICollections extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Insert a new document inside collection selected by their id
    *
    * @param collectionId  {string}
    * @param documentId    {string}
-   * @return {Promise.<objects.Document, objects.Error>}
+   * @return {Promise.<objects.Document, objects.ChinoError>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an Error object if rejected
+   *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
   removeDocument(collectionId, documentId) {
@@ -218,18 +201,18 @@ class ChinoAPICollections extends ChinoAPIBase {
             return new objects.Success(result);
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 
   /** Search between collections filtering on name
    *
    * @param filter    {object}
-   * @return {Promise.<objects.Document, objects.Error>}
+   * @return {Promise.<objects.Document, objects.ChinoError>}
    *         A promise that return a list of Collection object
-   *         matching filter if resolved, otherwise throw an Error
+   *         matching filter if resolved, otherwise throw an ChinoError
    *         object if rejected or was not retrieved a success status
    */
   search(filter) {
@@ -251,11 +234,11 @@ class ChinoAPICollections extends ChinoAPIBase {
             return collections;
           }
           else {
-            throw new objects.Error(result);
+            throw new objects.ChinoError(result);
           }
         })
 
-        .catch((error) => { throw new objects.Error(error); });
+        .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
 
