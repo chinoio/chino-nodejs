@@ -11,3 +11,4 @@ require("./lib/schemasTest");
 require("./lib/documentsTest");
 require("./lib/collectionsTest");
 require("./lib/searchTest");
+require("./lib/permsTest");

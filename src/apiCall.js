@@ -174,6 +174,7 @@ class Call {
       }
 
       if (acceptType === CONT_TYPES.OCT_STREAM) {
+        // assume octect stream esistano offset and length
         request
             .put(this.baseUrl + url)
             .auth(_(this).id, _(this).secret)

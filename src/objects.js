@@ -5,6 +5,16 @@
 
 let ChinoAPIObjects = {}
 
+ChinoAPIObjects.name = {
+    REPOSITORIES : "repositories",
+    SCHEMAS      : "schemas",
+    DOCUMENTS    : "documents",
+    COLLECTIONS  : "collections",
+    USERS        : "users",
+    USER_SCHEMAS : "user_schemas",
+    GROUPS       : "groups"
+}
+
 /** Js object for wrapping Chino Api objects */
 class BaseObject {
   constructor(response, type = "") {

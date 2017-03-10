@@ -9,5 +9,8 @@ branches:
 install:
   npm install
 
+script:
+  - npm run ci_test
+
 after_success:
   ./node_modules/.bin/codecov
