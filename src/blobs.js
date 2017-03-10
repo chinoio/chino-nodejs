@@ -95,7 +95,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
    *         A promise that return Blob object as Octet stream if resolved,
    *         otherwise throw an ChinoError object if rejected
    */
-  download(blobId) {
+  download(blobId, offset, limit) {
     return this.call.get(`/blobs/${blobId}`, {}, this.call.TYPES.OCT_STREAM)
         .then((chunk) => chunk)
         .catch((error) => { throw new objects.ChinoError(error); });

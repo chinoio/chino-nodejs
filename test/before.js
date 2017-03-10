@@ -167,15 +167,15 @@ module.exports = Promise.all([
     apiCall.post(`/collections`, collection)
         .then(res => { data.collId = res.data.collection.collection_id; })
   ])
-      .then((res =>
-              /* add 3 documents to collection */
-              Promise.all([data.docIds[0], data.docIds[1], data.docIds[2]]
-                  .map(id => apiCall.post(`/collections/${data.collId}/documents/${id}`))
-              )
-      ))
-      .catch((err) =>
-          console.log(`Error inserting documents resources\n${JSON.stringify(err)}`)
-      ),
+  .then((res =>
+          /* add 3 documents to collection */
+          Promise.all([data.docIds[0], data.docIds[1], data.docIds[2]]
+              .map(id => apiCall.post(`/collections/${data.collId}/documents/${id}`))
+          )
+  ))
+  .catch((err) =>
+      console.log(`Error inserting documents resources\n${JSON.stringify(err)}`)
+  ),
   /* create an application with password auth */
   apiCall.post("/auth/applications", application)
       .then(res => {

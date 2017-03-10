@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -21,6 +18,8 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *  selected by its id
    *
    * @param schemaId      {string}
+   * @param offset        {int}
+   * @param limit         {int}
    * @param fullDocument  {boolean} It specify if the documents inside
    *                                the list should show their content (true)
    *                                or not (false). By default it show only
@@ -30,25 +29,17 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  list(schemaId, fullDocument = false) {
-    const params = { full_document : fullDocument };
-    let documents = [];
+  list(schemaId, offset = 0, limit = 10, fullDocument = false) {
+    const params = {
+      full_document : fullDocument,
+      offset : offset,
+      limit : limit
+    };
 
     return this.call.get(`/schemas/${schemaId}/documents`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.documents.forEach((dInfo) => {
-              let dData = {
-                data : {
-                  document : dInfo
-                },
-                result_code : result.result_code
-              };
-
-              documents.push(new objects.Document(dData));
-            })
-
-            return documents;
+            return objects.getList(result.data.documents, "Document");
           }
           else {
             throw new objects.ChinoError(result);

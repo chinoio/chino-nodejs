@@ -21,29 +21,23 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *  selected by its id
    *
    * @param repositoryId  {string}
+   * @param offset        {int}
+   * @param limit         {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Schema object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  list(repositoryId) {
-    let schemas = [];
+  list(repositoryId, offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
-    return this.call.get(`/repositories/${repositoryId}/schemas`)
+    return this.call.get(`/repositories/${repositoryId}/schemas`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.schemas.forEach((sInfo) => {
-              let sData = {
-                data : {
-                  schema : sInfo
-                },
-                result_code : result.result_code
-              };
-
-              schemas.push(new objects.Schema(sData));
-            })
-
-            return schemas;
+            return objects.getList(result.data.schemas, "Schema");
           }
           else {
             throw new objects.ChinoError(result);

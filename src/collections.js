@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -19,30 +16,23 @@ class ChinoAPICollections extends ChinoAPIBase {
 
   /** Return a list of existing collections
    *
+   * @param offset  {int}
+   * @param limit   {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Collection object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  list() {
-    const params = {};
-    let collections = [];
+  list(offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
     return this.call.get(`/collections`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.collections.forEach((cInfo) => {
-              let cData = {
-                data : {
-                  collection : cInfo
-                },
-                result_code : result.result_code
-              };
-
-              collections.push(new objects.Collection(cData));
-            })
-
-            return collections;
+            return objects.getList(result.data.collections, "Collection");
           }
           else {
             throw new objects.ChinoError(result);
@@ -147,30 +137,23 @@ class ChinoAPICollections extends ChinoAPIBase {
    *  selected by its id
    *
    * @param collectionId  {string}
+   * @param offset        {int}
+   * @param limit         {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Documents object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  listDocuments(collectionId) {
-    const params = {};
-    let documents = [];
+  listDocuments(collectionId, offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
     return this.call.get(`/collections/${collectionId}/documents`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.documents.forEach((dInfo) => {
-              let dData = {
-                data : {
-                  document : dInfo
-                },
-                result_code : result.result_code
-              };
-
-              documents.push(new objects.Document(dData));
-            })
-
-            return documents;
+            return objects.getList(result.data.documents, "Document");
           }
           else {
             throw new objects.ChinoError(result);

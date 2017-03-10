@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -22,13 +19,17 @@ class ChinoAPISearch extends ChinoAPIBase {
    *
    * @param schemaId      {string}
    * @param searchParams  {object}
+   * @param offset        {int}
+   * @param limit         {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Document objects if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  documents(schemaId, searchParams) {
-    let documents = [];
+  documents(schemaId, searchParams, offset = 0, limit = 10) {
+    // TODO: how can I use offset and limit on search API
+    // searchParams["offset"] = offset;
+    // searchParams["limit"] = limit;
 
     switch (searchParams.result_type) {
       case RESULT_TYPES.FULL_CONTENT:
@@ -36,18 +37,7 @@ class ChinoAPISearch extends ChinoAPIBase {
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
             .then((result) => {
               if (result.result_code === 200) {
-                result.data.documents.forEach((dInfo) => {
-                  let dData = {
-                    data : {
-                      document : dInfo
-                    },
-                    result_code : result.result_code
-                  };
-
-                  documents.push(new objects.Document(dData));
-                })
-
-                return documents;
+                return objects.getList(result.data.documents, "Document");
               }
               else {
                 throw new objects.ChinoError(result);
@@ -82,39 +72,30 @@ class ChinoAPISearch extends ChinoAPIBase {
       default:
         throw new objects.ChinoError("Wrong result type used. See docs for further information.");
     }
-
-
   }
 
   /** Return all matching user inside selected user schema
    *
    * @param userSchemaId  {string}
    * @param searchParams  {object}
+   * @param offset        {int}
+   * @param limit         {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Document objects if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  users(userSchemaId, searchParams) {
-    let users = [];
+  users(userSchemaId, searchParams, offset = 0, limit = 10) {
+    // TODO: how can I use offset and limit on search API
+    // searchParams["offset"] = offset;
+    // searchParams["limit"] = limit;
 
     switch (searchParams.result_type) {
       case RESULT_TYPES.FULL_CONTENT:
         return this.call.post(`/search/users/${userSchemaId}`, searchParams)
             .then((result) => {
               if (result.result_code === 200) {
-                result.data.users.forEach((uInfo) => {
-                  let uData = {
-                    data: {
-                      user: uInfo
-                    },
-                    result_code: result.result_code
-                  };
-
-                  users.push(new objects.Document(uData));
-                })
-
-                return users;
+                return objects.getList(result.data.users, "User");
               }
               else {
                 throw new objects.ChinoError(result);

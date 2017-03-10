@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
 const objects = require("./objects");
@@ -19,30 +16,24 @@ class ChinoAPIRepositories extends ChinoAPIBase {
 
   /** Return the list of existing repositories
    *
+   * @param offset  {int}
+   * @param limit   {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Repository object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
-  list() {
-    let repositories = [];
+  list(offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
-    return this.call.get(`/repositories`)
+    return this.call.get(`/repositories`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.repositories.forEach((rInfo) => {
-              let rData = {
-                data : {
-                  repository : rInfo
-                },
-                result_code : result.result_code
-              };
-
-              repositories.push(new objects.Repository(rData));
-            })
-
-            return repositories;
+            return objects.getList(result.data.repositories, "Repository");
           }
           else {
             throw new objects.ChinoError(result);

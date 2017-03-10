@@ -36,7 +36,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -84,7 +84,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -176,7 +176,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -224,7 +224,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);
@@ -259,7 +259,7 @@ class Call {
        */
       function responseHandler(error, response) {
         if (error) {
-          reject(response.body);
+          reject(response.body || error);
         }
         else {
           resolve(response.body);

@@ -135,4 +135,14 @@ ChinoAPIObjects.Success =
       }
     }
 
+ChinoAPIObjects.getList = (data, object, result_code = 200) =>
+    data.map((value) =>
+        new ChinoAPIObjects[object]({
+          data : {
+            [object.toLowerCase()] : value
+          },
+          result_code : result_code
+        })
+    );
+
 module.exports = ChinoAPIObjects;

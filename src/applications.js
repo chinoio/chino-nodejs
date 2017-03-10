@@ -19,30 +19,24 @@ class ChinoAPIApplication extends ChinoAPIBase {
 
   /** Return the list of existing applications
    *
+   * @param offset {int}
+   * @param limit  {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Application object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
-  list() {
-    let applications = [];
+  list(offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
-    return this.call.get(`/auth/applications`)
+    return this.call.get(`/auth/applications`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.applications.forEach((aInfo) => {
-              let aData = {
-                data : {
-                  application : aInfo
-                },
-                result_code : result.result_code
-              };
-
-              applications.push(new objects.Application(aData));
-            })
-
-            return applications;
+            return objects.getList(result.data.applications, "Application");
           }
           else {
             throw new objects.ChinoError(result);

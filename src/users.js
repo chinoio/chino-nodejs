@@ -39,30 +39,24 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *  user schema by its id
    *
    * @param userSchemaId  {string}
+   * @param offset        {int}
+   * @param limit         {int}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of User object if resolved,
    *         otherwise throw a ChinoError object if rejected
    *         or was not retrieved a success status
    *
    */
-  list(userSchemaId) {
-    let users = [];
+  list(userSchemaId, offset = 0, limit = 10) {
+    const params = {
+      offset : offset,
+      limit : limit
+    };
 
-    return this.call.get(`/user_schemas/${userSchemaId}/users`)
+    return this.call.get(`/user_schemas/${userSchemaId}/users`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.users.forEach((userInfo) => {
-              let userData = {
-                data : {
-                  user: userInfo
-                },
-                result_code : result.result_code
-              };
-
-              users.push(new objects.User(userData));
-            })
-
-            return users;
+            return objects.getList(result.data.users, "User");
           }
           else {
             throw new objects.ChinoError(result);
