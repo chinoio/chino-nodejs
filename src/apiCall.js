@@ -5,6 +5,20 @@ const _ = require('private-parts').createKey();
 const GRANT_TYPES = require("./grantTypes");
 const CONT_TYPES = require("./callTypes");
 
+/** Manage response from Chino API
+ *
+ * @param error
+ * @param response
+ */
+function responseHandler(error, response) {
+  if (error) {
+    this.reject(response.body || error);
+  }
+  else {
+    this.resolve(response.body);
+  }
+}
+
 class Call {
   /** Create a Call object
    * @constructor
@@ -12,7 +26,7 @@ class Call {
    * @param id      {string}
    * @param secret  {string | object}
    */
-  constructor(baseUrl, authId, authSecret) {
+  constructor(baseUrl = "", authId = "", authSecret = "") {
     this.baseUrl = baseUrl;
 
     // set private properties
@@ -29,39 +43,23 @@ class Call {
    */
   get(url, params = {}, acceptType = null) {
     let makeCall = (resolve, reject) => {
-      /** Manage response from Chino API
-       *
-       * @param error
-       * @param response
-       */
-      function responseHandler(error, response) {
-        if (error) {
-          reject(response.body || error);
-        }
-        else {
-          resolve(response.body);
-        }
-      }
+      // prepare the request and then send it
+      const req = request
+                    .get(this.baseUrl + url)
+                    .auth(_(this).id, _(this).secret)
+                    .type("application/json");
 
       // call Chino API
       if(acceptType === CONT_TYPES.OCT_STREAM) {
-        request
-            .get(this.baseUrl + url)
-            .auth(_(this).id, _(this).secret)
-            .type("application/json")
-            .accept("application/octet-stream")
-            .query(params)
-            .end(responseHandler);
+        req.accept("application/octet-stream");
       }
       else {
-        request
-            .get(this.baseUrl + url)
-            .auth(_(this).id, _(this).secret)
-            .type("application/json")
-            .accept("application/json")
-            .query(params)
-            .end(responseHandler);
+        req.accept("application/json");
       }
+
+      req
+        .query(params)
+        .end(responseHandler.bind({resolve, reject}));
     }
 
     return new Promise(makeCall);
@@ -75,85 +73,59 @@ class Call {
    * @return {Promise}
    */
   post(url, data = {}, acceptType = null) {
-    // TODO: review post function => split it into smaller and private functions
     let makeCall = (resolve, reject) => {
-      /** Manage response from Chino API
-       *
-       * @param error
-       * @param response
-       */
-      function responseHandler(error, response) {
-        if (error) {
-          reject(response.body || error);
-        }
-        else {
-          resolve(response.body);
-        }
-      }
+      // prepare the request and then send it
+      const req = request
+                    .post(this.baseUrl + url)
+                    .auth(_(this).id, _(this).secret);
 
       if (acceptType === CONT_TYPES.FORM_DATA) {
+        req
+          .set("Content-Type", "multipart/form-data")
+          .accept("multipart/json");
+
+        // set form fields
         switch (data["grant_type"]) {
           case GRANT_TYPES.PASSWORD:
-            request
-                .post(this.baseUrl + url)
-                .auth(_(this).id, _(this).secret)
-                .set("Content-Type", "multipart/form-data")
-                .accept("multipart/json")
-                .field("grant_type", "password")
-                .field("username", data["username"])
-                .field("password", data["password"])
-                .end(responseHandler);
+            req
+              .field("grant_type", "password")
+              .field("username", data["username"])
+              .field("password", data["password"])
             break;
           case GRANT_TYPES.AUTH_CODE:
-            request
-                .post(this.baseUrl + url)
-                .auth(_(this).id, _(this).secret)
-                .set("Content-Type", "multipart/form-data")
-                .accept("multipart/json")
-                .field("grant_type", data["grant_type"])
-                .field("code", data["code"])
-                .field("redirect_url", data["redirect_url"])
-                .field("client_id", data["client_id"])
-                .field("client_secret", data["client_secret"])
-                .field("scope", "read write")
-                .end(responseHandler);
+            req
+              .field("grant_type", data["grant_type"])
+              .field("code", data["code"])
+              .field("redirect_url", data["redirect_url"])
+              .field("client_id", data["client_id"])
+              .field("client_secret", data["client_secret"])
+              .field("scope", "read write")
             break;
           case GRANT_TYPES.RFS_TOKEN:
-            request
-                .post(this.baseUrl + url)
-                .auth(_(this).id, _(this).secret)
-                .set("Content-Type", "multipart/form-data")
-                .accept("multipart/json")
-                .field("grant_type", "refresh_token")
-                .field("refresh_token", data["token"])
-                .field("client_id", data["client_id"])
-                .field("client_secret", data["client_secret"])
-                .end(responseHandler);
+            req
+              .field("grant_type", "refresh_token")
+              .field("refresh_token", data["token"])
+              .field("client_id", data["client_id"])
+              .field("client_secret", data["client_secret"])
             break;
           case GRANT_TYPES.REVOKE:
-            request
-                .post(this.baseUrl + url)
-                .auth(_(this).id, _(this).secret)
-                .set("Content-Type", "multipart/form-data")
-                .accept("multipart/json")
-                .field("token", data["token"])
-                .field("client_id", data["client_id"])
-                .field("client_secret", data["client_secret"])
-                .end(responseHandler);
+            req
+              .field("token", data["token"])
+              .field("client_id", data["client_id"])
+              .field("client_secret", data["client_secret"])
             break;
           default:
             throw new Error("No grant type selected.");
         }
       }
       else {
-        request
-            .post(this.baseUrl + url)
-            .auth(_(this).id, _(this).secret)
-            .type("application/json")
-            .accept("application/json")
-            .send(data)
-            .end(responseHandler);
+        req
+          .type("application/json")
+          .accept("application/json")
+          .send(data)
       }
+
+      req.end(responseHandler.bind({resolve, reject}));
     }
 
     return new Promise(makeCall);
@@ -169,41 +141,26 @@ class Call {
    */
   put(url, data = {}, acceptType = null, params = {}) {
     let makeCall = (resolve, reject) => {
-      /** Manage response from Chino API
-       *
-       * @param error
-       * @param response
-       */
-      function responseHandler(error, response) {
-        if (error) {
-          reject(response.body || error);
-        }
-        else {
-          resolve(response.body);
-        }
-      }
+      // prepare the request and then send it
+      const req = request
+                    .put(this.baseUrl + url)
+                    .auth(_(this).id, _(this).secret);
 
       if (acceptType === CONT_TYPES.OCT_STREAM) {
-        // assume octect stream esistano offset and length
-        request
-            .put(this.baseUrl + url)
-            .auth(_(this).id, _(this).secret)
-            .set("offset", params.blob_offset)
-            .set("length", params.blob_length)
-            .type("application/octet-stream")
-            .accept("application/json")
-            .send(data)
-            .end(responseHandler);
+        // for octet stream we assume that exist offset and length
+        req
+          .set("offset", params.blob_offset)
+          .set("length", params.blob_length)
+          .type("application/octet-stream");
       }
       else {
-        request
-            .put(this.baseUrl + url)
-            .auth(_(this).id, _(this).secret)
-            .type("application/json")
-            .accept("application/json")
-            .send(data)
-            .end(responseHandler);
+        req.type("application/json");
       }
+
+      req
+        .accept("application/json")
+        .send(data)
+        .end(responseHandler.bind({resolve, reject}));
     }
 
     return new Promise(makeCall);
@@ -217,27 +174,13 @@ class Call {
    */
   patch(url, data = {}) {
     let makeCall = (resolve, reject) => {
-      /** Manage response from Chino API
-       *
-       * @param error
-       * @param response
-       */
-      function responseHandler(error, response) {
-        if (error) {
-          reject(response.body || error);
-        }
-        else {
-          resolve(response.body);
-        }
-      }
-
       request
           .patch(this.baseUrl + url)
           .auth(_(this).id, _(this).secret)
           .type("application/json")
           .accept("application/json")
           .send(data)
-          .end(responseHandler);
+          .end(responseHandler.bind({resolve, reject}));
     }
 
     return new Promise(makeCall);
@@ -252,27 +195,13 @@ class Call {
    */
   del(url, params = {}) {
     let makeCall = (resolve, reject) => {
-      /** Manage response from Chino API
-       *
-       * @param error
-       * @param response
-       */
-      function responseHandler(error, response) {
-        if (error) {
-          reject(response.body || error);
-        }
-        else {
-          resolve(response.body);
-        }
-      }
-
       request
           .del(this.baseUrl + url)
           .auth(_(this).id, _(this).secret)
           .type("application/json")
           .accept("application/json")
           .query(params)
-          .end(responseHandler);
+          .end(responseHandler.bind({resolve, reject}));
     }
 
     return new Promise(makeCall);
@@ -280,4 +209,3 @@ class Call {
 }
 
 module.exports = Call;
-
