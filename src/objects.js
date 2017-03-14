@@ -82,18 +82,12 @@ ChinoAPIObjects.Collection =
       }
     };
 
-ChinoAPIObjects.BlobUncommitted =
-    class BlobUncommitted extends BaseObject {
+ChinoAPIObjects.Blob =
+    class Blob extends BaseObject {
       constructor(response) {
         super(response, "blob")
       }
     };
-
-// TODO: review this class
-// this must be used to store blob information
-// only when it is confirmed on the server
-ChinoAPIObjects.Blob =
-    class Blob extends ChinoAPIObjects.BlobUncommitted {};
 
 ChinoAPIObjects.Perms =
     class Perms extends BaseObject {

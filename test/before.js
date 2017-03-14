@@ -42,11 +42,11 @@ const ids = Array.from(new Array(data.elements-1), (val,index) => index+1);
 
 // DEFINE RESOURCES
 const repo = {
-  description : "Repository for testing Search lib",
+  description : "Repository for testing libs",
 };
 
 const schema = {
-  description: "Schema for testing Search lib",
+  description: "Schema for testing libs",
   structure: {
     fields: [
       {
@@ -71,7 +71,7 @@ let doc = (id) => ({
 });
 
 const userSchema = {
-  description : "User Schema for testing Search lib",
+  description : "User Schema for testing libs",
   structure : {
     fields : [
       {

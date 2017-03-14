@@ -1,10 +1,49 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
+const crypto = require('crypto');
 const objects = require("./objects");
 const ChinoAPIBase = require("./chinoBase");
+
+/** Commit the upload and return the blob information
+ *
+ * @param uploadId  {string}
+ * @return {Promise.<objects.Blob, objects.ChinoError>}
+ *         A promise that return a Blob object if resolved,
+ *         otherwise throw an ChinoError object if rejected
+ *         or was not retrieved a success status
+ */
+function commit(uploadId) {
+  const params = {
+    upload_id : uploadId
+  };
+
+  return this.call.post(`/blobs/commit`, params)
+      .then((result) => {
+        if (result.result_code === 200) {
+          return new objects.Blob(result);
+        }
+        else {
+          throw new objects.ChinoError(result);
+        }
+      })
+      .catch((error) => { throw new objects.ChinoError(error); });
+}
+
+/** Create a new blob
+ *
+ * @param info  {object} The parameter for the creation of a blob
+ * @return {Promise.<objects.BlobUncommitted, objects.ChinoError>}
+ *         A promise that return a BlobUncommitted object if resolved,
+ *         otherwise throw an ChinoError object if rejected
+ *         or was not retrieved a success status
+ */
+function create(info = {}) {
+  return this.call.post(`/blobs`, info);
+}
+
+
 
 class ChinoAPIBlobs extends ChinoAPIBase {
   /** Create a caller for Groups Chino APIs
@@ -17,75 +56,98 @@ class ChinoAPIBlobs extends ChinoAPIBase {
     super(baseUrl, customerId, customerKey);
   }
 
-  /** Create a new blob
+  /** Upload a blob file
    *
-   * @param info      {object}
-   * @return {Promise.<objects.BlobUncommitted, objects.ChinoError>}
-   *         A promise that return a BlobUncommitted object if resolved,
-   *         otherwise throw an ChinoError object if rejected
-   *         or was not retrieved a success status
-   */
-  create(info) {
-    return this.call.post(`/blobs`, info)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.BlobUncommitted(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
-        .catch((error) => { throw new objects.ChinoError(error); });
-  }
-
-  /** Upload data to blob using its upload id
-   *
-   * @param uploadId      {string}
-   * @return {Promise.<objects.BlobUncommitted, objects.ChinoError>}
-   *         A promise that return a BlobUncommitted object if resolved,
-   *         otherwise throw an ChinoError object if rejected
-   *         or was not retrieved a success status
-   */
-  upload(uploadId, octetStream, offset, length) {
-    const params = {
-      blob_offset : offset,
-      blob_length : length
-    }
-    return this.call.put(`/blobs/${uploadId}`, octetStream, this.call.TYPES.OCT_STREAM, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.BlobUncommitted(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
-        .catch((error) => { throw new objects.ChinoError(error); });
-  }
-
-  /** Commit the upload and return the blob information
-   *
-   * @param uploadId  {string}
+   * @param docId     {string}
+   * @param field     {string}
+   * @param fileName  {string}
    * @return {Promise.<objects.Blob, objects.ChinoError>}
-   *         A promise that return a Blob object if resolved,
+   *         A promise that return a BlobUncommitted object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
-  commit(uploadId) {
-    const params = {
-      upload_id : uploadId
-    };
+  upload(docId = "", field = "", fileName = "") {
+    const info = {
+      document_id : docId,
+      field : field,
+      file_name : fileName
+    }
 
-    return this.call.post(`/blobs/commit`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Blob(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
-        .catch((error) => { throw new objects.ChinoError(error); });
+    let uploadId = "";
+    
+    function doUpload(resolve, reject) {
+      create.call(this, info)
+          .then((result) => {
+            if (result.result_code === 200) {
+              // get an id where upload blob data
+              uploadId = result.data.blob.upload_id;
+
+              // prepare to read file
+              const options = {
+                flags : "r",
+                autoClose : true,
+                highWaterMark : 16 * 1024
+              };
+              const readStream = fs.createReadStream(fileName, options);
+              // hash for verifying blob integrity
+              const hash = crypto.createHash('sha1');
+
+              let chunks = [];
+              let offset = 0;
+
+              // read each chunk and upload it
+              readStream.on('data', (chunk) => {
+                let params = {
+                  blob_offset : offset,
+                  blob_length : chunk.length
+                }
+
+                // create an array of Promises upload
+                chunks.push(this.call.chunk(`/blobs/${uploadId}`, chunk, params))
+
+                hash.update(chunk);
+                offset += chunk.length;
+              });
+
+              readStream.on('error', (error) => {
+                throw new Error(`Error reading file:\n${error}`);
+              });
+
+              readStream.on('end', () =>
+                  // wait upload of all chunks is completed
+                  Promise.all(chunks)
+                      .then((result) => {
+                        if (result.every((res) => res.result_code === 200)) {
+                          commit.call(this, uploadId)
+                              .then((blob) => {
+                                // attention: digest method can be called one for hash
+                                if (blob.sha1 === hash.digest("hex")) {
+                                  resolve(blob);
+                                }
+                                else {
+                                  reject("Digest mismatch.");
+                                }
+                              })
+                              .catch((error) => {
+                                throw new objects.ChinoError(error);
+                              });
+                        }
+                        else {
+                          throw new objects.ChinoError(result);
+                        }
+                      })
+                      .catch((error) => { throw new objects.ChinoError(error); })
+              )
+            }
+            else {
+              throw new objects.ChinoError(result);
+            }
+          })
+          .catch((error) => { throw new objects.ChinoError(error); });
+    }
+
+
+    return new Promise(doUpload.bind(this))
   }
 
   /** Retrieve selected blob data
@@ -95,10 +157,37 @@ class ChinoAPIBlobs extends ChinoAPIBase {
    *         A promise that return Blob object as Octet stream if resolved,
    *         otherwise throw an ChinoError object if rejected
    */
-  download(blobId, offset, limit) {
-    return this.call.get(`/blobs/${blobId}`, {}, this.call.TYPES.OCT_STREAM)
-        .then((chunk) => chunk)
-        .catch((error) => { throw new objects.ChinoError(error); });
+  download(blobId, newFileName = "") {
+    function doDownload(resolve, reject) {
+      this.call.getBlob(`/blobs/${blobId}`, {})
+          .then((response) => {
+            const fileName = newFileName || response.header["content-disposition"].split(";")[1].trim();
+
+            const options = {
+              flags : "w",
+              autoClose : true,
+              highWaterMark : 16 * 1024
+            };
+            const writer = fs.createWriteStream(fileName, options);
+
+            writer.on("close", () => {
+              console.log("closing");
+              const ok = {
+                result_code: 200,
+                result: "success",
+                data : null,
+                message : null
+              };
+
+              resolve(new objects.Success(ok));
+            });
+
+            response.pipe(writer);
+          })
+          .catch((error) => { reject(new objects.ChinoError(error)) });
+    }
+
+    return new Promise(doDownload.bind(this));
   }
 
   /** Delete blob selected by its id

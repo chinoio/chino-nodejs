@@ -25,7 +25,8 @@
   "homepage": "https://github.com/danibix95/chino-nodejs#readme",
   "dependencies": {
     "private-parts": "^0.4.1",
-    "superagent": "^3.5.0"
+    "superagent": "^3.5.0",
+    "superagent-binary-parser": "^1.0.1"
   },
   "devDependencies": {
     "codecov": "^1.0.1",

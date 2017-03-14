@@ -90,6 +90,8 @@ class ChinoAPISearch extends ChinoAPIBase {
     // searchParams["offset"] = offset;
     // searchParams["limit"] = limit;
 
+    // need to set url with ?offset=<ofs>&length=<len>
+
     switch (searchParams.result_type) {
       case RESULT_TYPES.FULL_CONTENT:
         return this.call.post(`/search/users/${userSchemaId}`, searchParams)
