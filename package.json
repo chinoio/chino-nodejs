@@ -26,7 +26,8 @@
   "dependencies": {
     "private-parts": "^0.4.1",
     "superagent": "^3.5.0",
-    "superagent-binary-parser": "^1.0.1"
+    "superagent-binary-parser": "^1.0.1",
+    "through2": "^2.0.3"
   },
   "devDependencies": {
     "codecov": "^1.0.1",

@@ -2,7 +2,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const crypto = require('crypto');
+const crypto = require("crypto");
+const through2 = require("through2");
 const objects = require("./objects");
 const ChinoAPIBase = require("./chinoBase");
 
@@ -161,28 +162,78 @@ class ChinoAPIBlobs extends ChinoAPIBase {
     function doDownload(resolve, reject) {
       this.call.getBlob(`/blobs/${blobId}`, {})
           .then((response) => {
-            const fileName = newFileName || response.header["content-disposition"].split(";")[1].trim();
+            const fileName = newFileName || response.header["content-disposition"].split("=")[1].trim();
+            // console.log(response.header["content-disposition"].split("=")[1].trim());
 
-            const options = {
-              flags : "w",
-              autoClose : true,
-              highWaterMark : 16 * 1024
-            };
-            const writer = fs.createWriteStream(fileName, options);
+            // console.log(response.header)
 
-            writer.on("close", () => {
-              console.log("closing");
-              const ok = {
-                result_code: 200,
-                result: "success",
-                data : null,
-                message : null
-              };
+            // const options = {
+            //   flags : "w",
+            //   autoClose : true,
+            //   highWaterMark : 16 * 1024
+            // };
+            // const writer = fs.createWriteStream(fileName, options);
 
-              resolve(new objects.Success(ok));
-            });
+            response
+                .pipe(through2(function (chunk, enc, callback) {
+                  this.push(chunk)
+                  console.log("Chunking")
+                  // callback()
+                }))
+                .pipe(fs.createWriteStream(newFileName))
+                .on("finish", function () {
+                  // doSomethingSpecial()
+                  console.log("I've finish")
+                  const ok = {
+                    result_code: 200,
+                    result: "success",
+                    data : null,
+                    message : null
+                  };
 
-            response.pipe(writer);
+                  resolve(new objects.Success(ok));
+                })
+
+            // response.on('data', function(data) {
+            //   console.log("Hello!")
+            //   var ready = writer.write(data)
+            //   if (ready === false) {
+            //     this.pause()
+            //     writer.once('drain', this.resume.bind(this))
+            //   }
+            // })
+            // response.on("close", () => {
+            //   console.log("Hmewofn")
+            // })
+            //
+            // response.on("error", (error) => {
+            //   console.log("R error!")
+            //   reject(new Error(error));
+            // })
+            //
+            // writer.on("error", (error) => {
+            //   console.log("W error!")
+            //   reject(new Error(error));
+            // })
+            //
+            // writer.on("pipe", (data) => {
+            //   writer.write(data);
+            //   writer.end();
+            // })
+            //
+            // writer.on("finish", () => {
+            //   console.log("closing");
+            //   const ok = {
+            //     result_code: 200,
+            //     result: "success",
+            //     data : null,
+            //     message : null
+            //   };
+            //
+            //   resolve(new objects.Success(ok));
+            // });
+            //
+            // response.pipe(writer);
           })
           .catch((error) => { reject(new objects.ChinoError(error)) });
     }
