@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./test/runTests.sh",
     "ci_test": "./test/runTests.sh --no-warning",
-    "js_test": "node test/runTests.js --no-warning",
+    "js_test": "node test/runTests.js",
     "_test": "nyc ./node_modules/mocha/bin/mocha test/testsOrder.js --report spec"
   },
   "repository": {

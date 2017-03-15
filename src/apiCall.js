@@ -60,20 +60,10 @@ class Call {
    *
    * @param url         {string}
    * @param params      {object}
-   * @return {Promise}
+   * @return  {request}
    */
   getBlob(url, params = {}) {
-    let makeCall = (resolve, reject) => {
-      function blobResponseHandler(error, response) {
-        if (error) {
-          reject(response || error);
-        }
-        else {
-          resolve(response);
-        }
-      }
-
-      request
+      return request
           .get(this.baseUrl + url)
           .auth(_(this).id, _(this).secret)
           .type("application/json")
@@ -81,10 +71,6 @@ class Call {
           .query(params)
           .buffer(true)
           .parse(binaryParser)
-          .end(blobResponseHandler);
-    }
-
-    return new Promise(makeCall);
   }
 
   /** Make POST request to Chino APIs

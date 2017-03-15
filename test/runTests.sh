@@ -10,9 +10,12 @@ function runTests {
 
     # execute tests
     npm run _test
+    result=$?
 
     # clean the environment
     node test/after.js
+
+    return ${result}
 }
 
 # check if user is aware of what test

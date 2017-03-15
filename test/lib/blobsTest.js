@@ -26,7 +26,7 @@ describe('Chino Blobs API', function () {
   let blobId = "";
 
   before(function () {
-    repoId = "" // INSERT HERE YOUR REPOSITORY ID
+    repoId = settings.data().repoId;
 
     const schema = {
       description: "Schema for testing Blob lib",
@@ -96,7 +96,6 @@ describe('Chino Blobs API', function () {
       }
   );
 
-
   /* delete */
   it("Test the deletion of a blob data: should return a success message",
       function () {
@@ -117,15 +116,16 @@ describe('Chino Blobs API', function () {
     }
 
     return sleep(1000).then(() => {
+          console.log("Schema: " + schemaId)
         if (schemaId !== "") {
           return
               apiCall.del(`/schemas/${schemaId}?force=true&all_content=true`)
                 .then(res => {
-                  // if (repoId !== "") {
-                  //     return apiCall.del(`/repositories/${repoId}?force=true`)
-                  //         .then(res => { /*console.log("Removed stub stuff")*/ })
-                  //         .catch(err => { console.log(`Error removing repository resources`) });
-                  // }
+                  if (repoId !== "") {
+                      return apiCall.del(`/repositories/${repoId}?force=true`)
+                          .then(res => { /*console.log("Removed stub stuff")*/ })
+                          .catch(err => { console.log(`Error removing repository resources`) });
+                  }
                 })
               .catch(err => { console.log(`Error removing test resources`) });
         }
