@@ -74,10 +74,10 @@ Promise.all([
   // delete file previously created
   try {
     fs.unlinkSync(path.join(__dirname, "lib/", settings.filedata));
-    fs.unlinkSync(path.join(__dirname, "lib/files/result.pdf"));
+    fs.unlinkSync(path.join(__dirname, "lib/files/result.jpg"));
   }
   catch (error) {
-    console.log(`${error}\tImpossible to remove file ${settings.filedata} because it doesn't exists.\n`);
+    if (error.code !== "ENOENT") console.log(error);
   }
 
   // notify the end of the process

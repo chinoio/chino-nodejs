@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const crypto = require('crypto');
+const crypto = require("crypto");
 const objects = require("./objects");
 const ChinoAPIBase = require("./chinoBase");
 
@@ -42,8 +42,6 @@ function commit(uploadId) {
 function create(info = {}) {
   return this.call.post(`/blobs`, info);
 }
-
-
 
 class ChinoAPIBlobs extends ChinoAPIBase {
   /** Create a caller for Groups Chino APIs
@@ -146,45 +144,52 @@ class ChinoAPIBlobs extends ChinoAPIBase {
           .catch((error) => { throw new objects.ChinoError(error); });
     }
 
-
     return new Promise(doUpload.bind(this))
   }
 
-  /** Retrieve selected blob data
+  /** Retrieve selected blob data and save it in the specified file
    *
-   * @param blobId      {object}
-   * @return {Promise.<Octet Stream, objects.ChinoError>}
+   * @param blobId      {string}
+   * @param newFileName {string}
+   * @return {Promise.<objects.Success, Error>}
    *         A promise that return Blob object as Octet stream if resolved,
    *         otherwise throw an ChinoError object if rejected
    */
   download(blobId, newFileName = "") {
     function doDownload(resolve, reject) {
-      this.call.getBlob(`/blobs/${blobId}`, {})
-          .then((response) => {
-            const fileName = newFileName || response.header["content-disposition"].split(";")[1].trim();
+      const options = {
+        flags : "w",
+        autoClose : true,
+        highWaterMark : 16 * 1024
+      };
+      const writer = fs.createWriteStream(newFileName, options);
 
-            const options = {
-              flags : "w",
-              autoClose : true,
-              highWaterMark : 16 * 1024
-            };
-            const writer = fs.createWriteStream(fileName, options);
+      writer.on("finish", function () {
+        const ok = {
+          result_code: 200,
+          result: "success",
+          data : null,
+          message : null
+        };
 
-            writer.on("close", () => {
-              console.log("closing");
-              const ok = {
-                result_code: 200,
-                result: "success",
-                data : null,
-                message : null
-              };
+        resolve(new objects.Success(ok));
+      });
 
-              resolve(new objects.Success(ok));
-            });
+      writer.on("error", (error) => {
+        reject(new Error("Writing blob raise an error:\n" + error));
+      });
 
-            response.pipe(writer);
-          })
-          .catch((error) => { reject(new objects.ChinoError(error)) });
+      this.call.getBlob(`/blobs/${blobId}`).pipe(writer);
+    }
+
+    if (!newFileName || newFileName === "") {
+      const error = {
+        message : "Missing file name for creating file from downloaded blob data.",
+        result_code : 400,
+        result : "error",
+        data : null
+      };
+      throw new objects.ChinoError(error);
     }
 
     return new Promise(doDownload.bind(this));
