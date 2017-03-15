@@ -26,8 +26,7 @@ describe('Chino Blobs API', function () {
   let blobId = "";
 
   before(function () {
-    // repoId = settings.data().repoId;
-    repoId = "3e696ded-d81b-4c3e-9692-493459cd67e7";//settings.data().repoId;
+    repoId = "" // INSERT HERE YOUR REPOSITORY ID
 
     const schema = {
       description: "Schema for testing Blob lib",
