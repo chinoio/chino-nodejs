@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 28/02/17.
- */
 "use strict";
 
 const objects = require("./objects");

@@ -1,20 +1,17 @@
-/**
- * Created by daniele on 22/02/17.
- */
 "use strict";
 
-const ChinoAuth         = require("./auth.js");
-const ChinoUsers        = require("./users.js");
-const ChinoUserSchemas  = require("./userSchemas.js");
-const ChinoGroups       = require("./groups.js");
-const ChinoApplications = require("./applications.js");
-const ChinoRepositories = require("./repositories.js");
-const ChinoSchemas      = require("./schemas.js");
-const ChinoDocuments    = require("./documents.js");
-const ChinoPerms        = require("./perms.js");
-const ChinoBlobs        = require("./blobs.js");
-const ChinoCollections  = require("./collections.js");
-const ChinoSearch       = require("./search.js");
+const ChinoAuth         = require("./auth");
+const ChinoUsers        = require("./users");
+const ChinoUserSchemas  = require("./userSchemas");
+const ChinoGroups       = require("./groups");
+const ChinoApplications = require("./applications");
+const ChinoRepositories = require("./repositories");
+const ChinoSchemas      = require("./schemas");
+const ChinoDocuments    = require("./documents");
+const ChinoPerms        = require("./perms");
+const ChinoBlobs        = require("./blobs");
+const ChinoCollections  = require("./collections");
+const ChinoSearch       = require("./search");
 
 class Chino {
   /**

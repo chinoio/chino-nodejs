@@ -27,14 +27,10 @@ class ChinoAPISearch extends ChinoAPIBase {
    *         or was not retrieved a success status
    */
   documents(schemaId, searchParams, offset = 0, limit = 10) {
-    // TODO: how can I use offset and limit on search API
-    // searchParams["offset"] = offset;
-    // searchParams["limit"] = limit;
-
     switch (searchParams.result_type) {
       case RESULT_TYPES.FULL_CONTENT:
       case RESULT_TYPES.NO_CONTENT:
-        return this.call.post(`/search/documents/${schemaId}`, searchParams)
+        return this.call.post(`/search/documents/${schemaId}?offset=${offset}&limit=${limit}`, searchParams)
             .then((result) => {
               if (result.result_code === 200) {
                 return objects.getList(result.data.documents, "Document");
@@ -86,15 +82,9 @@ class ChinoAPISearch extends ChinoAPIBase {
    *         or was not retrieved a success status
    */
   users(userSchemaId, searchParams, offset = 0, limit = 10) {
-    // TODO: how can I use offset and limit on search API
-    // searchParams["offset"] = offset;
-    // searchParams["limit"] = limit;
-
-    // need to set url with ?offset=<ofs>&length=<len>
-
     switch (searchParams.result_type) {
       case RESULT_TYPES.FULL_CONTENT:
-        return this.call.post(`/search/users/${userSchemaId}`, searchParams)
+        return this.call.post(`/search/users/${userSchemaId}?offset=${offset}&limit=${limit}`, searchParams)
             .then((result) => {
               if (result.result_code === 200) {
                 return objects.getList(result.data.users, "User");
@@ -131,7 +121,7 @@ class ChinoAPISearch extends ChinoAPIBase {
               else {
                 throw new objects.ChinoError(result);
               }
-            }) // directly return true or false
+            })
             .catch((error) => {
               throw new objects.ChinoError(error);
             });

@@ -13,4 +13,5 @@ script:
   - npm run ci_test
 
 after_success:
+  ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov
   ./node_modules/.bin/codecov

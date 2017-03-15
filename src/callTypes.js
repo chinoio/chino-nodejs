@@ -1,7 +1,3 @@
-/**
- * Created by daniele on 07/03/17.
- */
-
 // content types for HTTP methods
 const TYPES = {
   JSON: "application/json",
