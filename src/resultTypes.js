@@ -1,7 +1,3 @@
-/**
- * Created by daniele on 07/03/17.
- */
-
 // constants result types for search library
 const RESULT_TYPES = {
   FULL_CONTENT    : "FULL_CONTENT",

@@ -1,6 +1,3 @@
-/**
- * Created by daniele on 24/02/17.
- */
 "use strict";
 
 const Call = require("./apiCall");
@@ -17,7 +14,6 @@ class ChinoAPIBase {
     const _customerKey = (customerKey !== null)
         ? customerKey
         : {type: "bearer"};
-
     this.call = new Call(baseUrl, customerId, _customerKey);
   }
 }

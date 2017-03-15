@@ -1,6 +1,6 @@
 codecov:
   notify:
-    require_ci_to_pass: no
+    require_ci_to_pass: yes
 
 coverage:
   precision: 2
@@ -9,7 +9,10 @@ coverage:
 
   status:
     project: yes
-    patch: yes
+    patch: yes/**
+ * Created by daniele on 07/03/17.
+ */
+
     changes: no
 
 parsers:

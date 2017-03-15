@@ -55,7 +55,6 @@ describe('Chino Search API', function() {
 
           return searchCaller.documents(schemaId, params)
             .then((result) => {
-              // console.log(JSON.stringify(result))
               result.should.be.an.instanceOf(Array);
               result.forEach((doc) => {
                 doc.should.be.an.instanceOf(objects.Document);
@@ -67,11 +66,134 @@ describe('Chino Search API', function() {
             });
         }
     );
+
+    it("Test the searching of documents from a schema: should return a list of Documents without content",
+        function () {
+          const filterValue = 4;
+          const offset = 2;
+
+          const params = {
+            result_type: RESULT_TYPES.NO_CONTENT,
+            filter_type: "and",
+            filter: [
+              {
+                field: "num",
+                type: "lte",
+                value: filterValue
+              },
+            ]
+          };
+
+          return searchCaller.documents(schemaId, params, offset)
+              .then((result) => {
+                result.should.be.an.instanceOf(Array);
+                result.forEach((doc) => {
+                  doc.should.be.an.instanceOf(objects.Document);
+                  doc.schema_id.should.be.eql(schemaId);
+                });
+
+                result.length.should.equal(filterValue-offset);
+              });
+        }
+    );
+
+    it("Test the searching of documents from a schema: should return the ids of Documents matching search criteria",
+        function () {
+          const filterValue = 5;
+
+          const params = {
+            result_type: RESULT_TYPES.ONLY_ID,
+            filter_type: "and",
+            filter: [
+              {
+                field: "num",
+                type: "lte",
+                value: filterValue
+              },
+            ]
+          };
+
+          return searchCaller.documents(schemaId, params)
+              .then((result) => {
+                result.data.count.should.equal(filterValue);
+                result.data.IDs.should.instanceOf(Array);
+              });
+        }
+    );
+
+    it("Test the searching of documents from a schema: should return the number of Documents matching search criteria",
+        function () {
+          const filterValue = 4;
+
+          const params = {
+            result_type: RESULT_TYPES.COUNT,
+            filter_type: "and",
+            filter: [
+              {
+                field: "num",
+                type: "lte",
+                value: filterValue
+              },
+            ]
+          };
+
+          return searchCaller.documents(schemaId, params)
+              .then((result) => { result.data.count.should.equal(filterValue); });
+        }
+    );
   });
 
   /* Search Users */
   describe("Search Users", function () {
-    it("Test the searching of users from a user schema: should return true",
+    it("Test the searching of users from a user schema: should return a list of Users",
+        function () {
+          const filterValue = 3;
+
+          const params = {
+            result_type: RESULT_TYPES.FULL_CONTENT,
+            filter_type: "and",
+            filter: [
+              {
+                field: "user",
+                type: "lte",
+                value: filterValue
+              },
+            ]
+          };
+
+          return searchCaller.users(usrSchemaId, params)
+              .then((result) => {
+                result.should.be.an.instanceOf(Array);
+                result.forEach((usr) => {
+                  usr.should.be.an.instanceOf(objects.User);
+                  usr.schema_id.should.be.eql(usrSchemaId);
+                });
+
+                result.length.should.equal(filterValue);
+              });
+        }
+    );
+    it("Test the searching of users from a user schema: should return the number of User matching search criteria",
+        function () {
+          const filterValue = 4;
+
+          const params = {
+            result_type: RESULT_TYPES.COUNT,
+            filter_type: "and",
+            filter: [
+              {
+                field: "user",
+                type: "lte",
+                value: filterValue
+              },
+            ]
+          };
+
+          return searchCaller.users(usrSchemaId, params)
+              .then((result) => { result.data.count.should.equal(filterValue); });
+        }
+    );
+    it("Test the searching of users from a user schema (EXISTS): should return true",
         function () {
           const filterValue = 2;
 
@@ -83,6 +205,28 @@ describe('Chino Search API', function() {
                 field: "user",
                 type: "lte",
                 value: filterValue
+              },
+            ]
+          };
+
+          return searchCaller.users(usrSchemaId, params)
+              .then((result) => {
+                result.data.exists.should.be.equal(true);
+              });
+        }
+    );
+    it("Test the searching of users from a user schema (USERNAME_EXISTS): should return true",
+        function () {
+          const filterValue = 2;
+
+          const params = {
+            result_type: RESULT_TYPES.USERNAME_EXISTS,
+            filter_type: "and",
+            filter: [
+              {
+                field: "username",
+                type: "eq",
+                value: "theLoginUser"
               },
             ]
           };

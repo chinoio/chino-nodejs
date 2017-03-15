@@ -42,3 +42,6 @@ jspm_packages
 # test files
 data.json
 result.jpg
+
+# documentation
+docs

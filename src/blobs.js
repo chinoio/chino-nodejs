@@ -6,9 +6,9 @@ const crypto = require("crypto");
 const objects = require("./objects");
 const ChinoAPIBase = require("./chinoBase");
 
-/** Commit the upload and return the blob information
+/** Commit the upload action and return the blob information
  *
- * @param uploadId  {string}
+ * @param uploadId  {string}  The upload id representing an upload action
  * @return {Promise.<objects.Blob, objects.ChinoError>}
  *         A promise that return a Blob object if resolved,
  *         otherwise throw an ChinoError object if rejected
@@ -34,10 +34,7 @@ function commit(uploadId) {
 /** Create a new blob
  *
  * @param info  {object} The parameter for the creation of a blob
- * @return {Promise.<objects.BlobUncommitted, objects.ChinoError>}
- *         A promise that return a BlobUncommitted object if resolved,
- *         otherwise throw an ChinoError object if rejected
- *         or was not retrieved a success status
+ * @return {Promise}
  */
 function create(info = {}) {
   return this.call.post(`/blobs`, info);

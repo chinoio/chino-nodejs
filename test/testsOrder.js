@@ -14,3 +14,4 @@ require("./lib/collectionsTest");
 require("./lib/searchTest");
 require("./lib/permsTest");
 require("./lib/blobsTest");
+require("./lib/chinoTest");

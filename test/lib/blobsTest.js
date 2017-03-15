@@ -116,7 +116,6 @@ describe('Chino Blobs API', function () {
     }
 
     return sleep(1000).then(() => {
-          console.log("Schema: " + schemaId)
         if (schemaId !== "") {
           return
               apiCall.del(`/schemas/${schemaId}?force=true&all_content=true`)
