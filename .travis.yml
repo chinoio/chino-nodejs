@@ -6,6 +6,11 @@ branches:
   only:
   - master
 
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
 install:
   npm install
 
@@ -14,3 +19,8 @@ script:
 
 after_success:
   ./node_modules/.bin/nyc report --reporter=text-lcov > coverage.lcov && ./node_modules/.bin/codecov
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: ./updateDocs.sh
