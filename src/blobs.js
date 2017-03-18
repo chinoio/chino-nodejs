@@ -113,22 +113,19 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                   Promise.all(chunks)
                       .then((result) => {
                         if (result.every((res) => res.result_code === 200)) {
-                          commit.call(this, uploadId)
-                              .then((blob) => {
-                                // attention: digest method can be called one for hash
-                                if (blob.sha1 === hash.digest("hex")) {
-                                  resolve(blob);
-                                }
-                                else {
-                                  reject("Digest mismatch.");
-                                }
-                              })
-                              .catch((error) => {
-                                throw new objects.ChinoError(error);
-                              });
+                          return commit.call(this, uploadId)
                         }
                         else {
                           throw new objects.ChinoError(result);
+                        }
+                      })
+                      .then((blob) => {
+                        // attention: digest method can be called one for hash
+                        if (blob.sha1 === hash.digest("hex")) {
+                          resolve(blob);
+                        }
+                        else {
+                          reject("Digest mismatch.");
                         }
                       })
                       .catch((error) => { throw new objects.ChinoError(error); })

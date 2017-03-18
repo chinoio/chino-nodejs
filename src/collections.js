@@ -32,7 +32,7 @@ class ChinoAPICollections extends ChinoAPIBase {
     return this.call.get(`/collections`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return objects.getList(result.data.collections, "Collection");
+            return new objects.ChinoList(result.data, objects.names.COLLECTIONS[1], "Collection");
           }
           else {
             throw new objects.ChinoError(result);
@@ -153,7 +153,7 @@ class ChinoAPICollections extends ChinoAPIBase {
     return this.call.get(`/collections/${collectionId}/documents`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return objects.getList(result.data.documents, "Document");
+            return new objects.ChinoList(result.data, objects.names.DOCUMENTS[1], "Document");
           }
           else {
             throw new objects.ChinoError(result);
@@ -216,28 +216,15 @@ class ChinoAPICollections extends ChinoAPIBase {
    *         object if rejected or was not retrieved a success status
    */
   search(filter) {
-    let collections = [];
     return this.call.post(`/collections/search`, filter)
         .then((result) => {
           if (result.result_code === 200) {
-            result.data.collections.forEach((cInfo) => {
-              let cData = {
-                data : {
-                  collection : cInfo
-                },
-                result_code : result.result_code
-              };
-
-              collections.push(new objects.Collection(cData));
-            })
-
-            return collections;
+            return new objects.ChinoList(result.data, objects.names.COLLECTIONS[1], "Collection");
           }
           else {
             throw new objects.ChinoError(result);
           }
         })
-
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

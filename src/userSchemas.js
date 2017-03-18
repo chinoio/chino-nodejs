@@ -33,13 +33,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
     return this.call.get(`/user_schemas`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return result.data.user_schemas.map((value) =>
-                new objects.UserSchema({
-                  data : {
-                    user_schema : value
-                  },
-                  result_code : result.result_code
-                }));
+            return new objects.ChinoList(result.data, objects.names.USER_SCHEMAS[1], "UserSchema");
           }
           else {
             throw new objects.ChinoError(result);

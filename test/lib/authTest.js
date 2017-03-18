@@ -8,6 +8,7 @@ const settings = require("./../testsSettings");
 const baseUrl     = settings.baseUrl;
 
 describe('Chino Auth API', function () {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(5000);
 

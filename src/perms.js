@@ -35,18 +35,21 @@ class ChinoAPIPerms extends ChinoAPIBase {
 
   /** Grant or revoke permission on resources objects
    *
-   * @param action         {string}
-   * @param resourcesType  {string}
-   * @param subjectType    {string}
-   * @param subjectId      {string}
-   * @param manage         {Array}
-   * @param authorize      {Array}
+   * @param data {object}
+   *        A JS object that contains parameters for working on permissions. Parameters are:
+   *     - action        {string} The permission action to execute                    {grant | revoke}
+   *     - resourcesType {string} The top level resource on which execute the action  {repositories | user_schemas | groups}
+   *     - subjectType   {string} The target type of permission action                {users | user_schemas | groups}
+   *     - subjectId     {string} The id of the target type
+   *     - manage        {Array}  The list of permissions that target receive on the resources
+   *     - authorize     {Array}  The list of permissions that target can give to others subjectType
+   *
    * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
-   *          otherwise throw a ChinoError object if rejected
+   *          otherwise throw a ChinoError if rejected
    *          or was not retrieved a success status
    */
-  onResources(action, resourcesType, subjectType, subjectId, manage = [], authorize = []) {
+  onResources({action, resourcesType, subjectType, subjectId, manage = [], authorize = []}) {
     const perms = {
       manage : manage,
       authorize : authorize
@@ -67,24 +70,27 @@ class ChinoAPIPerms extends ChinoAPIBase {
 
   /** Grant or revoke permission on resource objects
    *
-   * @param action        {string}
-   * @param resourceType  {string}
-   * @param resourcesId   {string}
-   * @param subjectType   {string}
-   * @param subjectId     {string}
-   * @param manage        {Array}
-   * @param authorize     {Array}
+   * @param data {object}
+   *        A JS object that contains parameters for working on permissions. Parameters are:
+   *     - action        {string} The permission action to execute         {grant | revoke}
+   *     - resourceType  {string} The resource on which execute the action
+   *     - resourceId    {string} The id of the resource on which target can manage
+   *     - subjectType   {string} The target type of permission action     {users | user_schemas | groups}
+   *     - subjectId     {string} The id of the target type
+   *     - manage        {Array}  The list of permissions that target receive on the resources
+   *     - authorize     {Array}  The list of permissions that target can give to others subjectType
+   *
    * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
-   *          otherwise throw a ChinoError object if rejected
+   *          otherwise throw a ChinoError if rejected
    *          or was not retrieved a success status
    */
-  onResource(action, resourceType, resourcesId, subjectType, subjectId, manage = [], authorize = []) {
+  onResource({action, resourceType, resourceId, subjectType, subjectId, manage = [], authorize = []}) {
     const perms = {
       manage : manage,
       authorize : authorize
     };
-    const url = `/perms/${action}/${resourceType}/${resourcesId}/${subjectType}/${subjectId}`;
+    const url = `/perms/${action}/${resourceType}/${resourceId}/${subjectType}/${subjectId}`;
 
     return this.call.post(url, perms)
         .then((result) => {
@@ -100,25 +106,28 @@ class ChinoAPIPerms extends ChinoAPIBase {
 
   /** Grant or revoke permission on resource children objects
    *
-   * @param action        {string}
-   * @param resourceType  {string}
-   * @param resourcesId   {string}
-   * @param childrenType  {string}
-   * @param subjectType   {string}
-   * @param subjectId     {string}
-   * @param manage        {Array}
-   * @param authorize     {Array}
+   * @param data {object}
+   *        A JS object that contains parameters for working on permissions. Parameters are:
+   *     - action        {string} The permission action to execute                      {grant | revoke}
+   *     - resourceType  {string} The resource on which execute the action
+   *     - resourceId    {string} The id of the resource on which target can manage
+   *     - childrenType  {string} The resource children of resource type on target can manage
+   *     - subjectType   {string} The target type of permission action                  {users | user_schemas | groups}
+   *     - subjectId     {string} The id of the target type
+   *     - manage        {Array}  The list of permissions that target receive on the resources
+   *     - authorize     {Array}  The list of permissions that target can give to others subjectType
+   *
    * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
-   *          otherwise throw a ChinoError object if rejected
+   *          otherwise throw a ChinoError if rejected
    *          or was not retrieved a success status
    */
-  onChildren(action, resourceType, resourcesId, childrenType, subjectType, subjectId,  manage = [], authorize = []) {
+  onChildren({action, resourceType, resourceId, childrenType, subjectType, subjectId,  manage = [], authorize = []}) {
     const perms = {
       manage : manage,
       authorize : authorize
     };
-    const url = `/perms/${action}/${resourceType}/${resourcesId}/${childrenType}/${subjectType}/${subjectId}`;
+    const url = `/perms/${action}/${resourceType}/${resourceId}/${childrenType}/${subjectType}/${subjectId}`;
 
     return this.call.post(url, perms)
         .then((result) => {
@@ -158,7 +167,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
    * @param documentId {string}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoError if rejected
    *         or was not retrieved a success status
    */
   getDocumentPermissions(documentId) {
@@ -179,7 +188,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
    * @param userId {string}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoError if rejected
    *         or was not retrieved a success status
    */
   getUserPermissions(userId) {
@@ -200,7 +209,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
    * @param groupId {string}
    * @return {Promise.<Array, objects.ChinoError>}
    *         A promise that return a list of Perms object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoError if rejected
    *         or was not retrieved a success status
    */
   getGroupPermissions(groupId) {

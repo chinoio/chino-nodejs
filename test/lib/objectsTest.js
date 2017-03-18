@@ -384,7 +384,6 @@ describe("Chino API Objects", function () {
       }
 
       let error = new objects.ChinoError(responseTest);
-      console.log(error.message)
       error.should.instanceOf(objects.ChinoError);
       error.should.containEql(errorObject);
     });

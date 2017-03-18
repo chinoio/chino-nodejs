@@ -39,7 +39,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
     return this.call.get(`/schemas/${schemaId}/documents`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return objects.getList(result.data.documents, "Document");
+            return new objects.ChinoList(result.data, objects.names.DOCUMENTS[1], "Document");
           }
           else {
             throw new objects.ChinoError(result);

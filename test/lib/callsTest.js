@@ -25,6 +25,7 @@ function e404(err) {
 }
 
 describe('Chino API Call', function () {
+  this.slow(300);
   this.timeout(5000);
   let repId = "";
 

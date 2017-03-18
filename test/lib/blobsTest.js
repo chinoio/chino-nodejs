@@ -13,6 +13,7 @@ const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
 describe('Chino Blobs API', function () {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(5000);
 
@@ -69,6 +70,7 @@ describe('Chino Blobs API', function () {
   /* upload */
   it("Test the upload of a blob: should return a Blob object",
       function () {
+        this.timeout(12000); // for slow connection (e.g. 1Mbps upload)
         const fileName = path.join(__dirname, "files/img.jpg");
 
         return blobCaller.upload(docId, "file", fileName)

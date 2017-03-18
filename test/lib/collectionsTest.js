@@ -10,6 +10,7 @@ const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
 describe('Chino Collections API', function() {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(5000);
 
@@ -60,12 +61,14 @@ describe('Chino Collections API', function() {
       function () {
         return collectionCaller.list()
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((coll) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((coll) => {
                 coll.should.be.an.instanceOf(objects.Collection);
               });
               // one collection inserted plus an existing one
-              result.length.should.equal(2);
+              result.list.length.should.equal(2);
             });
       }
   );
@@ -104,12 +107,14 @@ describe('Chino Collections API', function() {
         assert(collectionId !== "", "Collection undefined");
         return collectionCaller.listDocuments(collectionId)
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((doc) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((doc) => {
                 doc.should.be.an.instanceOf(objects.Document);
               });
               // only one document inserted in this collection
-              result.length.should.equal(1);
+              result.list.length.should.equal(1);
             });
       }
   );
@@ -135,13 +140,15 @@ describe('Chino Collections API', function() {
 
         return collectionCaller.search(filter)
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((coll) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((coll) => {
                 coll.should.be.an.instanceOf(objects.Collection);
                 coll.name.should.containEql("updated");
               });
               // in this case we have 1 collection that contain "Update" in its name
-              result.length.should.equal(1);
+              result.list.length.should.equal(1);
             });
       }
   );

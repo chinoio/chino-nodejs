@@ -10,6 +10,7 @@ const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
 describe('Chino Documents API', function() {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(5000);
 
@@ -65,12 +66,14 @@ describe('Chino Documents API', function() {
         assert(schemaId !== "", "Schema undefined");
         return documentCaller.list(schemaId)
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((doc) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((doc) => {
                 doc.should.be.an.instanceOf(objects.Document);
               });
               // documents already inserted plus the new one
-              result.length.should.equal(elements);
+              result.list.length.should.equal(elements);
             });
       }
   );

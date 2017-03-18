@@ -1,6 +1,7 @@
 const assert = require("assert");
 const should = require("should");
 
+const Auth = require("../../src/auth");
 const Perms = require("../../src/perms");
 const objects = require("../../src/objects");
 const settings = require("./../testsSettings");
@@ -10,6 +11,7 @@ const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
 describe('Chino Perms API', function() {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(10000);
 
@@ -23,6 +25,8 @@ describe('Chino Perms API', function() {
   let usrSchemaId = "";
   let usrIds = [];
 
+  let auth;
+
   // prepare the environment
   before("Set up resources to test the lib", function () {
     const data = settings.data();
@@ -33,21 +37,22 @@ describe('Chino Perms API', function() {
     groupId = data.groupId;
     usrSchemaId = data.usrSchemaId;
     usrIds = data.usrIds;
+
+    auth = new Auth(baseUrl, data.appId, data.appKey);
   });
 
   /* on resources */
   it("Test the granting of permission on resources: should return a Success object", function () {
-    const manage = ["C", "R", "U", "D"];
-    const authorize = ["R"];
+    const data = {
+        action        : "grant",
+        resourcesType : objects.names.REPOSITORIES[1],
+        subjectType   : objects.names.USERS[1],
+        subjectId     : usrIds[4],
+        manage        : ["C", "R", "U", "D"],
+        authorize     : ["R"]
+    }
 
-    return permsCaller.onResources(
-        "grant",
-        objects.name.REPOSITORIES,
-        objects.name.USERS,
-        usrIds[4],
-        manage,
-        authorize
-    )
+    return permsCaller.onResources(data)
     .then((result) => {
       result.should.be.an.instanceOf(objects.Success);
       result.result_code.should.be.equal(200);
@@ -55,16 +60,16 @@ describe('Chino Perms API', function() {
   });
   /* on resource */
   it("Test the granting of permission on resource (user schema): should return a Success object", function () {
-    const manage = ["R"];
+    const data = {
+      action        : "grant",
+      resourceType  : objects.names.USER_SCHEMAS[1],
+      resourceId    : usrSchemaId,
+      subjectType   : objects.names.USERS[1],
+      subjectId     : usrIds[4],
+      manage        : ["R"]
+    };
 
-    return permsCaller.onResource(
-        "grant",
-        objects.name.USER_SCHEMAS,
-        usrSchemaId,
-        objects.name.USERS,
-        usrIds[4],
-        manage
-    )
+    return permsCaller.onResource(data)
     .then((result) => {
       result.should.be.an.instanceOf(objects.Success);
       result.result_code.should.be.equal(200);
@@ -72,16 +77,16 @@ describe('Chino Perms API', function() {
   });
 
   it("Test the granting of permission on resource (document): should return a Success object", function () {
-    const manage = ["R", "U"];
+    const data = {
+      action        : "grant",
+      resourceType  : objects.names.DOCUMENTS[1],
+      resourceId    : docIds[4],
+      subjectType   : objects.names.USERS[1],
+      subjectId     : usrIds[3],
+      manage        : ["R", "U"]
+    };
 
-    return permsCaller.onResource(
-        "grant",
-        objects.name.DOCUMENTS,
-        docIds[4],
-        objects.name.USERS,
-        usrIds[3],
-        manage
-    )
+    return permsCaller.onResource(data)
     .then((result) => {
       result.should.be.an.instanceOf(objects.Success);
       result.result_code.should.be.equal(200);
@@ -89,16 +94,16 @@ describe('Chino Perms API', function() {
   });
 
   it("Test the granting of permission on resource (group): should return a Success object", function () {
-    const manage = ["R"];
+    const data = {
+      action        : "grant",
+      resourceType  : objects.names.SCHEMAS[1],
+      resourceId    : schemaId,
+      subjectType   : objects.names.GROUPS[1],
+      subjectId     : groupId,
+      manage        : ["R"]
+    };
 
-    return permsCaller.onResource(
-        "grant",
-        objects.name.SCHEMAS,
-        schemaId,
-        objects.name.GROUPS,
-        groupId,
-        manage
-    )
+    return permsCaller.onResource(data)
     .then((result) => {
       result.should.be.an.instanceOf(objects.Success);
       result.result_code.should.be.equal(200);
@@ -107,29 +112,34 @@ describe('Chino Perms API', function() {
 
   /* on children */
   it("Test the granting of permission on children of a resource: should return a Success object", function () {
-    const manage = ["R", "U", "L"];
-    const authorize = ["R", "A"];
+    const data = {
+      action        : "grant",
+      resourceType  : objects.names.SCHEMAS[1],
+      resourceId    : schemaId,
+      childrenType  : objects.names.DOCUMENTS[1],
+      subjectType   : objects.names.GROUPS[1],
+      subjectId     : groupId,
+      manage        : ["R", "U", "L"],
+      authorize     : ["R", "A"]
+    };
 
-    return permsCaller.onChildren(
-        "grant",
-        objects.name.SCHEMAS,
-        schemaId,
-        objects.name.DOCUMENTS,
-        objects.name.GROUPS,
-        groupId,
-        manage,
-        authorize
-    )
+    return permsCaller.onChildren(data)
     .then((result) => {
       result.should.be.an.instanceOf(objects.Success);
       result.result_code.should.be.equal(200);
     });
   });
+
   /* on view perms */
-  // TODO: need to use Bearer auth to test
-  it.skip("Test viewing of all permissions assigned to current user: should return a list of Perms object",
+  it("Test viewing of all permissions assigned to current user: should return a list of Perms object",
       function () {
-        return permsCaller.getPermissions()
+        return auth.login("theLoginUser", "This1CouldBe_a_StrongPassword!")
+            .then((user) => {
+              // need a perms caller from user POV
+              const userPermsCaller = new Perms(baseUrl, user.access_token);
+
+              return userPermsCaller.getPermissions();
+            })
             .then((result) => {
               result.should.be.an.instanceOf(Array);
               result.forEach((perm) => {
@@ -173,5 +183,23 @@ describe('Chino Perms API', function() {
                 Object.keys(perm).length.should.be.above(0);
               });
             });
+  });
+
+  /* revoke */
+  it("Test the revoking of permission on resource (document): should return a Success object", function () {
+    const data = {
+      action        : "revoke",
+      resourceType  : objects.names.DOCUMENTS[1],
+      resourceId    : docIds[4],
+      subjectType   : objects.names.USERS[1],
+      subjectId     : usrIds[3],
+      manage        : ["R", "U"]
+    };
+
+    return permsCaller.onResource(data)
+        .then((result) => {
+          result.should.be.an.instanceOf(objects.Success);
+          result.result_code.should.be.equal(200);
+        });
   });
 });

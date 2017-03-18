@@ -18,10 +18,10 @@ class Chino {
    * @constructor
    * @param {string} baseUrl
    * @param {string} customerId
-   * @param {string} customerKey
+   * @param {string | null} customerKey
    */
 
-  constructor(baseUrl, customerId, customerKey) {
+  constructor(baseUrl = "", customerId = "", customerKey = null) {
     this.baseUrl = baseUrl;
 
     // create Chino objects

@@ -11,6 +11,7 @@ const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
 describe('Chino Search API', function() {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(10000);
 
@@ -55,14 +56,16 @@ describe('Chino Search API', function() {
 
           return searchCaller.documents(schemaId, params)
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((doc) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((doc) => {
                 doc.should.be.an.instanceOf(objects.Document);
                 doc.schema_id.should.be.eql(schemaId);
                 doc.content.num.should.be.belowOrEqual(filterValue);
               });
 
-              result.length.should.equal(filterValue);
+              result.list.length.should.equal(filterValue);
             });
         }
     );
@@ -86,13 +89,15 @@ describe('Chino Search API', function() {
 
           return searchCaller.documents(schemaId, params, offset)
               .then((result) => {
-                result.should.be.an.instanceOf(Array);
-                result.forEach((doc) => {
+                result.should.be.an.instanceOf(objects.ChinoList);
+                result.count.should.be.above(0);
+                result.total_count.should.be.above(0);
+                result.list.forEach((doc) => {
                   doc.should.be.an.instanceOf(objects.Document);
                   doc.schema_id.should.be.eql(schemaId);
                 });
 
-                result.length.should.equal(filterValue-offset);
+                result.list.length.should.equal(filterValue-offset);
               });
         }
     );
@@ -163,13 +168,14 @@ describe('Chino Search API', function() {
 
           return searchCaller.users(usrSchemaId, params)
               .then((result) => {
-                result.should.be.an.instanceOf(Array);
-                result.forEach((usr) => {
+                result.should.be.an.instanceOf(objects.ChinoList)
+                result.count.should.be.above(0);
+                result.total_count.should.be.above(0);
+                result.list.forEach((usr) => {
                   usr.should.be.an.instanceOf(objects.User);
                   usr.schema_id.should.be.eql(usrSchemaId);
                 });
-
-                result.length.should.equal(filterValue);
+                result.list.length.should.equal(filterValue);
               });
         }
     );
