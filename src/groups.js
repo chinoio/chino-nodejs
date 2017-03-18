@@ -33,7 +33,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
     return this.call.get(`/groups`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return objects.getList(result.data.groups, "Group");
+            return new objects.ChinoList(result.data, objects.names.GROUPS[1], "Group");
           }
           else {
             throw new objects.ChinoError(result);

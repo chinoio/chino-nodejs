@@ -79,12 +79,14 @@ describe('Chino Schemas API', function() {
 
         return schemaCaller.list(repoId)
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((schema) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((schema) => {
                 schema.should.be.an.instanceOf(objects.Schema);
               });
               // one inserted now and one already online
-              result.length.should.equal(2);
+              result.list.length.should.equal(2);
             });
       }
   );

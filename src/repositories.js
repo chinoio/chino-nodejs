@@ -33,7 +33,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
     return this.call.get(`/repositories`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return objects.getList(result.data.repositories, "Repository");
+            return new objects.ChinoList(result.data, objects.names.REPOSITORIES[1], "Repository");
           }
           else {
             throw new objects.ChinoError(result);

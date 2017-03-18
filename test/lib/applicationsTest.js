@@ -77,12 +77,14 @@ describe('Chino Applications API', function() {
       function () {
         return appCaller.list()
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((app) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((app) => {
                 app.should.be.an.instanceOf(objects.Application);
               });
               // these app plus the one already inserted
-              result.length.should.equal(3);
+              result.list.length.should.equal(3);
             });
       }
   );

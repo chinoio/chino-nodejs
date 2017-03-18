@@ -90,12 +90,14 @@ describe('Chino Users API', function () {
         assert(usrSchemaId, "User schema not defined");
         return userCaller.list(usrSchemaId)
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((user) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((user) => {
                 user.should.be.an.instanceOf(objects.User);
               });
               // in this case we have inserted 1 user more than before
-              result.length.should.equal(elements+1);
+              result.list.length.should.equal(elements+1);
             });
       }
   );

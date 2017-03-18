@@ -37,7 +37,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
     return this.call.get(`/repositories/${repositoryId}/schemas`, params)
         .then((result) => {
           if (result.result_code === 200) {
-            return objects.getList(result.data.schemas, "Schema");
+            return new objects.ChinoList(result.data, objects.names.SCHEMAS[1], "Schema");
           }
           else {
             throw new objects.ChinoError(result);

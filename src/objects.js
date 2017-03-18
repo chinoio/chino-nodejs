@@ -2,14 +2,17 @@
 
 let ChinoAPIObjects = {}
 
-ChinoAPIObjects.name = {
-    REPOSITORIES : "repositories",
-    SCHEMAS      : "schemas",
-    DOCUMENTS    : "documents",
-    COLLECTIONS  : "collections",
-    USERS        : "users",
-    USER_SCHEMAS : "user_schemas",
-    GROUPS       : "groups"
+ChinoAPIObjects.names = {
+    APPLICATIONS : ["application" , "applications"],
+    REPOSITORIES : ["repository"  , "repositories"],
+    SCHEMAS      : ["schema"      , "schemas"],
+    DOCUMENTS    : ["document"    , "documents"],
+    COLLECTIONS  : ["collection"  , "collections"],
+    USERS        : ["user"        , "users"],
+    USER_SCHEMAS : ["user_schema" , "user_schemas"],
+    GROUPS       : ["group"       , "groups"],
+    BLOBS        : ["blob"        , "blobs"],
+    PERMISSIONS  : ["permission"  , "permissions"]
 }
 
 /** Js object for wrapping Chino Api objects */
@@ -28,28 +31,28 @@ class BaseObject {
 ChinoAPIObjects.Group =
     class Group extends BaseObject {
       constructor(response) {
-        super(response, "group")
+        super(response, ChinoAPIObjects.names.GROUPS[0])
       }
     };
 
 ChinoAPIObjects.UserSchema =
     class UserSchema extends BaseObject {
       constructor(response) {
-        super(response, "user_schema")
+        super(response, ChinoAPIObjects.names.USER_SCHEMAS[0])
       }
     };
 
 ChinoAPIObjects.User =
     class User extends BaseObject {
       constructor(response) {
-        super(response, "user")
+        super(response, ChinoAPIObjects.names.USERS[0])
       }
     };
 
 ChinoAPIObjects.Application =
     class Application extends BaseObject {
       constructor(response) {
-        super(response, "application")
+        super(response, ChinoAPIObjects.names.APPLICATIONS[0])
       }
     };
 
@@ -57,42 +60,42 @@ ChinoAPIObjects.Application =
 ChinoAPIObjects.Repository =
     class Repository extends BaseObject {
       constructor(response) {
-        super(response, "repository")
+        super(response, ChinoAPIObjects.names.REPOSITORIES[0])
       }
     };
 
 ChinoAPIObjects.Schema =
     class Schema extends BaseObject {
       constructor(response) {
-        super(response, "schema")
+        super(response, ChinoAPIObjects.names.SCHEMAS[0])
       }
     };
 
 ChinoAPIObjects.Document =
     class Document extends BaseObject {
       constructor(response) {
-        super(response, "document")
+        super(response, ChinoAPIObjects.names.DOCUMENTS[0])
       }
     };
 
 ChinoAPIObjects.Collection =
     class Collection extends BaseObject {
       constructor(response) {
-        super(response, "collection")
+        super(response, ChinoAPIObjects.names.COLLECTIONS[0])
       }
     };
 
 ChinoAPIObjects.Blob =
     class Blob extends BaseObject {
       constructor(response) {
-        super(response, "blob")
+        super(response, ChinoAPIObjects.names.BLOBS[0])
       }
     };
 
 ChinoAPIObjects.Perms =
     class Perms extends BaseObject {
       constructor(response) {
-        super(response, "permissions")
+        super(response, ChinoAPIObjects.names.PERMISSIONS[1])
       }
     };
 
@@ -129,14 +132,22 @@ ChinoAPIObjects.Success =
       }
     }
 
-ChinoAPIObjects.getList = (data, object, result_code = 200) =>
-    data.map((value) =>
-        new ChinoAPIObjects[object]({
-          data : {
-            [object.toLowerCase()] : value
-          },
-          result_code : result_code
-        })
-    );
+ChinoAPIObjects.ChinoList =
+    class ChinoList {
+      constructor(data, param, object, result_code = 200) {
+        this.count = data.count;
+        this.total_count = data.total_count;
+        this.list =
+            /* use plural name */
+            data[param].map((value) =>
+              new ChinoAPIObjects[object]({
+                data: {
+                  /* use singular name */
+                  [ChinoAPIObjects.names[param.toUpperCase()][0]]: value
+                },
+                result_code: result_code
+              }));
+      }
+    }
 
 module.exports = ChinoAPIObjects;

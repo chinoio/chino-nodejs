@@ -1,7 +1,3 @@
-/**
- * Created by daniele on 24/02/17.
- */
-
 const assert = require("assert");
 const should = require('should');
 
@@ -70,12 +66,14 @@ describe('Chino Groups API', function() {
       function () {
         return groupCaller.list()
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((group) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((group) => {
                 group.should.be.an.instanceOf(objects.Group);
               });
               // one inserted now and one already online
-              result.length.should.equal(2);
+              result.list.length.should.equal(2);
             });
       }
   );

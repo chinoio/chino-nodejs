@@ -22,7 +22,7 @@ const ChinoBlobs        = require("../../src/blobs");
 const ChinoCollections  = require("../../src/collections");
 const ChinoSearch       = require("../../src/search");
 
-describe("Chino API Objects", function () {
+describe("Chino main class", function () {
   it("Test Chino Object: should create a Chino Object with all of its properties.",
       function () {
         const chino = new Chino(baseUrl, customerId, customerKey);
@@ -48,7 +48,8 @@ describe("Chino API Objects", function () {
         };
         return chino.applications.create(app)
             .then((res) => {
-              chino.setAuth(res.app_id, res.app_key)
+              console.log(res);
+              chino.setAuth(res.app_id, res.app_secret)
 
               chino.auth.should.be.instanceOf(ChinoAuth);
             })

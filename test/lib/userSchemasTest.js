@@ -62,12 +62,14 @@ describe('Chino User Schemas API', function() {
       function () {
         return usCaller.list()
             .then((result) => {
-              result.should.be.an.instanceOf(Array);
-              result.forEach((userSchema) => {
+              result.should.be.an.instanceOf(objects.ChinoList);
+              result.count.should.be.above(0);
+              result.total_count.should.be.above(0);
+              result.list.forEach((userSchema) => {
                 userSchema.should.be.an.instanceOf(objects.UserSchema);
               });
               // one inserted now and one already online
-              result.length.should.equal(2);
+              result.list.length.should.equal(2);
             });
       }
   );

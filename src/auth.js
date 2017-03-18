@@ -15,8 +15,21 @@ class ChinoAPIAuth {
    * @param applicationId      {string}  The Chino application id
    * @param applicationSecret  {string}  The Chino application key
    */
-  constructor(baseUrl, applicationId, applicationSecret = "") {
+  constructor(baseUrl, applicationId, applicationSecret) {
     this.baseUrl = baseUrl;
+
+    if (applicationId === "" || typeof(applicationId) === "undefined" ||
+        applicationSecret === "" || typeof(applicationSecret) === "undefined") {
+
+      const err = {
+        message : "Impossible to create an Auth object without credentials",
+        data : null,
+        result : "error",
+        result_code : 400
+      }
+      throw new objects.ChinoError(err);
+    }
+
     _(this).applicationId = applicationId;
     // select between basic or bearer auth
     _(this).applicationSecret = applicationSecret;

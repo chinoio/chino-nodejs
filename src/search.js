@@ -33,7 +33,7 @@ class ChinoAPISearch extends ChinoAPIBase {
         return this.call.post(`/search/documents/${schemaId}?offset=${offset}&limit=${limit}`, searchParams)
             .then((result) => {
               if (result.result_code === 200) {
-                return objects.getList(result.data.documents, "Document");
+                return new objects.ChinoList(result.data, objects.names.DOCUMENTS[1], "Document");
               }
               else {
                 throw new objects.ChinoError(result);
@@ -87,7 +87,7 @@ class ChinoAPISearch extends ChinoAPIBase {
         return this.call.post(`/search/users/${userSchemaId}?offset=${offset}&limit=${limit}`, searchParams)
             .then((result) => {
               if (result.result_code === 200) {
-                return objects.getList(result.data.users, "User");
+                return new objects.ChinoList(result.data, objects.names.USERS[1], "User");
               }
               else {
                 throw new objects.ChinoError(result);
