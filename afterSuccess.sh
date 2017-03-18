@@ -12,7 +12,7 @@ then
     git clone --quiet --branch=gh-pages https://github.com/danibix95/chino-nodejs.git gh-pages
     if cd gh-pages; then
         # remove files
-        rm -rf .
+        rm -rfd --interactive=never chino-nodejs
         # copy just generated files
         cp -r ../docs/*/*/* .
         if [ -z `git diff --exit-code` ]; then
