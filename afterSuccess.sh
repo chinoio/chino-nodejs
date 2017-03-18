@@ -12,16 +12,23 @@ then
     git clone --quiet --branch=gh-pages https://github.com/danibix95/chino-nodejs.git gh-pages
     if cd gh-pages; then
         # remove files
-        rm -rfd --interactive=never chino-nodejs
+        echo "Before"
+        ls -l
+        rm -rf --interactive=never chino-nodejs
         # copy just generated files
         cp -r ../docs/*/*/* .
-        if [ -z `git diff --exit-code` ]; then
+
+        # update only if there are update on docs
+        if [ `git diff --quiet` -eq 1 ]; then
             git add -A
             git commit -m "Documentation updated by Travis CI (build $TRAVIS_BUILD_NUMBER)"
             git push --quiet https://${GH_PAGES}@github.com/danibix95/chino-nodejs.git gh-pages
         else
             echo "No changes to docs on this push."
         fi
+
+        echo "After"
+        ls -l
         cd ..
     fi
 fi
