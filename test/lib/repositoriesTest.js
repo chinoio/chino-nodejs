@@ -10,6 +10,7 @@ const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
 describe('Chino Repositories API', function() {
+  this.slow(300);
   // change timeout for slow network
   this.timeout(5000);
 

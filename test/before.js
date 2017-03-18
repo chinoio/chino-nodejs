@@ -129,12 +129,12 @@ module.exports = Promise.all([
           return Promise.all(ids.map(id =>
               apiCall.post(`/user_schemas/${data.usrSchemaId}/users`, user(id)))
           )
-          .then((res) => {
-            res.forEach(r => { data.usrIds.push(r.data.user.user_id); });
-            return apiCall.post(`/user_schemas/${data.usrSchemaId}/users`, fixedUser)
-                .then((res) => data.usrIds.push(res.data.user.user_id))
-          })
-        }),
+        })
+        .then((res) => {
+          res.forEach(r => { data.usrIds.push(r.data.user.user_id); });
+          return apiCall.post(`/user_schemas/${data.usrSchemaId}/users`, fixedUser)
+        })
+        .then((res) => { data.usrIds.push(res.data.user.user_id) }),
     /* create a group */
     apiCall.post("/groups", group)
         .then(res => { data.groupId = res.data.group.group_id; })
@@ -153,25 +153,25 @@ module.exports = Promise.all([
           data.repoId = res.data.repository.repository_id;
 
           return apiCall.post(`/repositories/${data.repoId}/schemas`, schema)
-              .then((res) => {
-                data.schemaId = res.data.schema.schema_id;
+        })
+        .then((res) => {
+          data.schemaId = res.data.schema.schema_id;
 
-                return Promise.all(ids.map(id =>
-                    apiCall.post(`/schemas/${data.schemaId}/documents`, doc(id))))
-                    .then((res) => {
-                      res.forEach(r => { data.docIds.push(r.data.document.document_id); });
-                    })
-              })
+          return Promise.all(ids.map(id =>
+              apiCall.post(`/schemas/${data.schemaId}/documents`, doc(id))))
+        })
+        .then((res) => {
+          res.forEach(r => { data.docIds.push(r.data.document.document_id); });
         }),
     /* create a collection */
     apiCall.post(`/collections`, collection)
         .then(res => { data.collId = res.data.collection.collection_id; })
   ])
   .then((res =>
-          /* add 3 documents to collection */
-          Promise.all([data.docIds[0], data.docIds[1], data.docIds[2]]
-              .map(id => apiCall.post(`/collections/${data.collId}/documents/${id}`))
-          )
+        /* add 3 documents to collection */
+        Promise.all([data.docIds[0], data.docIds[1], data.docIds[2]]
+            .map(id => apiCall.post(`/collections/${data.collId}/documents/${id}`))
+        )
   ))
   .catch((err) =>
       console.log(`Error inserting documents resources\n${JSON.stringify(err)}`)

@@ -21,15 +21,14 @@ Promise.all([
   apiCall.get(`/repositories`)
     .then(result =>
       Promise.all(
-          result.data.repositories.map(
-              repo =>
-                 apiCall.get(`/repositories/${repo.repository_id}/schemas`)
-                    .then( res =>
-                        Promise.all(res.data.schemas.map(
-                            schema => apiCall.del(`/schemas/${schema.schema_id}?force=true&all_content=true`)
-                            )
-                        ).then(res => apiCall.del(`/repositories/${repo.repository_id}?force=true`))
-                    )
+          result.data.repositories.map(repo =>
+            apiCall.get(`/repositories/${repo.repository_id}/schemas`)
+              .then( res =>
+                  Promise.all(res.data.schemas.map(
+                      schema => apiCall.del(`/schemas/${schema.schema_id}?force=true&all_content=true`)
+                  ))
+              )
+              .then(res => apiCall.del(`/repositories/${repo.repository_id}?force=true`))
           )
       )
     ),
