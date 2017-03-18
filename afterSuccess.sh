@@ -19,7 +19,7 @@ then
         cp -r ../docs/*/*/* .
 
         # update only if there are update on docs
-        if [ `git diff --quiet` -eq 1 ]; then
+        if [ -n "`git diff --exit-code`" ]; then
             git add -A
             git commit -m "Documentation updated by Travis CI (build $TRAVIS_BUILD_NUMBER)"
             git push --quiet https://${GH_PAGES}@github.com/danibix95/chino-nodejs.git gh-pages
