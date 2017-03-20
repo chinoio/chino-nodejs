@@ -48,8 +48,10 @@ describe('Chino Perms API', function() {
         resourcesType : objects.names.REPOSITORIES[1],
         subjectType   : objects.names.USERS[1],
         subjectId     : usrIds[4],
-        manage        : ["C", "R", "U", "D"],
-        authorize     : ["R"]
+        permissions   : {
+          manage      : ["C", "R", "U", "D"],
+          authorize   : ["R"]
+        }
     }
 
     return permsCaller.onResources(data)
@@ -66,7 +68,9 @@ describe('Chino Perms API', function() {
       resourceId    : usrSchemaId,
       subjectType   : objects.names.USERS[1],
       subjectId     : usrIds[4],
-      manage        : ["R"]
+      permissions   : {
+        manage      : ["R"]
+      }
     };
 
     return permsCaller.onResource(data)
@@ -83,7 +87,9 @@ describe('Chino Perms API', function() {
       resourceId    : docIds[4],
       subjectType   : objects.names.USERS[1],
       subjectId     : usrIds[3],
-      manage        : ["R", "U"]
+      permissions   : {
+        manage      : ["R", "U"]
+      }
     };
 
     return permsCaller.onResource(data)
@@ -100,7 +106,9 @@ describe('Chino Perms API', function() {
       resourceId    : schemaId,
       subjectType   : objects.names.GROUPS[1],
       subjectId     : groupId,
-      manage        : ["R"]
+      permissions   : {
+        manage      : ["R"]
+      }
     };
 
     return permsCaller.onResource(data)
@@ -119,8 +127,10 @@ describe('Chino Perms API', function() {
       childrenType  : objects.names.DOCUMENTS[1],
       subjectType   : objects.names.GROUPS[1],
       subjectId     : groupId,
-      manage        : ["R", "U", "L"],
-      authorize     : ["R", "A"]
+      permissions   : {
+        manage        : ["R", "U", "L"],
+        authorize     : ["R", "A"]
+      }
     };
 
     return permsCaller.onChildren(data)
@@ -193,7 +203,9 @@ describe('Chino Perms API', function() {
       resourceId    : docIds[4],
       subjectType   : objects.names.USERS[1],
       subjectId     : usrIds[3],
-      manage        : ["R", "U"]
+      permissions   : {
+        manage      : ["R", "U"]
+      }
     };
 
     return permsCaller.onResource(data)

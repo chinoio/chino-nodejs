@@ -48,7 +48,6 @@ describe("Chino main class", function () {
         };
         return chino.applications.create(app)
             .then((res) => {
-              console.log(res);
               chino.setAuth(res.app_id, res.app_secret)
 
               chino.auth.should.be.instanceOf(ChinoAuth);

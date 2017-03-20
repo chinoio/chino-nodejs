@@ -91,7 +91,7 @@ describe('Chino Applications API', function() {
   /* update */
   // NOTE: the following 2 test doesn't work at the moment (04/03/2017),
   // because server doesn't update the application information
-  it.skip("Test the update of application information: should return an Application object",
+  it("Test the update of application information: should return an Application object",
       function () {
         let appUpdate = {
           name: "Application 1 was updated",
@@ -108,7 +108,7 @@ describe('Chino Applications API', function() {
       }
   );
 
-  it.skip("Test the update of application information: should return an Application object",
+  it("Test the update of application information: should return an Application object",
       function () {
         let appUpdate = {
           name: "Application 2 was updated",
