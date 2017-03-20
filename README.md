@@ -3,7 +3,7 @@
 
 Unofficial NodeJs wrapper for Chino.io APIs.
 
-You can see official website here: https://chino.io/
+You can see official website here: [https://chino.io][1]. For further information on SDK, please refer to its [documentation][2].
 
 ## Test the SDK
 In order to test Chino Node Js SDK you have to install Node Js Javascript runtime. You can follow [instruction][1] provided on Node website.
@@ -22,4 +22,5 @@ Now the project is ready to be tested. Run the following command to test it:
 
     npm test
 
-[1]: https://nodejs.org/en/download/package-manager/
+[1]: https://chino.io
+[2]: https://nodejs.org/en/download/package-manager/
