@@ -41,22 +41,17 @@ class ChinoAPIPerms extends ChinoAPIBase {
    *     - resourcesType {string} The top level resource on which execute the action  {repositories | user_schemas | groups}
    *     - subjectType   {string} The target type of permission action                {users | user_schemas | groups}
    *     - subjectId     {string} The id of the target type
-   *     - manage        {Array}  The list of permissions that target receive on the resources
-   *     - authorize     {Array}  The list of permissions that target can give to others subjectType
+   *     - permissions   {object} Which permissions have to granted or revoked
    *
    * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
    *          otherwise throw a ChinoError if rejected
    *          or was not retrieved a success status
    */
-  onResources({action, resourcesType, subjectType, subjectId, manage = [], authorize = []}) {
-    const perms = {
-      manage : manage,
-      authorize : authorize
-    };
+  onResources({action, resourcesType, subjectType, subjectId, permissions = {}}) {
     const url = `/perms/${action}/${resourcesType}/${subjectType}/${subjectId}`;
 
-    return this.call.post(url, perms)
+    return this.call.post(url, permissions)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
@@ -77,22 +72,17 @@ class ChinoAPIPerms extends ChinoAPIBase {
    *     - resourceId    {string} The id of the resource on which target can manage
    *     - subjectType   {string} The target type of permission action     {users | user_schemas | groups}
    *     - subjectId     {string} The id of the target type
-   *     - manage        {Array}  The list of permissions that target receive on the resources
-   *     - authorize     {Array}  The list of permissions that target can give to others subjectType
+   *     - permissions   {object} Which permissions have to granted or revoked
    *
    * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
    *          otherwise throw a ChinoError if rejected
    *          or was not retrieved a success status
    */
-  onResource({action, resourceType, resourceId, subjectType, subjectId, manage = [], authorize = []}) {
-    const perms = {
-      manage : manage,
-      authorize : authorize
-    };
+  onResource({action, resourceType, resourceId, subjectType, subjectId, permissions = {}}) {
     const url = `/perms/${action}/${resourceType}/${resourceId}/${subjectType}/${subjectId}`;
 
-    return this.call.post(url, perms)
+    return this.call.post(url, permissions)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
@@ -114,22 +104,17 @@ class ChinoAPIPerms extends ChinoAPIBase {
    *     - childrenType  {string} The resource children of resource type on target can manage
    *     - subjectType   {string} The target type of permission action                  {users | user_schemas | groups}
    *     - subjectId     {string} The id of the target type
-   *     - manage        {Array}  The list of permissions that target receive on the resources
-   *     - authorize     {Array}  The list of permissions that target can give to others subjectType
+   *     - permissions   {object} Which permissions have to granted or revoked
    *
    * @returns {Promise.<objects.Success, objects.ChinoError>}
    *          A promise that return a Success object if resolved,
    *          otherwise throw a ChinoError if rejected
    *          or was not retrieved a success status
    */
-  onChildren({action, resourceType, resourceId, childrenType, subjectType, subjectId,  manage = [], authorize = []}) {
-    const perms = {
-      manage : manage,
-      authorize : authorize
-    };
+  onChildren({action, resourceType, resourceId, childrenType, subjectType, subjectId, permissions = {}}) {
     const url = `/perms/${action}/${resourceType}/${resourceId}/${childrenType}/${subjectType}/${subjectId}`;
 
-    return this.call.post(url, perms)
+    return this.call.post(url, permissions)
         .then((result) => {
           if (result.result_code === 200) {
             return new objects.Success(result);
