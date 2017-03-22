@@ -19,11 +19,7 @@ ChinoAPIObjects.names = {
 class BaseObject {
   constructor(response, type = "") {
     if (response && response.result_code === 200) {
-      let tmpInfo = response.data[type];
-
-      for (let key in tmpInfo) {
-        this[key] = tmpInfo[key];
-      }
+      Object.assign(this, response.data[type]);
     }
   }
 }
