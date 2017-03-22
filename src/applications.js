@@ -31,14 +31,7 @@ class ChinoAPIApplication extends ChinoAPIBase {
     };
 
     return this.call.get(`/auth/applications`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.APPLICATIONS[1], "Application");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkListResult(result, "applications", "Application"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -52,14 +45,7 @@ class ChinoAPIApplication extends ChinoAPIBase {
    */
   create(data) {
     return this.call.post(`/auth/applications`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Application(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Application"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -73,14 +59,7 @@ class ChinoAPIApplication extends ChinoAPIBase {
    */
   details(applicationId) {
     return this.call.get(`/auth/applications/${applicationId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Application(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Application"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -96,14 +75,7 @@ class ChinoAPIApplication extends ChinoAPIBase {
    */
   update(applicationId, data) {
     return this.call.put(`/auth/applications/${applicationId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Application(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Application"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -117,14 +89,7 @@ class ChinoAPIApplication extends ChinoAPIBase {
    */
   delete(applicationId) {
     return this.call.del(`/auth/applications/${applicationId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

@@ -419,4 +419,87 @@ describe("Chino API Objects", function () {
       success.should.containEql(emptyResponse);
     });
   });
+
+  describe("Check List Response function", function () {
+    it("Should return a correct ChinoList object", function () {
+      const responseTest = {
+        result: "success",
+        result_code: 200,
+        message: null,
+        data: {
+          count: 2,
+          total_count: 2,
+          limit: 100,
+          offset: 0,
+          groups: [
+            {
+              insert_date: "2015-03-13T17:26:27.666",
+              is_active: true,
+              last_update: "2015-03-13T17:26:27.666",
+              group_name: "group1426263987562",
+              attributes: null,
+              group_id: "fdd4f233-d1cb-4c24-82f5-445512d499be"
+            },
+            {
+              insert_date: "2015-03-13T17:26:23.212",
+              is_active: true,
+              last_update: "2015-03-13T17:26:25.604",
+              group_name: "group1426263983102",
+              attributes: null,
+              group_id: "1eb39c88-3ac8-4664-b897-849dd260c72b"
+            }
+          ]
+        }
+      };
+
+      let resultList = objects.checkListResult(responseTest, "groups", "Group");
+      resultList.should.instanceOf(objects.ChinoList);
+      resultList.list.should.be.instanceOf(Array);
+      resultList.list.forEach((val) => val.should.be.instanceOf(objects.Group));
+    });
+
+    it("Should throw a ChinoError object", function () {
+      let emptyResponse = {};
+
+      assert.throws(function () { objects.checkListResult(emptyResponse) }, objects.ChinoError);
+    });
+  });
+
+  describe("Check Response function", function () {
+    it("Should return a correct object corresponding to response data", function () {
+      const responseTest = {
+        "result": "success",
+        "result_code": 200,
+        "message": null,
+        "data": {
+          "user": {
+            "username": "james",
+            "user_id": "d88084ef-b6f7-405d-9863-d35b99543389",
+            "insert_date": "2015-02-05T10:53:38.157",
+            "last_update": "2015-02-05T10:53:38.157",
+            "is_active": true,
+            "attributes": {
+              "first_name": "James",
+              "last_name": "Ford",
+              "email": "james@acme.com"
+            },
+            "groups": [
+              "d88084ef-b6f7-405d-9863-d35b99543389",
+              "1eb39c88-3ac8-4664-b897-849dd260c72b"
+            ]
+          }
+        }
+      };
+
+      let user = objects.checkResult(responseTest, "User");
+      user.should.instanceOf(objects.User);
+      user.should.containEql(responseTest.data.user);
+    });
+
+    it("Should throw a ChinoError object", function () {
+      let emptyResponse = {};
+
+      assert.throws(function () { objects.checkResult(emptyResponse) }, objects.ChinoError);
+    });
+  });
 });

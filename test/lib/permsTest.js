@@ -45,8 +45,8 @@ describe('Chino Perms API', function() {
   it("Test the granting of permission on resources: should return a Success object", function () {
     const data = {
         action        : "grant",
-        resourcesType : objects.names.REPOSITORIES[1],
-        subjectType   : objects.names.USERS[1],
+        resourcesType : "repositories",
+        subjectType   : "users",
         subjectId     : usrIds[4],
         permissions   : {
           manage      : ["C", "R", "U", "D"],
@@ -64,9 +64,9 @@ describe('Chino Perms API', function() {
   it("Test the granting of permission on resource (user schema): should return a Success object", function () {
     const data = {
       action        : "grant",
-      resourceType  : objects.names.USER_SCHEMAS[1],
+      resourceType  : "user_schemas",
       resourceId    : usrSchemaId,
-      subjectType   : objects.names.USERS[1],
+      subjectType   : "users",
       subjectId     : usrIds[4],
       permissions   : {
         manage      : ["R"]
@@ -83,9 +83,9 @@ describe('Chino Perms API', function() {
   it("Test the granting of permission on resource (document): should return a Success object", function () {
     const data = {
       action        : "grant",
-      resourceType  : objects.names.DOCUMENTS[1],
+      resourceType  : "documents",
       resourceId    : docIds[4],
-      subjectType   : objects.names.USERS[1],
+      subjectType   : "users",
       subjectId     : usrIds[3],
       permissions   : {
         manage      : ["R", "U"]
@@ -102,9 +102,9 @@ describe('Chino Perms API', function() {
   it("Test the granting of permission on resource (group): should return a Success object", function () {
     const data = {
       action        : "grant",
-      resourceType  : objects.names.SCHEMAS[1],
+      resourceType  : "schemas",
       resourceId    : schemaId,
-      subjectType   : objects.names.GROUPS[1],
+      subjectType   : "groups",
       subjectId     : groupId,
       permissions   : {
         manage      : ["R"]
@@ -122,10 +122,10 @@ describe('Chino Perms API', function() {
   it("Test the granting of permission on children of a resource: should return a Success object", function () {
     const data = {
       action        : "grant",
-      resourceType  : objects.names.SCHEMAS[1],
+      resourceType  : "schemas",
       resourceId    : schemaId,
-      childrenType  : objects.names.DOCUMENTS[1],
-      subjectType   : objects.names.GROUPS[1],
+      childrenType  : "documents",
+      subjectType   : "groups",
       subjectId     : groupId,
       permissions   : {
         manage        : ["R", "U", "L"],
@@ -199,9 +199,9 @@ describe('Chino Perms API', function() {
   it("Test the revoking of permission on resource (document): should return a Success object", function () {
     const data = {
       action        : "revoke",
-      resourceType  : objects.names.DOCUMENTS[1],
+      resourceType  : "documents",
       resourceId    : docIds[4],
-      subjectType   : objects.names.USERS[1],
+      subjectType   : "users",
       subjectId     : usrIds[3],
       permissions   : {
         manage      : ["R", "U"]

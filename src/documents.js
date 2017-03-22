@@ -37,15 +37,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
     };
 
     return this.call.get(`/schemas/${schemaId}/documents`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.DOCUMENTS[1], "Document");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
-
+        .then((result) => objects.checkListResult(result, "documents", "Document"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -61,14 +53,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    */
   create(schemaId, data) {
     return this.call.post(`/schemas/${schemaId}/documents`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Document(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Document"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -82,14 +67,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    */
   details(documentId) {
     return this.call.get(`/documents/${documentId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Document(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Document"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -105,14 +83,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    */
   update(documentId, data) {
     return this.call.put(`/documents/${documentId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Document(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Document"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -123,7 +94,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *                              otherwise only deactivate it.
    *                              Default value is false (deactivate)
    * @return {Promise.<objects.Success, objects.ChinoError>}
-   *         A promise that return a Success object if resolved,X
+   *         A promise that return a Success object if resolved,
    *         otherwise throw an ChinoError object if rejected
    *         or was not retrieved a success status
    */
@@ -131,14 +102,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
     const params = { force : force };
 
     return this.call.del(`/documents/${documentId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

@@ -31,14 +31,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
     }
 
     return this.call.get(`/user_schemas`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.USER_SCHEMAS[1], "UserSchema");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkListResult(result, "user_schemas", "UserSchema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -52,14 +45,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    */
   create(data) {
     return this.call.post(`/user_schemas`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.UserSchema(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "UserSchema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -73,14 +59,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    */
   details(userSchemaId) {
     return this.call.get(`/user_schemas/${userSchemaId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.UserSchema(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "UserSchema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -96,14 +75,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    */
   update(userSchemaId, data) {
     return this.call.put(`/user_schemas/${userSchemaId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.UserSchema(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "UserSchema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -122,14 +94,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
     const params = { force : force };
 
     return this.call.del(`/user_schemas/${userSchemaId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

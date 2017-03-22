@@ -35,15 +35,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
     };
 
     return this.call.get(`/repositories/${repositoryId}/schemas`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.SCHEMAS[1], "Schema");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
-
+        .then((result) => objects.checkListResult(result, "schemas", "Schema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -59,14 +51,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
    */
   create(repositoryId, data) {
     return this.call.post(`/repositories/${repositoryId}/schemas`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Schema(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Schema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -80,14 +65,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
    */
   details(schemaId) {
     return this.call.get(`/schemas/${schemaId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Schema(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Schema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -103,14 +81,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
    */
   update(schemaId, data) {
     return this.call.put(`/schemas/${schemaId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Schema(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Schema"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -136,14 +107,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
     };
 
     return this.call.del(`/schemas/${schemaId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

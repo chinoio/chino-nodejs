@@ -31,38 +31,17 @@ class ChinoAPISearch extends ChinoAPIBase {
       case RESULT_TYPES.FULL_CONTENT:
       case RESULT_TYPES.NO_CONTENT:
         return this.call.post(`/search/documents/${schemaId}?offset=${offset}&limit=${limit}`, searchParams)
-            .then((result) => {
-              if (result.result_code === 200) {
-                return new objects.ChinoList(result.data, objects.names.DOCUMENTS[1], "Document");
-              }
-              else {
-                throw new objects.ChinoError(result);
-              }
-            })
+            .then((result) => objects.checkListResult(result, "documents", "Document"))
             .catch((error) => { throw new objects.ChinoError(error); });
 
       case RESULT_TYPES.ONLY_ID:
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
-            .then((result) => {
-              if (result.result_code === 200) {
-                return new objects.Success(result);
-              }
-              else {
-                throw new objects.ChinoError(result);
-              }
-            })
+            .then((result) => objects.checkResult(result, "Success"))
             .catch((error) => { throw new objects.ChinoError(error); });
 
       case RESULT_TYPES.COUNT:
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
-            .then((result) => {
-              if (result.result_code === 200) {
-                return new objects.Success(result);
-              }
-              else {
-                throw new objects.ChinoError(result);
-              }
-            })
+            .then((result) => objects.checkResult(result, "Success"))
             .catch((error) => { throw new objects.ChinoError(error); });
 
       default:
@@ -85,46 +64,19 @@ class ChinoAPISearch extends ChinoAPIBase {
     switch (searchParams.result_type) {
       case RESULT_TYPES.FULL_CONTENT:
         return this.call.post(`/search/users/${userSchemaId}?offset=${offset}&limit=${limit}`, searchParams)
-            .then((result) => {
-              if (result.result_code === 200) {
-                return new objects.ChinoList(result.data, objects.names.USERS[1], "User");
-              }
-              else {
-                throw new objects.ChinoError(result);
-              }
-            })
-            .catch((error) => {
-              throw new objects.ChinoError(error);
-            });
+            .then((result) => objects.checkListResult(result, "users", "User"))
+            .catch((error) => { throw new objects.ChinoError(error); });
 
       case RESULT_TYPES.COUNT:
         return this.call.post(`/search/users/${userSchemaId}`, searchParams)
-            .then((result) => {
-              if (result.result_code === 200) {
-                return new objects.Success(result);
-              }
-              else {
-                throw new objects.ChinoError(result);
-              }
-            })
-            .catch((error) => {
-              throw new objects.ChinoError(error);
-            });
+            .then((result) => objects.checkResult(result, "Success"))
+            .catch((error) => { throw new objects.ChinoError(error); });
 
       case RESULT_TYPES.EXISTS:
       case RESULT_TYPES.USERNAME_EXISTS:
         return this.call.post(`/search/users/${userSchemaId}`, searchParams)
-            .then((result) => {
-              if (result.result_code === 200) {
-                return new objects.Success(result);
-              }
-              else {
-                throw new objects.ChinoError(result);
-              }
-            })
-            .catch((error) => {
-              throw new objects.ChinoError(error);
-            });
+            .then((result) => objects.checkResult(result, "Success"))
+            .catch((error) => { throw new objects.ChinoError(error); });
 
       default:
         throw new objects.ChinoError("Wrong result type used. See docs for further information.");
