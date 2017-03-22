@@ -3,27 +3,23 @@
 let ChinoAPIObjects = {}
 
 ChinoAPIObjects.names = {
-    APPLICATIONS : ["application" , "applications"],
-    REPOSITORIES : ["repository"  , "repositories"],
-    SCHEMAS      : ["schema"      , "schemas"],
-    DOCUMENTS    : ["document"    , "documents"],
-    COLLECTIONS  : ["collection"  , "collections"],
-    USERS        : ["user"        , "users"],
-    USER_SCHEMAS : ["user_schema" , "user_schemas"],
-    GROUPS       : ["group"       , "groups"],
-    BLOBS        : ["blob"        , "blobs"],
-    PERMISSIONS  : ["permission"  , "permissions"]
+    Application : "application",
+    Repository  : "repository",
+    Schema      : "schema",
+    Document    : "document",
+    Collection  : "collection",
+    User        : "user",
+    UserSchema  : "user_schema",
+    Group       : "group",
+    Blob        : "blob",
+    Permission  : "permissions"
 }
 
 /** Js object for wrapping Chino Api objects */
 class BaseObject {
   constructor(response, type = "") {
     if (response && response.result_code === 200) {
-      let tmpInfo = response.data[type];
-
-      for (let key in tmpInfo) {
-        this[key] = tmpInfo[key];
-      }
+      Object.assign(this, response.data[type]);
     }
   }
 }
@@ -31,28 +27,28 @@ class BaseObject {
 ChinoAPIObjects.Group =
     class Group extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.GROUPS[0])
+        super(response, "group")
       }
     };
 
 ChinoAPIObjects.UserSchema =
     class UserSchema extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.USER_SCHEMAS[0])
+        super(response, "user_schema")
       }
     };
 
 ChinoAPIObjects.User =
     class User extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.USERS[0])
+        super(response, "user")
       }
     };
 
 ChinoAPIObjects.Application =
     class Application extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.APPLICATIONS[0])
+        super(response, "application")
       }
     };
 
@@ -60,42 +56,42 @@ ChinoAPIObjects.Application =
 ChinoAPIObjects.Repository =
     class Repository extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.REPOSITORIES[0])
+        super(response, "repository")
       }
     };
 
 ChinoAPIObjects.Schema =
     class Schema extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.SCHEMAS[0])
+        super(response, "schema")
       }
     };
 
 ChinoAPIObjects.Document =
     class Document extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.DOCUMENTS[0])
+        super(response, "document")
       }
     };
 
 ChinoAPIObjects.Collection =
     class Collection extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.COLLECTIONS[0])
+        super(response, "collection")
       }
     };
 
 ChinoAPIObjects.Blob =
     class Blob extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.BLOBS[0])
+        super(response, "blob")
       }
     };
 
 ChinoAPIObjects.Perms =
     class Perms extends BaseObject {
       constructor(response) {
-        super(response, ChinoAPIObjects.names.PERMISSIONS[1])
+        super(response, "permissions")
       }
     };
 
@@ -134,19 +130,39 @@ ChinoAPIObjects.Success =
 
 ChinoAPIObjects.ChinoList =
     class ChinoList {
-      constructor(data, param, object, result_code = 200) {
+      constructor(data, param = "", object = "", result_code = 200) {
         this.count = data.count;
         this.total_count = data.total_count;
         this.list =
             /* use plural name */
             data[param].map((value) =>
-              new ChinoAPIObjects[object]({
-                data: {
-                  /* use singular name */
-                  [ChinoAPIObjects.names[param.toUpperCase()][0]]: value
-                },
-                result_code: result_code
-              }));
+                new ChinoAPIObjects[object]({
+                  data: {
+                    /* use singular name */
+                    [ChinoAPIObjects.names[object]]: value
+                  },
+                  result_code: result_code
+                }));
+      }
+    }
+
+ChinoAPIObjects.checkResult =
+    function (response, object = "") {
+      if (response.result_code === 200) {
+        return new ChinoAPIObjects[object](response);
+      }
+      else {
+        throw new ChinoAPIObjects.ChinoError(response);
+      }
+    }
+
+ChinoAPIObjects.checkListResult =
+    function(response, param = "", object = "") {
+      if (response.result_code === 200) {
+        return new ChinoAPIObjects.ChinoList(response.data, param, object);
+      }
+      else {
+        throw new ChinoAPIObjects.ChinoError(response);
       }
     }
 

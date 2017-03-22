@@ -70,6 +70,7 @@ describe('Chino Blobs API', function () {
   /* upload */
   it("Test the upload of a blob: should return a Blob object",
       function () {
+        this.slow(1500);
         this.timeout(12000); // for slow connection (e.g. 1Mbps upload)
         const fileName = path.join(__dirname, "files/img.jpg");
 
@@ -85,6 +86,7 @@ describe('Chino Blobs API', function () {
   /* download */
   it("Test the retrieving of blob data: should write a file object",
       function () {
+        this.slow(750);
         this.timeout(10000);
 
         const resultFile = path.join(__dirname, "files/result.jpg");

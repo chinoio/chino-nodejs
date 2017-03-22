@@ -31,14 +31,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
     };
 
     return this.call.get(`/groups`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.GROUPS[1], "Group");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkListResult(result, "groups", "Group"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -52,14 +45,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
    */
   create(data) {
     return this.call.post(`/groups`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Group(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Group"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -73,14 +59,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
    */
   details(groupId) {
     return this.call.get(`/groups/${groupId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Group(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Group"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -96,14 +75,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
    */
   update(groupId, data) {
     return this.call.put(`/groups/${groupId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Group(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Group"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -122,14 +94,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
     const params = { force : force };
 
     return this.call.del(`/groups/${groupId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -144,14 +109,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
    */
   insertUser(groupId, userId) {
     return this.call.post(`/groups/${groupId}/users/${userId}`, {})
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -166,14 +124,7 @@ class ChinoAPIGroups extends ChinoAPIBase {
    */
   removeUser(groupId, userId) {
     return this.call.del(`/groups/${groupId}/users/${userId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

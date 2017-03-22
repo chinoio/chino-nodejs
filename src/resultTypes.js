@@ -1,4 +1,4 @@
-// constants result types for search library
+/* constants result types for search library */
 const RESULT_TYPES = {
   FULL_CONTENT    : "FULL_CONTENT",
   NO_CONTENT      : "NO_CONTENT",

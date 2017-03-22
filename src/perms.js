@@ -3,23 +3,28 @@
 const objects = require("./objects");
 const ChinoAPIBase = require("./chinoBase");
 
-/** Convert response into a list of Perms object
+/** Convert a response into a list of Perms object
  *
  * @param response
  * @param status_code
  * @returns {Array.<objects.Perms>}
  */
-function listPermissions(response, status_code) {
-    return response.map((permsInfo) =>
+function listPermissions(response) {
+  if (response.result_code === 200) {
+    return response.data.permissions.map((permsInfo) =>
         new objects.Perms(
-          {
-            data: {
-              permissions: permsInfo
-            },
-            result_code: status_code
-          }
+            {
+              data: {
+                permissions: permsInfo
+              },
+              result_code: response.result_code
+            }
         )
     );
+  }
+  else {
+    throw new objects.ChinoError(response);
+  }
 }
 
 class ChinoAPIPerms extends ChinoAPIBase {
@@ -52,14 +57,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
     const url = `/perms/${action}/${resourcesType}/${subjectType}/${subjectId}`;
 
     return this.call.post(url, permissions)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -83,14 +81,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
     const url = `/perms/${action}/${resourceType}/${resourceId}/${subjectType}/${subjectId}`;
 
     return this.call.post(url, permissions)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -115,14 +106,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
     const url = `/perms/${action}/${resourceType}/${resourceId}/${childrenType}/${subjectType}/${subjectId}`;
 
     return this.call.post(url, permissions)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -136,14 +120,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
   getPermissions() {
     // ATTENTION => this works only for application users (not app developer)
     return this.call.get(`/perms`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return listPermissions(result.data.permissions, result.result_code);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => listPermissions(result))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -157,14 +134,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
    */
   getDocumentPermissions(documentId) {
     return this.call.get(`/perms/documents/${documentId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return listPermissions(result.data.permissions, result.result_code);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => listPermissions(result))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -178,14 +148,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
    */
   getUserPermissions(userId) {
     return this.call.get(`/perms/users/${userId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return listPermissions(result.data.permissions, result.result_code);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => listPermissions(result))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -199,14 +162,7 @@ class ChinoAPIPerms extends ChinoAPIBase {
    */
   getGroupPermissions(groupId) {
     return this.call.get(`/perms/groups/${groupId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return listPermissions(result.data.permissions, result.result_code);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => listPermissions(result))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

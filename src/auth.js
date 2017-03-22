@@ -55,14 +55,7 @@ class ChinoAPIAuth {
     }
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Auth(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Auth"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -87,14 +80,7 @@ class ChinoAPIAuth {
     }
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Auth(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Auth"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -115,14 +101,7 @@ class ChinoAPIAuth {
     }
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Auth(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Auth"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -143,14 +122,7 @@ class ChinoAPIAuth {
     }
 
     return this.call.post(`/auth/revoke_token/`, form, CONT_TYPES.FORM_DATA)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

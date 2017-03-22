@@ -31,14 +31,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
     };
 
     return this.call.get(`/repositories`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.REPOSITORIES[1], "Repository");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkListResult(result, "repositories", "Repository"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -52,14 +45,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
    */
   create(data) {
     return this.call.post(`/repositories`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Repository(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Repository"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -73,14 +59,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
    */
   details(repositoryId) {
     return this.call.get(`/repositories/${repositoryId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Repository(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Repository"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -96,14 +75,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
    */
   update(repositoryId, data) {
     return this.call.put(`/repositories/${repositoryId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Repository(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Repository"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -122,14 +94,7 @@ class ChinoAPIRepositories extends ChinoAPIBase {
     const params = { force : force };
 
     return this.call.del(`/repositories/${repositoryId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

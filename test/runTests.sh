@@ -24,13 +24,17 @@ if [[ $# -eq 1 && $1 = "--no-warning" ]]
 then
     runTests
 else
-    echo "Test will remove everything inside your Chino environment."
+    echo "Test will clean up your Chino environment."
+    echo "Run it only when there is nothing inside."
     echo "Do you want to run it anyway? [y|N]"
 
     read run
 
     if [[ $run = "y" || $run = "Y" ]]
     then
+        # clean up environment before start testing
+        node test/after.js
+        # start testing
         runTests
     else
         exit 1

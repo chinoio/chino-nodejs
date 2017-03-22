@@ -24,14 +24,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   current() {
      return this.call.get("/users/me")
-         .then((result) => {
-           if (result.result_code === 200) {
-             return new objects.User(result);
-           }
-           else {
-             throw new objects.ChinoError(result);
-           }
-         })
+         .then((result) => objects.checkResult(result, "User"))
          .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -54,15 +47,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
     };
 
     return this.call.get(`/user_schemas/${userSchemaId}/users`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.ChinoList(result.data, objects.names.USERS[1], "User");
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
-
+        .then((result) => objects.checkListResult(result, "users", "User"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -78,14 +63,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   create(userSchemaId, data) {
     return this.call.post(`/user_schemas/${userSchemaId}/users`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.User(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "User"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -99,14 +77,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   details(userId) {
     return this.call.get(`/users/${userId}`)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.User(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "User"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -122,14 +93,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   update(userId, data) {
     return this.call.put(`/users/${userId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.User(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "User"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -145,14 +109,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
    */
   partialUpdate(userId, data) {
     return this.call.patch(`/users/${userId}`, data)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.User(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "User"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 
@@ -171,14 +128,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
     const params = { force : force };
 
     return this.call.del(`/users/${userId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }

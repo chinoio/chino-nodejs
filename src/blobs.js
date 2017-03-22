@@ -20,14 +20,7 @@ function commit(uploadId) {
   };
 
   return this.call.post(`/blobs/commit`, params)
-      .then((result) => {
-        if (result.result_code === 200) {
-          return new objects.Blob(result);
-        }
-        else {
-          throw new objects.ChinoError(result);
-        }
-      })
+      .then((result) => objects.checkResult(result, "Blob"))
       .catch((error) => { throw new objects.ChinoError(error); });
 }
 
@@ -201,14 +194,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
     const params = {};
 
     return this.call.del(`/blobs/${blobId}`, params)
-        .then((result) => {
-          if (result.result_code === 200) {
-            return new objects.Success(result);
-          }
-          else {
-            throw new objects.ChinoError(result);
-          }
-        })
+        .then((result) => objects.checkResult(result, "Success"))
         .catch((error) => { throw new objects.ChinoError(error); });
   }
 }
