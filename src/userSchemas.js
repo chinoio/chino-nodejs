@@ -18,9 +18,9 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    *
    * @param offset  {int}
    * @param limit   {int}
-   * @return {Promise.<Array, objects.ChinoError>}
+   * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of UserSchema object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    *
    */
@@ -32,35 +32,35 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
 
     return this.call.get(`/user_schemas`, params)
         .then((result) => objects.checkListResult(result, "user_schemas", "UserSchema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Create a new user schema
    *
    * @param data          {object}
-   * @return {Promise.<objects.UserSchema, objects.ChinoError>}
+   * @return {Promise.<objects.UserSchema, objects.ChinoException>}
    *         A promise that return a UserSchema object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   create(data) {
     return this.call.post(`/user_schemas`, data)
         .then((result) => objects.checkResult(result, "UserSchema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Return information about user schema selected by its id
    *
    * @param userSchemaId  {string}
-   * @return {Promise.<objects.UserSchema, objects.ChinoError>}
+   * @return {Promise.<objects.UserSchema, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   details(userSchemaId) {
     return this.call.get(`/user_schemas/${userSchemaId}`)
         .then((result) => objects.checkResult(result, "UserSchema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Update information about user schema selected by its id
@@ -68,15 +68,15 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    *
    * @param userSchemaId  {string}
    * @param data          {object}
-   * @return {Promise.<objects.UserSchema, objects.ChinoError>}
+   * @return {Promise.<objects.UserSchema, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   update(userSchemaId, data) {
     return this.call.put(`/user_schemas/${userSchemaId}`, data)
         .then((result) => objects.checkResult(result, "UserSchema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Deactivate (or delete) user schema selected by its id
@@ -85,9 +85,9 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
    * @param force         {boolean} If true delete user schema information
    *                                otherwise only deactivate it.
    *                                Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.ChinoError>}
+   * @return {Promise.<objects.Success, objects.ChinoException>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   delete(userSchemaId, force = false) {
@@ -95,7 +95,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
 
     return this.call.del(`/user_schemas/${userSchemaId}`, params)
         .then((result) => objects.checkResult(result, "Success"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 }
 

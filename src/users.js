@@ -17,15 +17,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
   /** Return information about current user
    *  NOTE: need to be authenticated with bearer token
    *
-   * @return {Promise.<objects.User, objects.ChinoError>}
+   * @return {Promise.<objects.User, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    */
   current() {
      return this.call.get("/users/me")
          .then((result) => objects.checkResult(result, "User"))
-         .catch((error) => { throw new objects.ChinoError(error); });
+         .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Return a list of current users inside the selected
@@ -34,9 +34,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param userSchemaId  {string}
    * @param offset        {int}
    * @param limit         {int}
-   * @return {Promise.<Array, objects.ChinoError>}
+   * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of User object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    *
    */
@@ -48,7 +48,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
 
     return this.call.get(`/user_schemas/${userSchemaId}/users`, params)
         .then((result) => objects.checkListResult(result, "users", "User"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Create a new user inside selected user schema by its id
@@ -56,29 +56,29 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param userSchemaId  {string}
    * @param data          {object}
-   * @return {Promise.<objects.User, objects.ChinoError>}
+   * @return {Promise.<objects.User, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    */
   create(userSchemaId, data) {
     return this.call.post(`/user_schemas/${userSchemaId}/users`, data)
         .then((result) => objects.checkResult(result, "User"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Return information about selected user by its id
    *
    * @param userId  {string}
-   * @return {Promise.<objects.User, objects.ChinoError>}
+   * @return {Promise.<objects.User, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    */
   details(userId) {
     return this.call.get(`/users/${userId}`)
         .then((result) => objects.checkResult(result, "User"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Update information about selected user by its id
@@ -86,15 +86,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param userId  {string}
    * @param data    {object}
-   * @return {Promise.<objects.User, objects.ChinoError>}
+   * @return {Promise.<objects.User, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    */
   update(userId, data) {
     return this.call.put(`/users/${userId}`, data)
         .then((result) => objects.checkResult(result, "User"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Update a specific part of information about
@@ -102,15 +102,15 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *
    * @param userId  {string}
    * @param data    {object}
-   * @return {Promise.<objects.User, objects.ChinoError>}
+   * @return {Promise.<objects.User, objects.ChinoException>}
    *         A promise that return a User object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    */
   partialUpdate(userId, data) {
     return this.call.patch(`/users/${userId}`, data)
         .then((result) => objects.checkResult(result, "User"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Deactivate (or delete) selected user by its id
@@ -119,9 +119,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
    * @param force   {boolean} If true delete user information
    *                          otherwise only deactivate it.
    *                          Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.ChinoError>}
+   * @return {Promise.<objects.Success, objects.ChinoException>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw a ChinoError object if rejected
+   *         otherwise throw a ChinoException object if rejected
    *         or was not retrieved a success status
    */
   delete(userId, force = false) {
@@ -129,7 +129,7 @@ class ChinoAPIUsers extends ChinoAPIBase {
 
     return this.call.del(`/users/${userId}`, params)
         .then((result) => objects.checkResult(result, "Success"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 }
 

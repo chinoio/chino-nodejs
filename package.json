@@ -1,5 +1,5 @@
 {
-  "name": "chino-sdk",
+  "name": "chinoio",
   "version": "1.0.0",
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
@@ -16,7 +16,8 @@
   },
   "keywords": [
     "Chino.io",
-    "SDK"
+    "SDK",
+    "data security platform"
   ],
   "author": "Chino.io <hello@chino.io>",
   "contributors": [

@@ -148,4 +148,102 @@ describe('Chino Users API', function () {
             })
       }
   );
+
+  /* =================================== */
+  /* Test what happen in wrong situation */
+  describe("Test error situations:", function () {
+    it("should throw a ChinoException error while creating user, because user data are incorrect",
+        function () {
+          const user = {
+            attributes: {
+              user: 3
+            },
+            is_active: null
+          }
+
+          return userCaller.create(usrSchemaId, user)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+
+    it("should throw a ChinoException error while getting current user details, because this is not an application user",
+        function () {
+          return userCaller.current()
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(403)
+              })
+        }
+    );
+    it("should throw a ChinoException error while getting user details, because user id doesn't exist",
+        function () {
+          return userCaller.details(usrId2)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException error while listing users, because user schema id doesn't exist",
+        function () {
+          return userCaller.list(null)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException error while updating user data, because user id doesn't exist",
+        function () {
+          const newUser = {
+            username: "aThirdUser",
+            password: "aPassword3",
+            attributes: {
+              user: 21
+            },
+            is_active: true
+          }
+
+          return userCaller.update(null, newUser)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException error while partial updating user data, because user id doesn't exist",
+        function () {
+          let user = {
+            attributes: {
+              user: 42
+            }
+          }
+
+          return userCaller.partialUpdate(usrId2, user)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException error while deleting user, because user id doesn't exist",
+        function () {
+          return userCaller.delete(usrId2, true)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+  });
 });

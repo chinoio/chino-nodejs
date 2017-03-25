@@ -111,6 +111,47 @@ describe('Chino Blobs API', function () {
       }
   );
 
+  /* =================================== */
+  /* Test what happen in wrong situation */
+  describe("Test error situations:", function () {
+    it("Upload file should throw a ChinoException because is not provided any file",
+        function () {
+          this.slow(750);
+          this.timeout(10000);
+
+          return blobCaller.download(blobId, "")
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("Download file should throw a ChinoException due missing output file",
+        function () {
+          this.slow(1500);
+          this.timeout(12000);
+
+          return blobCaller.upload(docId, "file", "")
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("Delete file should throw a ChinoException because as a result of wrong blob id",
+        function () {
+          return blobCaller.delete("wrongId")
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+  });
+
   after("Clean environment", function () {
     // be sure to have enough time
     this.timeout(10000);

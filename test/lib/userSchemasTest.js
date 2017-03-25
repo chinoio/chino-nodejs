@@ -118,4 +118,84 @@ describe('Chino User Schemas API', function() {
             })
       }
   );
+
+  /* =================================== */
+  /* Test what happen in wrong situation */
+  describe("Test error situations:", function () {
+    it("should throw a ChinoException error while creating user schema, because user schema data are incorrect",
+        function () {
+          const userSchema = {
+            description: "User schema test"
+          };
+
+          return usCaller.create(userSchema)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("should throw a ChinoException error while getting user schema details, because user schema id doesn't exist",
+        function () {
+          return usCaller.details(null)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException error while listing user schemas, because offset and limit parameters are wrong",
+        function () {
+          return usCaller.list(-1, -4)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("should throw a ChinoException error while updating user schema details, because user schema id doesn't exist",
+        function () {
+          const newUS = {
+            description: "User schema test edited",
+            structure: {
+              fields: [
+                {
+                  type : "string",
+                  name : "job"
+                },
+                {
+                  type : "integer",
+                  name : 3
+                },
+                {
+                  type : "date",
+                  name : "application",
+                  indexed : true
+                }
+              ]
+            }
+          };
+
+          return usCaller.update("", newUS)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException error while deleting user schema details, because user schema id doesn't exist",
+        function () {
+          return usCaller.delete(usrSchemaID, true)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+  });
 });

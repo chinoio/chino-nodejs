@@ -42,7 +42,7 @@ docs
 
 # scripts
 test
-clean
+.clean
 *.sh
 
 # config files

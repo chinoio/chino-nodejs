@@ -107,9 +107,7 @@ describe('Chino Groups API', function() {
                   .then((res) => {
                     res.data.user.groups.should.containEql(gId);
                   })
-                  .catch((err) => { console.log(`${JSON.stringify((err))} Error retrieving user`); });
             })
-            .catch((err) => {console.log(`${JSON.stringify((err))} Error inserting user into group`); });
       }
   );
 
@@ -134,4 +132,87 @@ describe('Chino Groups API', function() {
             })
       }
   );
+
+  /* =================================== */
+  /* Test what happen in wrong situation */
+  describe("Test error situations:", function () {
+    it("should throw a ChinoException object, because group information are incorrect",
+        function () {
+          let group = {}
+
+          return groupCaller.create(group)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because group id doesn't exist",
+        function () {
+          return groupCaller.details("")
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because listing parameter are wrong (wrong offset)",
+        function () {
+          return groupCaller.list(-1)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because group information are incorrect",
+        function () {
+          let newGroup = {
+            attributes: {
+              description: "This is a test group"
+            }
+          }
+
+          return groupCaller.update(gId, newGroup)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because group id doesn't exist",
+        function () {
+          return groupCaller.insertUser("", usersId[elements-1])
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because group id doesn't exist",
+        function () {
+          return groupCaller.removeUser(gId, usersId[elements-1])
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because group id doesn't exist",
+        function () {
+          return groupCaller.delete(gId, true)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+  });
 });

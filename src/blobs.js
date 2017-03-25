@@ -9,9 +9,9 @@ const ChinoAPIBase = require("./chinoBase");
 /** Commit the upload action and return the blob information
  *
  * @param uploadId  {string}  The upload id representing an upload action
- * @return {Promise.<objects.Blob, objects.ChinoError>}
+ * @return {Promise.<objects.Blob, objects.ChinoException>}
  *         A promise that return a Blob object if resolved,
- *         otherwise throw an ChinoError object if rejected
+ *         otherwise throw an ChinoException object if rejected
  *         or was not retrieved a success status
  */
 function commit(uploadId) {
@@ -21,7 +21,7 @@ function commit(uploadId) {
 
   return this.call.post(`/blobs/commit`, params)
       .then((result) => objects.checkResult(result, "Blob"))
-      .catch((error) => { throw new objects.ChinoError(error); });
+      .catch((error) => { throw new objects.ChinoException(error); });
 }
 
 /** Create a new blob
@@ -49,9 +49,9 @@ class ChinoAPIBlobs extends ChinoAPIBase {
    * @param docId     {string}
    * @param field     {string}
    * @param fileName  {string}
-   * @return {Promise.<objects.Blob, objects.ChinoError>}
+   * @return {Promise.<objects.Blob, objects.ChinoException>}
    *         A promise that return a BlobUncommitted object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   upload(docId = "", field = "", fileName = "") {
@@ -64,71 +64,84 @@ class ChinoAPIBlobs extends ChinoAPIBase {
     let uploadId = "";
     
     function doUpload(resolve, reject) {
-      create.call(this, info)
-          .then((result) => {
-            if (result.result_code === 200) {
-              // get an id where upload blob data
-              uploadId = result.data.blob.upload_id;
+      if (!fileName) {
+        const error = {
+          message : "Missing file name: impossible to upload undefined file",
+          result_code : 400,
+          result : "error",
+          data : null
+        };
 
-              // prepare to read file
-              const options = {
-                flags : "r",
-                autoClose : true,
-                highWaterMark : 16 * 1024
-              };
-              const readStream = fs.createReadStream(fileName, options);
-              // hash for verifying blob integrity
-              const hash = crypto.createHash('sha1');
+        reject(new objects.ChinoException(error));
+      }
+      else {
+        create.call(this, info)
+            .then((result) => {
+              if (result.result_code === 200) {
+                // get an id where upload blob data
+                uploadId = result.data.blob.upload_id;
 
-              let chunks = [];
-              let offset = 0;
+                // prepare to read file
+                const options = {
+                  flags : "r",
+                  autoClose : true,
+                  highWaterMark : 16 * 1024
+                };
+                const readStream = fs.createReadStream(fileName, options);
+                // hash for verifying blob integrity
+                const hash = crypto.createHash('sha1');
 
-              // read each chunk and upload it
-              readStream.on('data', (chunk) => {
-                let params = {
-                  blob_offset : offset,
-                  blob_length : chunk.length
-                }
+                let chunks = [];
+                let offset = 0;
 
-                // create an array of Promises upload
-                chunks.push(this.call.chunk(`/blobs/${uploadId}`, chunk, params))
+                // read each chunk and upload it
+                readStream.on('data', (chunk) => {
+                  let params = {
+                    blob_offset : offset,
+                    blob_length : chunk.length
+                  }
 
-                hash.update(chunk);
-                offset += chunk.length;
-              });
+                  // create an array of Promises upload
+                  chunks.push(this.call.chunk(`/blobs/${uploadId}`, chunk, params))
 
-              readStream.on('error', (error) => {
-                throw new Error(`Error reading file:\n${error}`);
-              });
+                  hash.update(chunk);
+                  offset += chunk.length;
+                });
 
-              readStream.on('end', () =>
-                  // wait upload of all chunks is completed
-                  Promise.all(chunks)
-                      .then((result) => {
-                        if (result.every((res) => res.result_code === 200)) {
-                          return commit.call(this, uploadId)
-                        }
-                        else {
-                          throw new objects.ChinoError(result);
-                        }
-                      })
-                      .then((blob) => {
-                        // attention: digest method can be called one for hash
-                        if (blob.sha1 === hash.digest("hex")) {
-                          resolve(blob);
-                        }
-                        else {
-                          reject("Digest mismatch.");
-                        }
-                      })
-                      .catch((error) => { throw new objects.ChinoError(error); })
-              )
-            }
-            else {
-              throw new objects.ChinoError(result);
-            }
-          })
-          .catch((error) => { throw new objects.ChinoError(error); });
+                readStream.on('error', (error) => {
+                  throw new Error(`Error reading file:\n${error}`);
+                });
+
+                readStream.on('end', () =>
+                    // wait upload of all chunks is completed
+                    Promise.all(chunks)
+                        .then((result) => {
+                          if (result.every((res) => res.result_code === 200)) {
+                            return commit.call(this, uploadId)
+                          }
+                          else {
+                            throw new objects.ChinoException(result);
+                          }
+                        })
+                        .then((blob) => {
+                          // attention: digest method can be called one for hash
+                          if (blob.sha1 === hash.digest("hex")) {
+                            resolve(blob);
+                          }
+                          else {
+                            reject("Digest mismatch.");
+                          }
+                        })
+                        .catch((error) => { throw new objects.ChinoException(error); })
+                )
+              }
+              else {
+                throw new objects.ChinoException(result);
+              }
+            })
+            .catch((error) => { throw new objects.ChinoException(error); });
+
+      }
     }
 
     return new Promise(doUpload.bind(this))
@@ -140,43 +153,45 @@ class ChinoAPIBlobs extends ChinoAPIBase {
    * @param newFileName {string}
    * @return {Promise.<objects.Success, Error>}
    *         A promise that return Blob object as Octet stream if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    */
   download(blobId, newFileName = "") {
     function doDownload(resolve, reject) {
-      const options = {
-        flags : "w",
-        autoClose : true,
-        highWaterMark : 16 * 1024
-      };
-      const writer = fs.createWriteStream(newFileName, options);
-
-      writer.on("finish", function () {
-        const ok = {
-          result_code: 200,
-          result: "success",
-          data : null,
-          message : null
+      if (!newFileName || newFileName === "") {
+        const error = {
+          message : "Missing file name for creating file from downloaded blob data.",
+          result_code : 400,
+          result : "error",
+          data : null
         };
 
-        resolve(new objects.Success(ok));
-      });
+        reject(new objects.ChinoException(error));
+      }
+      else {
+        const options = {
+          flags : "w",
+          autoClose : true,
+          highWaterMark : 16 * 1024
+        };
+        const writer = fs.createWriteStream(newFileName, options);
 
-      writer.on("error", (error) => {
-        reject(new Error("Writing blob raise an error:\n" + error));
-      });
+        writer.on("finish", function () {
+          const ok = {
+            result_code: 200,
+            result: "success",
+            data : null,
+            message : null
+          };
 
-      this.call.getBlob(`/blobs/${blobId}`).pipe(writer);
-    }
+          resolve(new objects.Success(ok));
+        });
 
-    if (!newFileName || newFileName === "") {
-      const error = {
-        message : "Missing file name for creating file from downloaded blob data.",
-        result_code : 400,
-        result : "error",
-        data : null
-      };
-      throw new objects.ChinoError(error);
+        writer.on("error", (error) => {
+          reject(new Error("Writing blob raise an error:\n" + error));
+        });
+
+        this.call.getBlob(`/blobs/${blobId}`).pipe(writer);
+      }
     }
 
     return new Promise(doDownload.bind(this));
@@ -185,9 +200,9 @@ class ChinoAPIBlobs extends ChinoAPIBase {
   /** Delete blob selected by its id
    *
    * @param blobId  {string}
-   * @return {Promise.<objects.Success, objects.ChinoError>}
+   * @return {Promise.<objects.Success, objects.ChinoException>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   delete(blobId) {
@@ -195,7 +210,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
 
     return this.call.del(`/blobs/${blobId}`, params)
         .then((result) => objects.checkResult(result, "Success"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 }
 
