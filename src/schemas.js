@@ -23,9 +23,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    * @param repositoryId  {string}
    * @param offset        {int}
    * @param limit         {int}
-   * @return {Promise.<Array, objects.ChinoError>}
+   * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of Schema object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   list(repositoryId, offset = 0, limit = 10) {
@@ -36,7 +36,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
 
     return this.call.get(`/repositories/${repositoryId}/schemas`, params)
         .then((result) => objects.checkListResult(result, "schemas", "Schema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Create a new schema inside repository selected by its id
@@ -44,29 +44,29 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *
    * @param repositoryId  {string}
    * @param data          {object}
-   * @return {Promise.<objects.Schema, objects.ChinoError>}
+   * @return {Promise.<objects.Schema, objects.ChinoException>}
    *         A promise that return a Schema object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   create(repositoryId, data) {
     return this.call.post(`/repositories/${repositoryId}/schemas`, data)
         .then((result) => objects.checkResult(result, "Schema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Return information about schema selected by its id
    *
    * @param schemaId  {string}
-   * @return {Promise.<objects.Schema, objects.ChinoError>}
+   * @return {Promise.<objects.Schema, objects.ChinoException>}
    *         A promise that return a Schema object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   details(schemaId) {
     return this.call.get(`/schemas/${schemaId}`)
         .then((result) => objects.checkResult(result, "Schema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Update information about schema selected by its id
@@ -74,15 +74,15 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *
    * @param schemaId  {string}
    * @param data      {object}
-   * @return {Promise.<objects.Schema, objects.ChinoError>}
+   * @return {Promise.<objects.Schema, objects.ChinoException>}
    *         A promise that return a Schema object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   update(schemaId, data) {
     return this.call.put(`/schemas/${schemaId}`, data)
         .then((result) => objects.checkResult(result, "Schema"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Deactivate (or delete) schema selected by its id
@@ -95,9 +95,9 @@ class ChinoAPISchemas extends ChinoAPIBase {
    *                              the schema will deleted otherwise
    *                              it is not possible to delete a schema
    *                              unless is empty. Default value is false.
-   * @return {Promise.<objects.Success, objects.ChinoError>}
+   * @return {Promise.<objects.Success, objects.ChinoException>}
    *         A promise that return a Success object if resolved,X
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   delete(schemaId, force = false, allContent = false) {
@@ -108,7 +108,7 @@ class ChinoAPISchemas extends ChinoAPIBase {
 
     return this.call.del(`/schemas/${schemaId}`, params)
         .then((result) => objects.checkResult(result, "Success"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 }
 

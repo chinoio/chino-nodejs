@@ -52,7 +52,6 @@ ChinoAPIObjects.Application =
       }
     };
 
-
 ChinoAPIObjects.Repository =
     class Repository extends BaseObject {
       constructor(response) {
@@ -106,12 +105,12 @@ ChinoAPIObjects.Auth =
       }
     };
 
-ChinoAPIObjects.ChinoError =
-    class ChinoError extends Error {
+ChinoAPIObjects.ChinoException =
+    class ChinoException extends Error {
       constructor(response) {
         super(response.message)
         if (response) {
-          this.name = "ChinoAPIError";
+          this.name = "ChinoAPI_Exception";
           this.result_code = response.result_code;
         }
       }
@@ -152,7 +151,7 @@ ChinoAPIObjects.checkResult =
         return new ChinoAPIObjects[object](response);
       }
       else {
-        throw new ChinoAPIObjects.ChinoError(response);
+        throw new ChinoAPIObjects.ChinoException(response);
       }
     }
 
@@ -162,7 +161,7 @@ ChinoAPIObjects.checkListResult =
         return new ChinoAPIObjects.ChinoList(response.data, param, object);
       }
       else {
-        throw new ChinoAPIObjects.ChinoError(response);
+        throw new ChinoAPIObjects.ChinoException(response);
       }
     }
 

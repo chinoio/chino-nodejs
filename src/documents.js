@@ -24,9 +24,9 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *                                the list should show their content (true)
    *                                or not (false). By default it show only
    *                                documents information (false)
-   * @return {Promise.<Array, objects.ChinoError>}
+   * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of Document object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   list(schemaId, offset = 0, limit = 10, fullDocument = false) {
@@ -38,7 +38,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
 
     return this.call.get(`/schemas/${schemaId}/documents`, params)
         .then((result) => objects.checkListResult(result, "documents", "Document"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Create a new document inside schema selected by its id
@@ -46,29 +46,29 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *
    * @param schemaId  {string}
    * @param data      {object}
-   * @return {Promise.<objects.Document, objects.ChinoError>}
+   * @return {Promise.<objects.Document, objects.ChinoException>}
    *         A promise that return a Document object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   create(schemaId, data) {
     return this.call.post(`/schemas/${schemaId}/documents`, data)
         .then((result) => objects.checkResult(result, "Document"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Return information about document selected by its id
    *
    * @param documentId  {string}
-   * @return {Promise.<objects.Document, objects.ChinoError>}
+   * @return {Promise.<objects.Document, objects.ChinoException>}
    *         A promise that return a Document object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   details(documentId) {
     return this.call.get(`/documents/${documentId}`)
         .then((result) => objects.checkResult(result, "Document"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Update information about document selected by its id
@@ -76,15 +76,15 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    *
    * @param documentId  {string}
    * @param data        {object}
-   * @return {Promise.<objects.Document, objects.ChinoError>}
+   * @return {Promise.<objects.Document, objects.ChinoException>}
    *         A promise that return a Document object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   update(documentId, data) {
     return this.call.put(`/documents/${documentId}`, data)
         .then((result) => objects.checkResult(result, "Document"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Deactivate (or delete) document selected by its id
@@ -93,9 +93,9 @@ class ChinoAPIDocuments extends ChinoAPIBase {
    * @param force       {boolean} If true delete document information
    *                              otherwise only deactivate it.
    *                              Default value is false (deactivate)
-   * @return {Promise.<objects.Success, objects.ChinoError>}
+   * @return {Promise.<objects.Success, objects.ChinoException>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   delete(documentId, force = false) {
@@ -103,7 +103,7 @@ class ChinoAPIDocuments extends ChinoAPIBase {
 
     return this.call.del(`/documents/${documentId}`, params)
         .then((result) => objects.checkResult(result, "Success"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 }
 

@@ -21,9 +21,9 @@ class ChinoAPISearch extends ChinoAPIBase {
    * @param searchParams  {object}
    * @param offset        {int}
    * @param limit         {int}
-   * @return {Promise.<Array, objects.ChinoError>}
+   * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of Document objects if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   documents(schemaId, searchParams, offset = 0, limit = 10) {
@@ -32,20 +32,20 @@ class ChinoAPISearch extends ChinoAPIBase {
       case RESULT_TYPES.NO_CONTENT:
         return this.call.post(`/search/documents/${schemaId}?offset=${offset}&limit=${limit}`, searchParams)
             .then((result) => objects.checkListResult(result, "documents", "Document"))
-            .catch((error) => { throw new objects.ChinoError(error); });
+            .catch((error) => { throw new objects.ChinoException(error); });
 
       case RESULT_TYPES.ONLY_ID:
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
             .then((result) => objects.checkResult(result, "Success"))
-            .catch((error) => { throw new objects.ChinoError(error); });
+            .catch((error) => { throw new objects.ChinoException(error); });
 
       case RESULT_TYPES.COUNT:
         return this.call.post(`/search/documents/${schemaId}`, searchParams)
             .then((result) => objects.checkResult(result, "Success"))
-            .catch((error) => { throw new objects.ChinoError(error); });
+            .catch((error) => { throw new objects.ChinoException(error); });
 
       default:
-        throw new objects.ChinoError("Wrong result type used. See docs for further information.");
+        throw new Error("Wrong result type used. See docs for further information.");
     }
   }
 
@@ -55,9 +55,9 @@ class ChinoAPISearch extends ChinoAPIBase {
    * @param searchParams  {object}
    * @param offset        {int}
    * @param limit         {int}
-   * @return {Promise.<Array, objects.ChinoError>}
+   * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of Document objects if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   users(userSchemaId, searchParams, offset = 0, limit = 10) {
@@ -65,21 +65,21 @@ class ChinoAPISearch extends ChinoAPIBase {
       case RESULT_TYPES.FULL_CONTENT:
         return this.call.post(`/search/users/${userSchemaId}?offset=${offset}&limit=${limit}`, searchParams)
             .then((result) => objects.checkListResult(result, "users", "User"))
-            .catch((error) => { throw new objects.ChinoError(error); });
+            .catch((error) => { throw new objects.ChinoException(error); });
 
       case RESULT_TYPES.COUNT:
         return this.call.post(`/search/users/${userSchemaId}`, searchParams)
             .then((result) => objects.checkResult(result, "Success"))
-            .catch((error) => { throw new objects.ChinoError(error); });
+            .catch((error) => { throw new objects.ChinoException(error); });
 
       case RESULT_TYPES.EXISTS:
       case RESULT_TYPES.USERNAME_EXISTS:
         return this.call.post(`/search/users/${userSchemaId}`, searchParams)
             .then((result) => objects.checkResult(result, "Success"))
-            .catch((error) => { throw new objects.ChinoError(error); });
+            .catch((error) => { throw new objects.ChinoException(error); });
 
       default:
-        throw new objects.ChinoError("Wrong result type used. See docs for further information.");
+        throw new Error("Wrong result type used. See docs for further information.");
     }
   }
 }

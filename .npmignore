@@ -1,3 +1,4 @@
+### Node template
 # Logs
 logs
 *.log
@@ -7,6 +8,7 @@ npm-debug.log*
 pids
 *.pid
 *.seed
+*.pid.lock
 
 # Coverage directory used by tools like istanbul
 coverage
@@ -14,28 +16,37 @@ coverage
 # nyc test coverage
 .nyc_output
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
-
 # Dependency directories
-node_modules
-jspm_packages
+node_modules/
 
 # Optional npm cache directory
 .npm
 
+# Optional eslint cache
+.eslintcache
+
 # Optional REPL history
 .node_repl_history
 
-# webstorm files
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variables file
+.env
+
+# jetbrains files
 .idea
 
-# test files
-data.json
-result.jpg
-
-# cleaning scrits
-.clean/
-
-# documentation
+# docs
 docs
+
+# scripts
+test
+.clean
+*.sh
+
+# config files
+.gitignore
+.codecov.yml
+.jsdoc.json
+.travis.yml

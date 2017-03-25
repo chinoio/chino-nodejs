@@ -87,6 +87,14 @@ class Call {
                     .post(this.baseUrl + url)
                     .auth(_(this).id, _(this).secret);
 
+      // error data in used in case of data is empty or miss any property
+      const missingFieldException = {
+        message : "Trying to make request with wrong or empty data",
+        result_code : 400,
+        result : "error",
+        data : null
+      };
+
       if (acceptType === CONT_TYPES.FORM_DATA) {
         req
           .set("Content-Type", "multipart/form-data")
@@ -95,35 +103,62 @@ class Call {
         // set form fields
         switch (data["grant_type"]) {
           case GRANT_TYPES.PASSWORD:
-            req
-              .field("grant_type", "password")
-              .field("username", data["username"])
-              .field("password", data["password"])
+            if (data["username"] && data["password"]) {
+              req
+                .field("grant_type", "password")
+                .field("username", data["username"])
+                .field("password", data["password"])
+            }
+            else {
+              throw missingFieldException;
+            }
             break;
           case GRANT_TYPES.AUTH_CODE:
-            req
-              .field("grant_type", data["grant_type"])
-              .field("code", data["code"])
-              .field("redirect_url", data["redirect_url"])
-              .field("client_id", data["client_id"])
-              .field("client_secret", data["client_secret"])
-              .field("scope", "read write")
+            if (data["code"] && data["redirect_url"] &&
+                data["client_id"] && data["client_secret"] ) {
+
+                req
+                  .field("grant_type", data["grant_type"])
+                  .field("code", data["code"])
+                  .field("redirect_url", data["redirect_url"])
+                  .field("client_id", data["client_id"])
+                  .field("client_secret", data["client_secret"])
+                  .field("scope", "read write")
+            }
+            else {
+              throw missingFieldException;
+            }
             break;
           case GRANT_TYPES.RFS_TOKEN:
-            req
-              .field("grant_type", "refresh_token")
-              .field("refresh_token", data["token"])
-              .field("client_id", data["client_id"])
-              .field("client_secret", data["client_secret"])
+            if (data["token"] && data["client_id"] && data["client_secret"]) {
+              req
+                  .field("grant_type", "refresh_token")
+                  .field("refresh_token", data["token"])
+                  .field("client_id", data["client_id"])
+                  .field("client_secret", data["client_secret"])
+            }
+            else {
+              throw missingFieldException;
+            }
             break;
           case GRANT_TYPES.REVOKE:
-            req
-              .field("token", data["token"])
-              .field("client_id", data["client_id"])
-              .field("client_secret", data["client_secret"])
+            if (data["token"] && data["client_id"] && data["client_secret"]) {
+              req
+                  .field("token", data["token"])
+                  .field("client_id", data["client_id"])
+                  .field("client_secret", data["client_secret"])
+            }
+            else {
+              throw missingFieldException;
+            }
             break;
           default:
-            throw new Error("No grant type selected.");
+            throw {
+              message : "No grant type selected",
+              result_code : 400,
+              result : "error",
+              data : null
+            };
         }
       }
       else {

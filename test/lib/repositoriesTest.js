@@ -88,4 +88,67 @@ describe('Chino Repositories API', function() {
             })
       }
   );
+
+  /* =================================== */
+  /* Test what happen in wrong situation */
+  describe("Test error situations:", function () {
+    it("should throw a ChinoException object, because repository information are incorrect",
+        function () {
+          let repo = {}
+
+          return repoCaller.create(repo)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because repository id doesn't exist",
+        function () {
+          return repoCaller.details("notARepositoryId")
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because listing parameters are incorrect",
+        function () {
+          return repoCaller.list(-12, 42)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(400)
+              })
+        }
+    );
+    it("should throw a ChinoException object, because repository id doesn't exist",
+        function () {
+          let repoUpdate = {
+            description: "This repository was updated"
+          }
+
+          return repoCaller.update(repoId, repoUpdate)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+
+    /* delete */
+    it("should throw a ChinoException object, because repository id doesn't exists",
+        function () {
+          return repoCaller.delete(repoId, true)
+              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+              .catch((error) => {
+                error.should.be.instanceOf(objects.ChinoException)
+                error.result_code.should.be.equal(404)
+              })
+        }
+    );
+  });
 });

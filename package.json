@@ -1,5 +1,5 @@
 {
-  "name": "chino-nodejs",
+  "name": "chinoio",
   "version": "1.0.0",
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
@@ -12,18 +12,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danibix95/chino-nodejs.git"
+    "url": "git+https://github.com/chinoio/chino-nodejs.git"
   },
   "keywords": [
     "Chino.io",
-    "SDK"
+    "SDK",
+    "data security platform"
   ],
-  "author": "Daniele Bissoli",
+  "author": "Chino.io <hello@chino.io>",
+  "contributors": [
+    "Daniele Bissoli <danibix95@users.noreply.github.com>"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/danibix95/chino-nodejs/issues"
+    "url": "https://github.com/chinoio/chino-nodejs/issues"
   },
-  "homepage": "https://github.com/danibix95/chino-nodejs#readme",
+  "homepage": "https://github.com/chinoio/chino-nodejs#readme",
   "dependencies": {
     "private-parts": "^0.4.1",
     "superagent": "^3.5.0",

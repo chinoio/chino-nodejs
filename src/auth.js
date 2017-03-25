@@ -18,16 +18,15 @@ class ChinoAPIAuth {
   constructor(baseUrl, applicationId, applicationSecret) {
     this.baseUrl = baseUrl;
 
-    if (applicationId === "" || typeof(applicationId) === "undefined" ||
-        applicationSecret === "" || typeof(applicationSecret) === "undefined") {
+    if (!baseUrl || !applicationId || !applicationSecret) {
 
       const err = {
-        message : "Impossible to create an Auth object without credentials",
+        message : "Impossible to create an Auth object without credentials or base url",
         data : null,
         result : "error",
         result_code : 400
       }
-      throw new objects.ChinoError(err);
+      throw new objects.ChinoException(err);
     }
 
     _(this).applicationId = applicationId;
@@ -42,9 +41,9 @@ class ChinoAPIAuth {
    *
    * @param username    {string}
    * @param password    {string}
-   * @returns {Promise.<objects.Auth, objects.ChinoError>}
+   * @returns {Promise.<objects.Auth, objects.ChinoException>}
    *         A promise that return a Auth object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   login(username, password) {
@@ -56,7 +55,7 @@ class ChinoAPIAuth {
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Auth"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Authenticate user through code returned at redirectUlr
@@ -64,9 +63,9 @@ class ChinoAPIAuth {
    *
    * @param code           {string}
    * @param redirectUrl    {string}
-   * @returns {Promise.<objects.Auth, objects.ChinoError>}
+   * @returns {Promise.<objects.Auth, objects.ChinoException>}
    *         A promise that return a Auth object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   loginWithCode(code, redirectUrl) {
@@ -81,15 +80,15 @@ class ChinoAPIAuth {
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Auth"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Get a new token using a old token
    *
    * @param token           {string}
-   * @returns {Promise.<objects.Auth, objects.ChinoError>}
+   * @returns {Promise.<objects.Auth, objects.ChinoException>}
    *         A promise that return a Auth object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   refreshToken(token) {
@@ -102,15 +101,15 @@ class ChinoAPIAuth {
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Auth"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Revoke token authorization
    *
    * @param token           {string}
-   * @returns {Promise.<objects.Success, objects.ChinoError>}
+   * @returns {Promise.<objects.Success, objects.ChinoException>}
    *         A promise that return a Success object if resolved,
-   *         otherwise throw an ChinoError object if rejected
+   *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
   logout(token) {
@@ -123,7 +122,7 @@ class ChinoAPIAuth {
 
     return this.call.post(`/auth/revoke_token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Success"))
-        .catch((error) => { throw new objects.ChinoError(error); });
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 }
 

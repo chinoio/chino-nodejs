@@ -370,8 +370,39 @@ describe("Chino API Objects", function () {
     });
   });
 
-  describe("ChinoError object", function () {
-    it("Should return a correct ChinoError object", function () {
+  describe("Blob object", function () {
+    it("Should return a correct Blob object", function () {
+      let responseTest = {
+        "result": "success",
+        "result_code": 200,
+        "message": null,
+        "data": {
+          "blob": {
+            "bytes": 41231,
+            "blob_id": "85c6b0f8-9033-4b9a-8457-617ec1adc0ee",
+            "sha1": "89cfc89bc8a2197e9d1fdf653bb4d63bb7b7fd4d",
+            "document_id": "40d12ace-c52d-4508-b887-23fa8d2825d7",
+            "md5": "70a4479bdb5db0cf58184c7210ee07af"
+          }
+        }
+      };
+
+      let blob = new objects.Auth(responseTest);
+      blob.should.instanceOf(objects.Auth);
+      blob.should.containEql(responseTest.data);
+    });
+
+    it("Should return an empty Blob object", function () {
+      let emptyResponse = {}
+
+      let blob = new objects.Blob(emptyResponse);
+      blob.should.instanceOf(objects.Blob);
+      blob.should.containEql(emptyResponse);
+    });
+  });
+
+  describe("ChinoException object", function () {
+    it("Should return a correct ChinoException object", function () {
       const responseTest = {
         "data": null,
         "message": "Schema not found",
@@ -383,16 +414,16 @@ describe("Chino API Objects", function () {
         "result_code": 404
       }
 
-      let error = new objects.ChinoError(responseTest);
-      error.should.instanceOf(objects.ChinoError);
+      let error = new objects.ChinoException(responseTest);
+      error.should.instanceOf(objects.ChinoException);
       error.should.containEql(errorObject);
     });
 
-    it("Should return an empty ChinoError object", function () {
+    it("Should return an empty ChinoException object", function () {
       let emptyResponse = {}
 
-      let error = new objects.ChinoError(emptyResponse);
-      error.should.instanceOf(objects.ChinoError);
+      let error = new objects.ChinoException(emptyResponse);
+      error.should.instanceOf(objects.ChinoException);
       error.should.containEql(emptyResponse);
     });
   });
@@ -458,10 +489,10 @@ describe("Chino API Objects", function () {
       resultList.list.forEach((val) => val.should.be.instanceOf(objects.Group));
     });
 
-    it("Should throw a ChinoError object", function () {
+    it("Should throw a ChinoException object", function () {
       let emptyResponse = {};
 
-      assert.throws(function () { objects.checkListResult(emptyResponse) }, objects.ChinoError);
+      assert.throws(function () { objects.checkListResult(emptyResponse) }, objects.ChinoException);
     });
   });
 
@@ -496,10 +527,10 @@ describe("Chino API Objects", function () {
       user.should.containEql(responseTest.data.user);
     });
 
-    it("Should throw a ChinoError object", function () {
+    it("Should throw a ChinoException object", function () {
       let emptyResponse = {};
 
-      assert.throws(function () { objects.checkResult(emptyResponse) }, objects.ChinoError);
+      assert.throws(function () { objects.checkResult(emptyResponse) }, objects.ChinoException);
     });
   });
 });
