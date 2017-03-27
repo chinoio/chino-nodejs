@@ -17,11 +17,12 @@
   "keywords": [
     "Chino.io",
     "SDK",
-    "data security platform"
+    "data security platform",
+    "privacy"
   ],
-  "author": "Chino.io <hello@chino.io>",
+  "author": "Chino.io <info@chino.io>",
   "contributors": [
-    "Daniele Bissoli <danibix95@users.noreply.github.com>"
+    "Daniele Bissoli <dani95bissoli@gmail.com>"
   ],
   "license": "MIT",
   "bugs": {

@@ -1,5 +1,5 @@
 # Chino.io Node JS client
-[![Build Status](https://travis-ci.org/danibix95/chino-nodejs.svg?branch=master)](https://travis-ci.org/danibix95/chino-nodejs) [![codecov](https://codecov.io/gh/danibix95/chino-nodejs/branch/master/graph/badge.svg)](https://codecov.io/gh/danibix95/chino-nodejs)
+[![Build Status](https://travis-ci.org/chinoio/chino-nodejs.svg?branch=master)](https://travis-ci.org/chinoio/chino-nodejs) [![codecov](https://codecov.io/gh/danibix95/chino-nodejs/branch/master/graph/badge.svg)](https://codecov.io/gh/danibix95/chino-nodejs)
 
 *Official* Node JS wrapper for [Chino.io](https://chino.io) APIs.
 
@@ -11,7 +11,11 @@ At the following links can be found:
 Before you can use Chino Node JS SDK you have to install Node JS Javascript runtime. If you haven't it yet, you can follow the [instructions](https://nodejs.org/en/download/package-manager/) provided on Node JS website.
 
 ## Installation
-Work in progress (SDK will be publish on NPM and then this section will be updated)
+To install Chino SDK in your Node JS project you can run the following command
+
+    npm install --save chinoio
+    
+The above command will download Chino SDK in your `node_modules` directory and will add the dependency in your `package.json file`.
 
 ## Test the SDK
 Once requirements are satisfied you can test the SDK. In order to complete this task you have to follow these steps:
@@ -20,7 +24,7 @@ Clone this repository with the following command:
     
     git clone https://github.com/danibix95/chino-nodejs.git
 
-Then go inside the repository folder:
+Then go inside repository folder:
    
     cd chino-nodejs
 And install project dependencies:
@@ -131,4 +135,4 @@ For further information view [SDK docs][1]. You can view an example of applicati
 
 MIT
 
-[1]: https://danibix95.github.io/chino-nodejs/
+[1]: https://chinoio.github.io/chino-nodejs/
