@@ -74,7 +74,7 @@ describe('Chino User Schemas API', function() {
       }
   );
   /* update */
-  it("Test the update of user information: should return a User object",
+  it("Test the update of user information: should return a User Schema object",
       function () {
         const newUS = {
           description: "User schema test edited",
@@ -86,7 +86,7 @@ describe('Chino User Schemas API', function() {
               },
               {
                 type : "integer",
-                name : "this is an int"
+                name : "int_field"
               },
               {
                 type : "date",

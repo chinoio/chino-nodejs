@@ -1,7 +1,7 @@
 const path = require("path");
 const jsonfile = require("jsonfile");
 
-module.exports.baseUrl = "https://api.test.chino.io/v1";
+module.exports.baseUrl = process.env.url;
 module.exports.customerId  = process.env.customer_id;  // insert here your Chino Customer ID
 module.exports.customerKey = process.env.customer_key; // insert here your Chino Customer KEY
 module.exports.filedata = "data.json";
