@@ -86,7 +86,7 @@ describe('Chino User Schemas API', function() {
               },
               {
                 type : "integer",
-                name : 3
+                name : "this is an int"
               },
               {
                 type : "date",

@@ -15,7 +15,7 @@ const customerKey = settings.customerKey;
 describe('Chino Blobs API', function () {
   this.slow(300);
   // change timeout for slow network
-  this.timeout(5000);
+  this.timeout(50000);
 
   const apiCall = new Call(baseUrl, customerId, customerKey);
   const blobCaller = new Blobs(baseUrl, customerId, customerKey);
