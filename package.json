@@ -1,6 +1,6 @@
 {
   "name": "chinoio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,8 @@
   ],
   "author": "Chino.io <info@chino.io>",
   "contributors": [
-    "Daniele Bissoli <dani95bissoli@gmail.com>"
+    "Daniele Bissoli <dani95bissoli@gmail.com>",
+    "Stefano Tranquillini <stefano@chino.io>"
   ],
   "license": "MIT",
   "bugs": {
