@@ -13,6 +13,7 @@ script:
 - npm run ci_test
 deploy:
   provider: npm
+  email: "info@chino.io"
   on:
     branch: master
   api_key:
