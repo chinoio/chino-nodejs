@@ -8,11 +8,10 @@ notifications:
   email:
     on_success: change
     on_failure: change
-install: npm install
+install: 
+  npm install
 script:
-- npm run ci_test
-after_success: 
-- "./afterSuccess.sh"
+  - npm run ci_test
 deploy:
   provider: npm
   authToken:
