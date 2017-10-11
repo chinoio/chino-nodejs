@@ -11,7 +11,8 @@ notifications:
 install: npm install
 script:
 - npm run ci_test
-after_success: "./afterSuccess.sh"
+after_success: 
+- "./afterSuccess.sh"
 deploy:
   provider: npm
   authToken:
