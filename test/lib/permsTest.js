@@ -249,7 +249,7 @@ describe('Chino Perms API', function() {
             subjectType: "users",
             subjectId: usrIds[4],
             permissions: {
-              manage: ["S"]   /* or wrong permission on this resource */
+              manage: ["W"]   /* or wrong permission on this resource */
             }
           };
 

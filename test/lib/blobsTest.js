@@ -71,7 +71,7 @@ describe('Chino Blobs API', function () {
   it("Test the upload of a blob: should return a Blob object",
       function () {
         this.slow(1500);
-        this.timeout(12000); // for slow connection (e.g. 1Mbps upload)
+        this.timeout(50000); // for slow connection (e.g. 1Mbps upload)
         const fileName = path.join(__dirname, "files/img.jpg");
 
         return blobCaller.upload(docId, "file", fileName)

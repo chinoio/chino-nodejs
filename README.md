@@ -128,6 +128,10 @@ In the end we can try to make a call as user application:
  
  Moreover, if you have to make sequential calls, you have to chain returned promises from each call.
 
+#### Blob Upload
+The chunk uploads are sent in parallel. The server limits the number of concurrent calls a user can do, thus use the `chunkSize` wisely in order to not exceed ~10 parallel calls. 
+The *default* value is of `100MB` which works for most of the cases.
+
 ### Examples
 For further information view [SDK docs][1]. You can view an example of application in the [`example`](https://github.com/chinoio/chino-nodejs/tree/example) branch.
 

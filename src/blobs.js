@@ -54,7 +54,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
    *         otherwise throw an ChinoException object if rejected
    *         or was not retrieved a success status
    */
-  upload(docId = "", field = "", fileName = "") {
+  upload(docId = "", field = "", fileName = "", chunkSize = 100 * 1024 * 1024) {
     const info = {
       document_id : docId,
       field : field,
@@ -85,7 +85,10 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                 const options = {
                   flags : "r",
                   autoClose : true,
-                  highWaterMark : 16 * 1024
+                  // TODO: with small values the requests are in parallel 
+                  // too many to be handled.
+                  // change this method in a sequential one and decrease the size of the buffer
+                  highWaterMark :  chunkSize
                 };
                 const readStream = fs.createReadStream(fileName, options);
                 // hash for verifying blob integrity
