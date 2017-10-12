@@ -1,6 +1,6 @@
 {
   "name": "chinoio",
-  "version": "1.0.1",
+  "version": "1.0.2b",
   "description": "Node JS SDK for Chino.io",
   "main": "index.js",
   "scripts": {
@@ -32,15 +32,15 @@
   "homepage": "https://github.com/chinoio/chino-nodejs#readme",
   "dependencies": {
     "private-parts": "^0.4.1",
-    "superagent": "^3.5.0",
+    "superagent": "^3.6.3",
     "superagent-binary-parser": "^1.0.1"
   },
   "devDependencies": {
-    "codecov": "^2.0.1",
-    "jsdoc": "^3.4.3",
+    "codecov": "^2.3.0",
+    "jsdoc": "^3.5.5",
     "jsonfile": "^2.4.0",
     "minami": "^1.1.1",
-    "mocha": "^3.2.0",
+    "mocha": "^3.5.3",
     "nyc": "^10.1.2",
     "path": "^0.12.7",
     "should": "^11.2.1"
