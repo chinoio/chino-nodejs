@@ -13,7 +13,8 @@ const CONT_TYPES = require("./callTypes");
  */
 function responseHandler(error, response) {
   if (error) {
-    this.reject(response.body || error);
+    const reason = (response.body === undefined) ? "Chino API returned empty response" : response.body;
+    this.reject(reason || error);
   }
   else {
     this.resolve(response.body);
@@ -23,9 +24,9 @@ function responseHandler(error, response) {
 class Call {
   /** Create a Call object
    * @constructor
-   * @param baseUrl {string}
-   * @param id      {string}
-   * @param secret  {string | object}
+   * @param baseUrl     {string}
+   * @param authId      {string}
+   * @param authSecret  {string | object}
    */
   constructor(baseUrl = "", authId = "", authSecret = "") {
     this.baseUrl = baseUrl;
