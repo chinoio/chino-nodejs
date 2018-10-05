@@ -13,7 +13,7 @@ const CONT_TYPES = require("./callTypes");
  */
 function responseHandler(error, response) {
   if (error) {
-    const reason = (response.body === undefined) ? "Chino API returned empty response" : response.body;
+    const reason = (response === undefined) ? "Chino API returned no response" : response.body;
     this.reject(reason || error);
   }
   else {
