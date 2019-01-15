@@ -53,5 +53,36 @@ describe("Chino main class", function () {
               chino.auth.should.be.instanceOf(ChinoAuth);
             })
       }
-  )
+  );
+  it("Test Chino Object: force URL to HTTPS if using the .chino.io API server",
+    function() {
+      // Test for official .chino.io server
+      const expectedUrls = ["https://api.chino.io/v1", "https://api.test.chino.io/v1"];
+      const chinoIoUrls = ["http://api.chino.io", "http://api.chino.io/", "http://api.chino.io/v1/",
+          "http://api.test.chino.io", "http://api.test.chino.io/", "http://api.test.chino.io/v1/"];
+
+      for (i in chinoIoUrls) {
+          let badUrl = chinoIoUrls[i];
+          let chino = new Chino(badUrl, customerId, customerKey);
+          // check that URL was fixed
+          chino.baseUrl.should.be.oneOf(expectedUrls);
+      }
+
+      // Test for custom servers
+      const customServerUrls = ["http://localhost:8443", "http://localhost:8443/", "http://localhost:8443/v1/",
+          "https://localhost/asdfg", "https://localhost/asdfg/",  "https://localhost/asdfg/v1/"];
+      for (i in customServerUrls) {
+          let customUrl = customServerUrls[i];
+          let chino = new Chino(customUrl, customerId, customerKey);
+          // check that version nr was appended
+          chino.baseUrl.should.endWith("/v1");
+
+          // check that http/https was NOT changed,
+          // i.e. original URL and actual URL stored in Chino obj start with the same protocol
+          chino.baseUrl.should.startWith(
+              customUrl.substr(0, 8)
+          );
+      }
+    }
+  );
 });
