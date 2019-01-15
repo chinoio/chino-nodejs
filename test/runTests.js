@@ -39,11 +39,20 @@ else {
   });
 }
 
+var testScriptName = "_test";
+
 function runTest() {
+  // use custom config for Windows. "win32" is returned also on 64bit versions of Windows.
+  if (process.platform === "win32") {
+      testScriptName += "_windows";
+  }
+
   // set up environment
   require("./before").then(() => {
+
+
       // execute test
-      const test = spawn('npm', ["run", "_test"]);
+      const test = spawn('npm', ["run", testScriptName]);
 
       test.stdout.on('data', (data) => {
         console.log(`${data}`);

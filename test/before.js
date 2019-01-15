@@ -13,6 +13,18 @@ const baseUrl     = settings.baseUrl;
 const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
+console.log("* * * * TEST ENV * * * *");
+console.log("URL: " + process.env.url);
+console.log("ID: " + (
+    process.env.customer_id
+        ? process.env.customer_id.toString().substr(0,5) + "..."
+        : "undefined"
+    )
+);
+console.log("KEY is defined: " + (process.env.customer_key !== undefined));
+console.log("* * * * * * * * * * * * *");
+
+
 const apiCall = new Call(baseUrl, customerId, customerKey);
 
 // Support function: wait some time before resolve Promise
