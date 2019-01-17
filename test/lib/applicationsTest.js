@@ -152,58 +152,6 @@ describe('Chino Applications API', function() {
 
   /* =================================== */
   /* Test what happen in wrong situation */
-  describe("Test error situations:", function () {
-    it("Missing credentials creating app caller, therefore should throws a ChinoException",
-        function () {
-          let app = {
-            name: "Password app test",
-            grant_type: "password",
-          };
-
-          return wrongCaller.create(app)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(401)
-              });
-        }
-    );
-    it("Creation should throws a ChinoException due wrong data",
-        function () {
-          let app = {
-            name: "Authorization code app test"
-          }
-
-          return appCaller.create(app)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              });
-        }
-    );
-
-    it("Details should throws a ChinoException because application was deleted",
-        function () {
-          return appCaller.details(appId1)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              });
-        }
-    );
-
-    it("Listing should throws a ChinoException because application was deleted",
-        function () {
-          return appCaller.list(-1)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              });
-        }
-    );
 
   // describe("Test error situations:", function () {
   //   it("Missing credentials creating app caller, therefore should throws a ChinoException",

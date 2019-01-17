@@ -13,4 +13,9 @@ module.exports.data = function () {
   catch (error) {
     throw new Error(`Data file impossible to read:\n${error}`);
   }
-}
+};
+
+// log unhandled Promise rejection
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('Unhandled Rejection at:', reason.stack || reason)
+})

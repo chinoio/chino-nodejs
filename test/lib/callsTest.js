@@ -14,14 +14,29 @@ const customerKey = settings.customerKey;
 function s200(res) {
   return res["result_code"].should.be.equal(200);
 }
-function e400(res) {
-  return res["result_code"].should.be.equal(400);
+function e400(res, caller="not specified") {
+    try {
+        return res["result_code"].should.be.equal(400);
+    } catch (e) {
+        console.log(res);
+        throw e;
+    }
 }
-function e401(err) {
-  return err["result_code"].should.be.equal(401);
+function e401(err, caller="not specified") {
+    try {
+        return err["result_code"].should.be.equal(401);
+    } catch (e) {
+        console.log(err);
+        throw e;
+    }
 }
-function e404(err) {
-  return err["result_code"].should.be.equal(404);
+function e404(err, caller="not specified") {
+    try {
+        return err["result_code"].should.be.equal(404);
+    } catch (e) {
+        console.log(err);
+        throw e;
+    }
 }
 
 describe('Chino API Call', function () {
@@ -143,12 +158,12 @@ describe('Chino API Call', function () {
         return authCall.post("/auth/token/", form, CONT_TYPES.FORM_DATA).then(s200);
       });
 
-      it('Wrong auth with password: should return 401', function () {
+      it('Auth with wrong password: should return 400', function () {
         // change password to test wrong auth
         form.password = "wrongPassword";
 
         let authCall = new Call(baseUrl, appId, appKey);
-        return authCall.post("/auth/token/", form, CONT_TYPES.FORM_DATA).catch(e401);
+        return authCall.post("/auth/token/", form, CONT_TYPES.FORM_DATA).catch(e400);
       });
     });
   });
