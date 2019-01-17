@@ -103,7 +103,7 @@ describe('Chino Users API', function () {
   );
   /* update */
   it("Test the update of user information: should return a User object",
-      function () {
+      function (done) {
         const newUser = {
           username: "aThirdUser",
           password: "aPassword3",
@@ -118,7 +118,12 @@ describe('Chino Users API', function () {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
               result.username.should.be.equal("aThirdUser");
+              done();
             })
+            .catch((error) => {
+                should.fail(error.message);
+                done();
+            });
       }
   );
   /* partialUpdate */
@@ -140,11 +145,16 @@ describe('Chino Users API', function () {
   );
   /* delete */
   it("Test the deletion of a user: should return a success message",
-      function () {
+      function (done) {
         return userCaller.delete(usrId2, true)
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
+              done();
+            })
+            .catch((error) => {
+                should.fail(error.message);
+                done();
             })
       }
   );

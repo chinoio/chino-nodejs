@@ -91,6 +91,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                   highWaterMark :  chunkSize
                 };
                 const readStream = fs.createReadStream(fileName, options);
+
                 // hash for verifying blob integrity
                 const hash = crypto.createHash('sha1');
 
