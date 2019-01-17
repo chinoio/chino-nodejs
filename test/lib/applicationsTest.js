@@ -132,6 +132,7 @@ describe('Chino Applications API', function() {
         assert(appId1 !== "", "Application undefined");
         return appCaller.delete(appId1, true)
             .then((result) => {
+                console.log("Deleted 1!")
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
             })
@@ -142,6 +143,7 @@ describe('Chino Applications API', function() {
         assert(appId2 !== "", "Application undefined");
         return appCaller.delete(appId2, true)
             .then((result) => {
+                console.log("Deleted 2!")
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
             })
@@ -203,31 +205,84 @@ describe('Chino Applications API', function() {
         }
     );
 
-    it("Update should throws a ChinoException because application was deleted",
-        function () {
-          let appUpdate = {
-            name: "Application 1 was updated",
-            grant_type: "password",
-          };
-
-          return appCaller.update(appId1, appUpdate)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              });
-        }
-    );
-
-    it("Deletion should throws a ChinoException because application was already deleted",
-        function () {
-          return appCaller.delete(appId2, true)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              });
-        }
-    );
-  });
+  // describe("Test error situations:", function () {
+  //   it("Missing credentials creating app caller, therefore should throws a ChinoException",
+  //       function () {
+  //         let app = {
+  //           name: "Password app test",
+  //           grant_type: "password",
+  //         };
+  //
+  //         return wrongCaller.create(app)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(401)
+  //             });
+  //       }
+  //   );
+  //   it("Creation should throws a ChinoException due wrong data",
+  //       function () {
+  //         let app = {
+  //           name: "Authorization code app test"
+  //         }
+  //
+  //         return appCaller.create(app)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             });
+  //       }
+  //   );
+  //
+  //   it("Details should throws a ChinoException because application was deleted",
+  //       function () {
+  //         return appCaller.details(appId1)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             });
+  //       }
+  //   );
+  //
+  //   it("Listing should throws a ChinoException because application was deleted",
+  //       function () {
+  //         return appCaller.list(-1)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             });
+  //       }
+  //   );
+  //
+  //   it("Update should throws a ChinoException because application was deleted",
+  //       function () {
+  //         let appUpdate = {
+  //           name: "Application 1 was updated",
+  //           grant_type: "password",
+  //         };
+  //
+  //         return appCaller.update(appId1, appUpdate)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             });
+  //       }
+  //   );
+  //
+  //   it("Deletion should throws a ChinoException because application was already deleted",
+  //       function () {
+  //         return appCaller.delete(appId2, true)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             });
+  //       }
+  //   );
+  // });
 });

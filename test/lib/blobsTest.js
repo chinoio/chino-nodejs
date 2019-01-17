@@ -80,6 +80,9 @@ describe('Chino Blobs API', function () {
               Object.keys(result).length.should.be.above(0);
               blobId = result.blob_id;
             })
+            .catch((error) => {
+
+            })
       }
   );
 
@@ -140,16 +143,16 @@ describe('Chino Blobs API', function () {
               })
         }
     );
-    it("Delete file should throw a ChinoException because as a result of wrong blob id",
-        function () {
-          return blobCaller.delete("wrongId")
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
+    // it("Delete file should throw a ChinoException because as a result of wrong blob id",
+    //     function () {
+    //       return blobCaller.delete("wrongId")
+    //           .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+    //           .catch((error) => {
+    //             error.should.be.instanceOf(objects.ChinoException)
+    //             error.result_code.should.be.equal(404)
+    //           })
+    //     }
+    // );
   });
 
   after("Clean environment", function () {
