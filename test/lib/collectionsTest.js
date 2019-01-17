@@ -167,109 +167,109 @@ describe('Chino Collections API', function() {
 
   /* =================================== */
   /* Test what happen in wrong situation */
-  describe("Test error situations:", function () {
-    it("Trying to create a new collection should throw a ChinoException object, because request body is empty",
-        function () {
-          return collectionCaller.create({})
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-    it("Trying to get collection information should throw a ChinoException object, because collection id doesn't exists",
-        function () {
-          return collectionCaller.details(collectionId)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("Listing collections Should throw a ChinoException object, due wrong offset",
-        function () {
-          return collectionCaller.list(-1)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-
-    it("Updating collection should throw a ChinoException object, because collection id doesn't exists",
-        function () {
-          const collUpdate = {
-            name : "Collection name updated"
-          };
-
-          return collectionCaller.update(collectionId, collUpdate)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("Inserting document into collection should throw a ChinoException object, because collection id doesn't exists",
-        function () {
-          return collectionCaller.insertDocument(collectionId, documentIds[0])
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("Listing collection documents should throw a ChinoException object, because collection id doesn't exists",
-        function () {
-          return collectionCaller.listDocuments(collectionId)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("Inserting document into collection should throw a ChinoException object, because collection id doesn't exists",
-        function () {
-          return collectionCaller.removeDocument(collectionId, documentIds[0])
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("Searching over collection should throw a ChinoException object, because is passed a wrong filter",
-        function () {
-          const filter = {}
-
-          return collectionCaller.search(filter)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-
-    it("Deleting collection should throw a ChinoException object, because collection id doesn't exists",
-        function () {
-          return collectionCaller.delete(collectionId, true)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-  });
+  // describe("Test error situations:", function () {
+  //   it("Trying to create a new collection should throw a ChinoException object, because request body is empty",
+  //       function () {
+  //         return collectionCaller.create({})
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //   it("Trying to get collection information should throw a ChinoException object, because collection id doesn't exists",
+  //       function () {
+  //         return collectionCaller.details(collectionId)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Listing collections Should throw a ChinoException object, due wrong offset",
+  //       function () {
+  //         return collectionCaller.list(-1)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Updating collection should throw a ChinoException object, because collection id doesn't exists",
+  //       function () {
+  //         const collUpdate = {
+  //           name : "Collection name updated"
+  //         };
+  //
+  //         return collectionCaller.update(collectionId, collUpdate)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Inserting document into collection should throw a ChinoException object, because collection id doesn't exists",
+  //       function () {
+  //         return collectionCaller.insertDocument(collectionId, documentIds[0])
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Listing collection documents should throw a ChinoException object, because collection id doesn't exists",
+  //       function () {
+  //         return collectionCaller.listDocuments(collectionId)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Inserting document into collection should throw a ChinoException object, because collection id doesn't exists",
+  //       function () {
+  //         return collectionCaller.removeDocument(collectionId, documentIds[0])
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Searching over collection should throw a ChinoException object, because is passed a wrong filter",
+  //       function () {
+  //         const filter = {}
+  //
+  //         return collectionCaller.search(filter)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("Deleting collection should throw a ChinoException object, because collection id doesn't exists",
+  //       function () {
+  //         return collectionCaller.delete(collectionId, true)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  // });
 });

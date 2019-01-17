@@ -217,113 +217,113 @@ describe('Chino Perms API', function() {
 
   /* =================================== */
   /* Test what happen in wrong situation */
-  describe("Test error situations:", function () {
-    it("should throw a ChinoException object, because perms data are incorrect",
-        function () {
-          const data = {
-            action: "grant",
-            resourcesType: "repositories",
-            subjectType: "users", /* the subject id is missing */
-            permissions: {
-              manage: ["L", "C", "R", "U", "D"], /* wrong permission on this resource (L) */
-              authorize: ["R"]
-            }
-          }
-
-          return permsCaller.onResources(data)
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        });
-
-    it("should throw a ChinoException object, because perms data are incorrect",
-        function () {
-          const data = {
-            action: "grant",
-            resourceType: "user_schema", /* eg. typo error: missing 's'*/
-            resourceId: usrSchemaId,
-            subjectType: "users",
-            subjectId: usrIds[4],
-            permissions: {
-              manage: ["W"]   /* or wrong permission on this resource */
-            }
-          };
-
-          return permsCaller.onResource(data)
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-
-    it("should throw a ChinoException object, because perms data are incorrect (empty)",
-        function () {
-          const data = {};
-
-          return permsCaller.onChildren(data)
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because this is not an application user",
-        function () {
-          return permsCaller.getPermissions()
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(403)
-              })
-        });
-
-    it("should throw a ChinoException object, because document id doesn't exist",
-        function () {
-          return permsCaller.getDocumentPermissions("")
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        });
-
-    it("should throw a ChinoException object, because user id doesn't exist",
-        function () {
-          return permsCaller.getUserPermissions(null)
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        });
-
-    it("should throw a ChinoException object, because group id doesn't exist",
-        function () {
-          return permsCaller.getGroupPermissions(undefined)
-              .then((res) => {
-                throw new Error("This promise shouldn't be fulfilled!")
-              })
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-    });
-  });
+  // describe("Test error situations:", function () {
+  //   it("should throw a ChinoException object, because perms data are incorrect",
+  //       function () {
+  //         const data = {
+  //           action: "grant",
+  //           resourcesType: "repositories",
+  //           subjectType: "users", /* the subject id is missing */
+  //           permissions: {
+  //             manage: ["L", "C", "R", "U", "D"], /* wrong permission on this resource (L) */
+  //             authorize: ["R"]
+  //           }
+  //         }
+  //
+  //         return permsCaller.onResources(data)
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       });
+  //
+  //   it("should throw a ChinoException object, because perms data are incorrect",
+  //       function () {
+  //         const data = {
+  //           action: "grant",
+  //           resourceType: "user_schema", /* eg. typo error: missing 's'*/
+  //           resourceId: usrSchemaId,
+  //           subjectType: "users",
+  //           subjectId: usrIds[4],
+  //           permissions: {
+  //             manage: ["W"]   /* or wrong permission on this resource */
+  //           }
+  //         };
+  //
+  //         return permsCaller.onResource(data)
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("should throw a ChinoException object, because perms data are incorrect (empty)",
+  //       function () {
+  //         const data = {};
+  //
+  //         return permsCaller.onChildren(data)
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because this is not an application user",
+  //       function () {
+  //         return permsCaller.getPermissions()
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(403)
+  //             })
+  //       });
+  //
+  //   it("should throw a ChinoException object, because document id doesn't exist",
+  //       function () {
+  //         return permsCaller.getDocumentPermissions("")
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       });
+  //
+  //   it("should throw a ChinoException object, because user id doesn't exist",
+  //       function () {
+  //         return permsCaller.getUserPermissions(null)
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       });
+  //
+  //   it("should throw a ChinoException object, because group id doesn't exist",
+  //       function () {
+  //         return permsCaller.getGroupPermissions(undefined)
+  //             .then((res) => {
+  //               throw new Error("This promise shouldn't be fulfilled!")
+  //             })
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //   });
+  // });
 });

@@ -149,89 +149,89 @@ describe('Chino Schemas API', function() {
 
   /* =================================== */
   /* Test what happen in wrong situation */
-  describe("Test error situations:", function () {
-    it("should throw a ChinoException object, because schema information are incorrect",
-        function () {
-          const schema = {};
-
-          return schemaCaller.create(repoId, schema)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because schema id doesn't exist",
-        function () {
-          return schemaCaller.details("")
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because repository id doesn't exist, so no schemas can be retrieved",
-        function () {
-
-          return schemaCaller.list("")
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because schema id doesn't exist",
-        function () {
-          const schemaUpdate = {
-            "description": "Schema test Updated",
-            "structure": {
-              "fields": [
-                {
-                  "name": "physician_id",
-                  "type": "string",
-                  "indexed": true
-                },
-                {
-                  "name": "patient_birth_date",
-                  "type": "date",
-                  "indexed": true
-                },
-                {
-                  "name": "observation",
-                  "type": "string"
-                },
-                {
-                  "name": "visit_date",
-                  "type": "datetime",
-                  "indexed": true
-                },
-                {
-                  "name": "address",
-                  "type": "string",
-                }
-              ]
-            }
-          };
-
-          return schemaCaller.update(schemaId, schemaUpdate)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })        }
-    );
-    it("should throw a ChinoException object, because schema id doesn't exist",
-        function () {
-          return schemaCaller.delete(schemaId, null)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-  });
+  // describe("Test error situations:", function () {
+  //   it("should throw a ChinoException object, because schema information are incorrect",
+  //       function () {
+  //         const schema = {};
+  //
+  //         return schemaCaller.create(repoId, schema)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because schema id doesn't exist",
+  //       function () {
+  //         return schemaCaller.details("")
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because repository id doesn't exist, so no schemas can be retrieved",
+  //       function () {
+  //
+  //         return schemaCaller.list("")
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because schema id doesn't exist",
+  //       function () {
+  //         const schemaUpdate = {
+  //           "description": "Schema test Updated",
+  //           "structure": {
+  //             "fields": [
+  //               {
+  //                 "name": "physician_id",
+  //                 "type": "string",
+  //                 "indexed": true
+  //               },
+  //               {
+  //                 "name": "patient_birth_date",
+  //                 "type": "date",
+  //                 "indexed": true
+  //               },
+  //               {
+  //                 "name": "observation",
+  //                 "type": "string"
+  //               },
+  //               {
+  //                 "name": "visit_date",
+  //                 "type": "datetime",
+  //                 "indexed": true
+  //               },
+  //               {
+  //                 "name": "address",
+  //                 "type": "string",
+  //               }
+  //             ]
+  //           }
+  //         };
+  //
+  //         return schemaCaller.update(schemaId, schemaUpdate)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })        }
+  //   );
+  //   it("should throw a ChinoException object, because schema id doesn't exist",
+  //       function () {
+  //         return schemaCaller.delete(schemaId, null)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  // });
 });

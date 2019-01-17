@@ -119,66 +119,66 @@ describe('Chino Documents API', function() {
 
   /* =================================== */
   /* Test what happen in wrong situation */
-  describe("Test error situations:", function () {
-    it("should throw a ChinoException object, because doc information are incorrect",
-        function () {
-          const doc = {};
-
-          return documentCaller.create(schemaId, doc)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because documents id doesn't id",
-        function () {
-          return documentCaller.details("")
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because list params are wrong and schema doesn't exists",
-        function () {
-          return documentCaller.list("", -1)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-    it("should throw a ChinoException object, because documents id doesn't id",
-        function () {
-          const docUpdate = {
-            content: {
-              info : "document test",
-              num : 7
-            }
-          };
-
-          return documentCaller.update("", docUpdate)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("should throw a ChinoException object, because documents id doesn't id",
-        function () {
-          return documentCaller.delete(documentId, null)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-  });
+  // describe("Test error situations:", function () {
+  //   it("should throw a ChinoException object, because doc information are incorrect",
+  //       function () {
+  //         const doc = {};
+  //
+  //         return documentCaller.create(schemaId, doc)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because documents id doesn't id",
+  //       function () {
+  //         return documentCaller.details("")
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because list params are wrong and schema doesn't exists",
+  //       function () {
+  //         return documentCaller.list("", -1)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //   it("should throw a ChinoException object, because documents id doesn't id",
+  //       function () {
+  //         const docUpdate = {
+  //           content: {
+  //             info : "document test",
+  //             num : 7
+  //           }
+  //         };
+  //
+  //         return documentCaller.update("", docUpdate)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("should throw a ChinoException object, because documents id doesn't id",
+  //       function () {
+  //         return documentCaller.delete(documentId, null)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  // });
 });

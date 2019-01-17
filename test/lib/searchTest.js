@@ -247,174 +247,174 @@ describe('Chino Search API', function() {
 
   /* =================================== */
   /* Test what happen in wrong situation */
-  describe("Test error situations:", function () {
-    it("searching documents (full content) should throw a ChinoException error, because filter is wrong",
-        function () {
-          const filterValue = 2;
-
-          const params = {
-            result_type: RESULT_TYPES.FULL_CONTENT,
-            filter_type: "as",
-            filter: []
-          };
-
-          return searchCaller.documents(schemaId, params)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-
-    it("searching documents (count) should throw a ChinoException error, because filter type is wrong",
-        function () {
-          const filterValue = 4;
-          const offset = 2;
-
-          const params = {
-            result_type: RESULT_TYPES.COUNT,
-            filter_type: null,
-            filter: [
-              {
-                field: "num",
-                type: "lte",
-                value: filterValue
-              },
-            ]
-          };
-
-          return searchCaller.documents(schemaId, params, offset)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-
-    it("searching documents (ids) should throw a ChinoException error, because schema id doesn't exist",
-        function () {
-          const filterValue = 5;
-
-          const params = {
-            result_type: RESULT_TYPES.ONLY_ID,
-            filter_type: "and",
-            filter: [
-              {
-                field: "num",
-                type: "lte",
-                value: filterValue
-              },
-            ]
-          };
-
-          return searchCaller.documents("", params)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-
-    it("searching documents (wrong result type) should throw a ChinoException error, because result type is wrong",
-        function () {
-          const filterValue = 4;
-
-          const params = {
-            result_type: null,
-            filter_type: "and",
-            filter: [
-              {
-                field: "num"
-              },
-            ]
-          };
-
-          assert.throws(function () {
-            let wrongSearch = searchCaller.documents(schemaId, params);
-          }, Error);
-        }
-    );
-
-    it("searching users (full content) should throw a ChinoException error, because filter is wrong",
-        function () {
-          const params = {
-            result_type: RESULT_TYPES.FULL_CONTENT,
-            filter_type: "ciao",
-          };
-
-          return searchCaller.users(usrSchemaId, params)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-    it("searching users (count) should throw a ChinoException error, because filter is wrong",
-        function () {
-          const filterValue = 2;
-
-          const params = {
-            result_type: RESULT_TYPES.COUNT,
-            filter_type: "and",
-            filter: [
-              {},
-            ]
-          };
-
-          return searchCaller.users(usrSchemaId, params)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(400)
-              })
-        }
-    );
-    it("searching users (username exists) should throw a ChinoException error, because user schema id doesn't exist",
-        function () {
-          const filterValue = 2;
-
-          const params = {
-            result_type: RESULT_TYPES.USERNAME_EXISTS,
-            filter_type: "and",
-            filter: [
-              {
-                field: "username",
-                type: "eq",
-                value: "theLoginUser"
-              },
-            ]
-          };
-
-          return searchCaller.users(null, params)
-              .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
-              .catch((error) => {
-                error.should.be.instanceOf(objects.ChinoException)
-                error.result_code.should.be.equal(404)
-              })
-        }
-    );
-    it("searching users (wrong result type) should throw a ChinoException error, because result type is wrong",
-        function () {
-          const params = {
-            result_type: "wrongResultType",
-            filter_type: "and",
-            filter: [
-              {
-                field: "user",
-                type: "lte",
-                value: 3
-              },
-            ]
-          };
-
-          assert.throws(function () {
-            let wrongSearch = searchCaller.users(usrSchemaId, params);
-          }, Error);
-        }
-    );
-  });
+  // describe("Test error situations:", function () {
+  //   it("searching documents (full content) should throw a ChinoException error, because filter is wrong",
+  //       function () {
+  //         const filterValue = 2;
+  //
+  //         const params = {
+  //           result_type: RESULT_TYPES.FULL_CONTENT,
+  //           filter_type: "as",
+  //           filter: []
+  //         };
+  //
+  //         return searchCaller.documents(schemaId, params)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("searching documents (count) should throw a ChinoException error, because filter type is wrong",
+  //       function () {
+  //         const filterValue = 4;
+  //         const offset = 2;
+  //
+  //         const params = {
+  //           result_type: RESULT_TYPES.COUNT,
+  //           filter_type: null,
+  //           filter: [
+  //             {
+  //               field: "num",
+  //               type: "lte",
+  //               value: filterValue
+  //             },
+  //           ]
+  //         };
+  //
+  //         return searchCaller.documents(schemaId, params, offset)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("searching documents (ids) should throw a ChinoException error, because schema id doesn't exist",
+  //       function () {
+  //         const filterValue = 5;
+  //
+  //         const params = {
+  //           result_type: RESULT_TYPES.ONLY_ID,
+  //           filter_type: "and",
+  //           filter: [
+  //             {
+  //               field: "num",
+  //               type: "lte",
+  //               value: filterValue
+  //             },
+  //           ]
+  //         };
+  //
+  //         return searchCaller.documents("", params)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //
+  //   it("searching documents (wrong result type) should throw a ChinoException error, because result type is wrong",
+  //       function () {
+  //         const filterValue = 4;
+  //
+  //         const params = {
+  //           result_type: null,
+  //           filter_type: "and",
+  //           filter: [
+  //             {
+  //               field: "num"
+  //             },
+  //           ]
+  //         };
+  //
+  //         assert.throws(function () {
+  //           let wrongSearch = searchCaller.documents(schemaId, params);
+  //         }, Error);
+  //       }
+  //   );
+  //
+  //   it("searching users (full content) should throw a ChinoException error, because filter is wrong",
+  //       function () {
+  //         const params = {
+  //           result_type: RESULT_TYPES.FULL_CONTENT,
+  //           filter_type: "ciao",
+  //         };
+  //
+  //         return searchCaller.users(usrSchemaId, params)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //   it("searching users (count) should throw a ChinoException error, because filter is wrong",
+  //       function () {
+  //         const filterValue = 2;
+  //
+  //         const params = {
+  //           result_type: RESULT_TYPES.COUNT,
+  //           filter_type: "and",
+  //           filter: [
+  //             {},
+  //           ]
+  //         };
+  //
+  //         return searchCaller.users(usrSchemaId, params)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(400)
+  //             })
+  //       }
+  //   );
+  //   it("searching users (username exists) should throw a ChinoException error, because user schema id doesn't exist",
+  //       function () {
+  //         const filterValue = 2;
+  //
+  //         const params = {
+  //           result_type: RESULT_TYPES.USERNAME_EXISTS,
+  //           filter_type: "and",
+  //           filter: [
+  //             {
+  //               field: "username",
+  //               type: "eq",
+  //               value: "theLoginUser"
+  //             },
+  //           ]
+  //         };
+  //
+  //         return searchCaller.users(null, params)
+  //             .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
+  //             .catch((error) => {
+  //               error.should.be.instanceOf(objects.ChinoException)
+  //               error.result_code.should.be.equal(404)
+  //             })
+  //       }
+  //   );
+  //   it("searching users (wrong result type) should throw a ChinoException error, because result type is wrong",
+  //       function () {
+  //         const params = {
+  //           result_type: "wrongResultType",
+  //           filter_type: "and",
+  //           filter: [
+  //             {
+  //               field: "user",
+  //               type: "lte",
+  //               value: 3
+  //             },
+  //           ]
+  //         };
+  //
+  //         assert.throws(function () {
+  //           let wrongSearch = searchCaller.users(usrSchemaId, params);
+  //         }, Error);
+  //       }
+  //   );
+  // });
 });
