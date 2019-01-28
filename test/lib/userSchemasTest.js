@@ -44,7 +44,7 @@ describe('Chino UserSchemas API', function() {
 
               result.should.be.an.instanceOf(objects.UserSchema);
               Object.keys(result).length.should.be.above(0);
-            })
+            });
       }
   );
   /* details */

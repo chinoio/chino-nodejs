@@ -17,6 +17,8 @@ IF "%confirm%" == "y" (
     GOTO :cleanupAndRun
 )
 
+echo Test aborted.
+
 ENDLOCAL
 
 GOTO :return 0

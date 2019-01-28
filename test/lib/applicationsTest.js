@@ -86,6 +86,7 @@ describe('Chino Applications API', function() {
                 app.should.be.an.instanceOf(objects.Application);
               });
               // these app plus the one already inserted
+              // [Andrea] should not be a fixed value - unit tests should run asynchronously
               result.list.length.should.equal(3);
             });
       }

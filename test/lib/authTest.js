@@ -24,7 +24,7 @@ describe('Chino Auth API', function () {
     appKey = data.appKey;
 
     auth = new Auth(baseUrl, appId, appKey);
-  })
+  });
 
   /* login */
   it("Test the login feature: should return an Auth object",
@@ -39,15 +39,15 @@ describe('Chino Auth API', function () {
       }
   );
   /* login with code */
-  it.skip("Test the login with code feature: should return an Auth object",
-      function () {
-        return auth.loginWithCode("<insertARealCode>", "127.0.0.1")
-            .then((result) => {
-              result.should.be.an.instanceOf(objects.Auth);
-              Object.keys(result).length.should.be.above(0);
-            })
-      }
-  );
+  // it.skip("Test the login with code feature: should return an Auth object",
+  //     function () {
+  //       return auth.loginWithCode("<insertARealCode>", "127.0.0.1")
+  //           .then((result) => {
+  //             result.should.be.an.instanceOf(objects.Auth);
+  //             Object.keys(result).length.should.be.above(0);
+  //           })
+  //     }
+  // );
   /* refresh token */
   it("Test the refresh token feature: should return an Auth object",
       function () {

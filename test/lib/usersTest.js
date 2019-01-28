@@ -36,7 +36,7 @@ describe('Chino Users API', function () {
 
   /* create */
   it("Test the creation of a user: should return a User object",
-      function () {
+      function (done) {
         const user = {
           username: "adminUser",
           password: "aStrongPassword",
@@ -44,15 +44,20 @@ describe('Chino Users API', function () {
             user: 3
           },
           is_active: true
-        }
+        };
 
-        return userCaller.create(usrSchemaId, user)
+        userCaller.create(usrSchemaId, user)
             .then((result) => {
               // save id
               usrId2 = result.user_id;
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
+              return done();
             })
+            .catch((error) => {
+                should.fail(error);
+                return done(error);
+            });
       }
   );
 
@@ -111,18 +116,18 @@ describe('Chino Users API', function () {
             user: 21
           },
           is_active: true
-        }
+        };
 
-        return userCaller.update(usrId2, newUser)
+        userCaller.update(usrId2, newUser)
             .then((result) => {
               result.should.be.an.instanceOf(objects.User);
               Object.keys(result).length.should.be.above(0);
               result.username.should.be.equal("aThirdUser");
-              done();
+              return done();
             })
             .catch((error) => {
                 should.fail(error.message);
-                done();
+                return done(error);
             });
       }
   );
@@ -133,7 +138,7 @@ describe('Chino Users API', function () {
           attributes: {
             user: 42
           }
-        }
+        };
 
         return userCaller.partialUpdate(usrId2, user)
             .then((result) => {
@@ -146,15 +151,15 @@ describe('Chino Users API', function () {
   /* delete */
   it("Test the deletion of a user: should return a success message",
       function (done) {
-        return userCaller.delete(usrId2, true)
+        userCaller.delete(usrId2, true)
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
-              done();
+              return done();
             })
             .catch((error) => {
                 should.fail(error.message);
-                done();
+                return done(error);
             })
       }
   );

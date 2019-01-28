@@ -69,48 +69,62 @@ describe('Chino Blobs API', function () {
 
   /* upload */
   it("Test the upload of a blob: should return a Blob object",
-      function () {
+      function (done) {
         this.slow(1500);
-        this.timeout(50000); // for slow connection (e.g. 1Mbps upload)
+        this.timeout(60000); // for slow connection (e.g. 1Mbps upload)
         const fileName = path.join(__dirname, "files/img.jpg");
 
-        return blobCaller.upload(docId, "file", fileName)
+        blobCaller.upload(docId, "file", fileName)
             .then((result) => {
               result.should.be.an.instanceOf(objects.Blob);
               Object.keys(result).length.should.be.above(0);
               blobId = result.blob_id;
+              return done();
             })
             .catch((error) => {
-
-            })
+                should.fail(error);
+                return done(error);
+            });
       }
   );
 
   /* download */
-  it("Test the retrieving of blob data: should write a file object",
-      function () {
+  it("Test the retrieval of blob data: should write a file object",
+      function (done) {
         this.slow(750);
         this.timeout(10000);
 
         const resultFile = path.join(__dirname, "files/result.jpg");
 
-        return blobCaller.download(blobId, resultFile)
+        blobCaller.download(blobId, resultFile)
             .then((result) => {
               fs.access(resultFile, fs.constants.R_OK, (err) => {
                 throw new Error(err);
+                return done();
               })
             })
+            .catch((error) =>{
+                should.fail(error);
+                return done(error);
+            });
       }
   );
 
   /* delete */
   it("Test the deletion of a blob data: should return a success message",
-      function () {
-        return blobCaller.delete(blobId)
+      function (done) {
+        this.timeout(10000); // wait for blob creation
+
+        blobCaller.delete(blobId)
             .then((result) => {
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
+              return done();
             })
+            .catch((error) => {
+                should.fail(error);
+                return done(error);
+            });
       }
   );
 

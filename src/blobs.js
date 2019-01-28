@@ -59,7 +59,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
       document_id : docId,
       field : field,
       file_name : fileName
-    }
+    };
 
     let uploadId = "";
     
@@ -98,12 +98,16 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                 let chunks = [];
                 let offset = 0;
 
+                // let chunkNumber = 0;
+
                 // read each chunk and upload it
                 readStream.on('data', (chunk) => {
+                  // console.log("Pushing chunk " + (++chunkNumber));
+
                   let params = {
                     blob_offset : offset,
                     blob_length : chunk.length
-                  }
+                  };
 
                   // create an array of Promises upload
                   chunks.push(this.call.chunk(`/blobs/${uploadId}`, chunk, params))
@@ -121,7 +125,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                     Promise.all(chunks)
                         .then((result) => {
                           if (result.every((res) => res.result_code === 200)) {
-                            return commit.call(this, uploadId)
+                            return commit.call(this, uploadId);
                           }
                           else {
                             throw new objects.ChinoException(result);
@@ -143,7 +147,9 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                 throw new objects.ChinoException(result);
               }
             })
-            .catch((error) => { throw new objects.ChinoException(error); });
+            .catch((error) => {
+              throw new objects.ChinoException(error);
+            });
 
       }
     }
