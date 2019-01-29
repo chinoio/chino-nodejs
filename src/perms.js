@@ -110,7 +110,8 @@ class ChinoAPIPerms extends ChinoAPIBase {
         .catch((error) => { throw new objects.ChinoException(error); });
   }
 
-  /** Return permissions on all the resources
+  /** Return permissions on all the resources.
+   *  Works only for application users (not with customer credentials)
    *
    * @return {Promise.<Array, objects.ChinoException>}
    *         A promise that return a list of Perms object if resolved,
@@ -118,7 +119,6 @@ class ChinoAPIPerms extends ChinoAPIBase {
    *         or was not retrieved a success status
    */
   getPermissions() {
-    // ATTENTION => this works only for application users (not app developer)
     return this.call.get(`/perms`)
         .then((result) => listPermissions(result))
         .catch((error) => { throw new objects.ChinoException(error); });

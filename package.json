@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "./test/runTests.sh",
+    "test_windows": "\"test\\runTests.bat\"",
     "ci_test": "./test/runTests.sh --no-warning",
     "js_test": "node test/runTests.js",
-    "_test": "nyc ./node_modules/mocha/bin/mocha test/testsOrder.js --report spec",
+    "js_test_intellij": "node %NODE_DEBUG_OPTION% test/runTests.js",
+    "_test": "nyc mocha test/testsOrder.js --report spec",
+    "_test_windows": "node_modules\\.bin\\nyc.cmd  ./node_modules/mocha/bin/mocha test/testsOrder.js --report spec",
     "generate_docs": "./node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },
   "repository": {
@@ -16,14 +19,21 @@
   },
   "keywords": [
     "Chino.io",
+    "chino",
     "SDK",
     "data security platform",
-    "privacy"
+    "privacy",
+    "health data protection",
+    "gdpr",
+    "gdpr-compliance",
+    "hipaa",
+    "hipaa-compliance"
   ],
   "author": "Chino.io <info@chino.io>",
   "contributors": [
     "Daniele Bissoli <dani95bissoli@gmail.com>",
-    "Stefano Tranquillini <stefano@chino.io>"
+    "Stefano Tranquillini <stefano@chino.io>",
+    "Andrea Arighi <andrea@chino.io>"
   ],
   "license": "MIT",
   "bugs": {

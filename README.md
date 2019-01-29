@@ -8,14 +8,16 @@ At the following links can be found:
 - [SDK documentation][1]
 
 ## Requirements
-Before you can use Chino Node JS SDK you have to install Node JS Javascript runtime. If you haven't it yet, you can follow the [instructions](https://nodejs.org/en/download/package-manager/) provided on Node JS website.
+Before you can use Chino Node JS SDK you have to install Node JS Javascript runtime. If you haven't it yet, you can 
+follow the [instructions](https://nodejs.org/en/download/package-manager/) provided on Node JS website.
 
 ## Installation
 To install Chino SDK in your Node JS project you can run the following command
 
     npm install --save chinoio
     
-The above command will download Chino SDK in your `node_modules` directory and will add the dependency in your `package.json file`.
+The above command will download Chino SDK in your `node_modules` directory and will add the dependency in your 
+`package.json file`.
 
 ## Test the SDK
 Once requirements are satisfied you can test the SDK. In order to complete this task you have to follow these steps:
@@ -30,15 +32,21 @@ Then go inside repository folder:
 And install project dependencies:
 
     npm install
-After the install process, open `/test/testSettings.js` file and insert base url for calls (e.g. the one for testing if you have a free plan), your Chino customer id and customer key:
-
-    Inside file /test/testSettings.js
     
-    ...
-    module.exports.baseUrl = "https://api.test.chino.io/v1";
-    module.exports.customerId  = "your-Chino-Customer-ID";
-    module.exports.customerKey = "your-Chino-Customer-KEY";
-    ...
+After the install process, set in your environment the base url for calls (e.g. the one for testing if 
+you have a free plan), your Chino customer id and customer key:
+
+*Linux*
+
+    export url="https://api.test.chino.io/v1"
+    export customer_id="your-Chino-Customer-ID"
+    export customer_key="your-Chino-Customer-KEY"
+    
+*Windows*
+
+    set url="https://api.test.chino.io/v1"
+    set customer_id="your-Chino-Customer-ID"
+    set customer_key="your-Chino-Customer-KEY"
     
 Now the project is ready to be tested. Run the following command to test it:
 
@@ -63,9 +71,11 @@ Parameters used for construct a Chino object are:
 - `chino-key`  
     one of the Chino customer key associated with your account
 
-**Note:** creating a client in this way is meant for development or for *authentication* purpose, since this grant to client no restriction on call permissions.
+**Note:** creating a client in this way is meant for development or for *authentication* purpose, since this grant to 
+client no restriction on call permissions.
     
-Now we have a client object. Let's us make a call to Chino APIs. For example we create a repository on Chino, using as parameter the right object (according to Chino API docs):
+Now we have a client object. Let's us make a call to Chino APIs. For example we create a repository on Chino, using as 
+parameter the right object (according to Chino API docs):
 
     const data = {
         description: "This is a test repository"
@@ -74,9 +84,12 @@ Now we have a client object. Let's us make a call to Chino APIs. For example we 
     chinoClient.repositories.create(data);
 
 ### Set Chino credentials for application user
-OK, we created a Chino client for a developer. Now we will follow these basic steps to set up a client for an application user. This client will be limited by user Chino permissions (see docs for further information on permissions).
+OK, we created a Chino client for a developer. Now we will follow these basic steps to set up a client 
+for an application user. This client will be limited by user Chino permissions 
+(see docs for further information on permissions).
  
-First of all we need to create a Chino Application and set its credentials (application id and application secret). These properties are kept private for security reasons.
+First of all we need to create a Chino Application and set its credentials (application id and application secret). 
+These properties are kept private for security reasons.
  
     const appData = {
         grant_type: "password",
@@ -93,7 +106,8 @@ First of all we need to create a Chino Application and set its credentials (appl
             console.log(error);
         });
  
-Then you can authenticate a user and retrieve an access token, that will be used later for accessing Chino API (*Attention*: the access token has an expiration, see docs for managing it).
+Then you can authenticate a user and retrieve an access token, that will be used later for accessing Chino API 
+(*Attention*: the access token has an expiration, see docs for managing it).
       
      let token = "";
      
@@ -124,16 +138,21 @@ In the end we can try to make a call as user application:
         }
         
 ### Notes
- Since requesting to REST service could require some time, each call is made asynchronously. As a result, each function return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object that will be resolved if client receive a 200 (`OK`) status code as response from server, otherwise it will be rejected.
+ Since requesting to REST service could require some time, each call is made asynchronously. As a result, each function 
+ return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) 
+ object that will be resolved if client receive a 200 (`OK`) status code as response from server, 
+ otherwise it will be rejected.
  
  Moreover, if you have to make sequential calls, you have to chain returned promises from each call.
 
 #### Blob Upload
-The chunk uploads are sent in parallel. The server limits the number of concurrent calls a user can do, thus use the `chunkSize` wisely in order to not exceed ~10 parallel calls. 
+The chunk uploads are sent in parallel. The server limits the number of concurrent calls a user can do, thus use the 
+`chunkSize` wisely in order to not exceed ~10 parallel calls. 
 The *default* value is of `100MB` which works for most of the cases.
 
 ### Examples
-For further information view [SDK docs][1]. You can view an example of application in the [`example`](https://github.com/chinoio/chino-nodejs/tree/example) branch.
+For further information view [SDK docs][1]. You can view an example of application in the 
+[`example`](https://github.com/chinoio/chino-nodejs/tree/example) branch.
 
 ## License
 
