@@ -179,25 +179,37 @@ describe('Chino API Call', function () {
       is_active: true
     };
 
-    it('Corret call: should return 200', function () {
-      let apiCall = new Call(baseUrl, customerId, customerKey);
+        it('Corret call: should return 200',
+            function (done) {
+                let apiCall = new Call(baseUrl, customerId, customerKey);
 
-      if (usrId) {
-        return apiCall.put(`/users/${usrId}`, user)
-            .then(s200)
-            .catch(e400);
-      }
+                if (usrId) {
+                    apiCall.put(`/users/${usrId}`, user)
+                        .then((result) => {
+                            s200(result);
+                            return done();
+                        })
+                        .catch((error) => {
+                            e400(error);
+                            return done(error);
+                        });
+                }
+            });
+
+        it('Wrong auth: should return 401',
+            function (done) {
+                let apiCall = new Call(baseUrl, customerId, "");
+
+                if (usrId) {
+                    apiCall.put(`/users/${usrId}`, user)
+                        .catch((error) => {
+                            e401(error);
+                            // "Wrong auth" test must succeed in case of error, thus done() has no params
+                            return done();
+                        });
+                }
+            });
     });
-
-    it('Wrong auth: should return 401', function () {
-      let apiCall = new Call(baseUrl, customerId, "");
-
-      if (usrId) {
-        return apiCall.put(`/users/${usrId}`, user)
-            .catch(e401)
-      }
-    });
-  });
 
   describe("PATCH", function () {
     // right auth
@@ -207,37 +219,56 @@ describe('Chino API Call', function () {
       }
     };
 
-    it('Correct call: should return 200', function () {
-      let apiCall = new Call(baseUrl, customerId, customerKey);
+        it('Correct call: should return 200',
+            function (done) {
+                let apiCall = new Call(baseUrl, customerId, customerKey);
 
-      if (usrId) {
-        return apiCall.patch(`/users/${usrId}`, user)
-            .then(s200)
-            .catch(e400);
-      }
+                if (usrId) {
+                    apiCall.patch(`/users/${usrId}`, user)
+                        .then((result) => {
+                            s200(result);
+                            return done();
+                        })
+                        .catch((error) => {
+                            e400(error);
+                            return done(error);
+                        });
+                }
+            });
+
+        it('Wrong auth: should return 401',
+            function (done) {
+                let apiCall = new Call(baseUrl, customerId, "");
+
+                if (usrId) {
+                    apiCall.patch(`/users/${usrId}`, user)
+                        .catch((error) => {
+                            e401(error);
+                            // "Wrong auth" test must succeed in case of error, thus done() has no params
+                            return done();
+                        });
+                }
+            });
     });
 
-    it('Wrong auth: should return 401', function () {
-      let apiCall = new Call(baseUrl, customerId, "");
+    describe("DELETE", function () {
+        // right auth
+        it('Correct call: should return 200',
+            function (done) {
+                let apiCall = new Call(baseUrl, customerId, customerKey);
 
-      if (usrId) {
-        return apiCall.patch(`/users/${usrId}`, user)
-            .catch(e401);
-      }
-    });
-  });
-
-  describe("DELETE", function () {
-    // right auth
-    it('Correct call: should return 200', function () {
-      let apiCall = new Call(baseUrl, customerId, customerKey);
-
-      if (repId) {
-        return apiCall.del(`/repositories/${repId}?force=true`)
-            .then(s200)
-            .catch(e404);
-      }
-    });
+                if (repId) {
+                    apiCall.del(`/repositories/${repId}?force=true`)
+                        .then((result) => {
+                            s200(result);
+                            return done();
+                        })
+                        .catch((error) => {
+                            e404(error);
+                            return done(error);
+                        });
+                }
+            });
 
     it('Wrong auth: should return 401', function () {
       let apiCall = new Call(baseUrl, customerId, "");
