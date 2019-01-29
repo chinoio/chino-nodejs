@@ -25,7 +25,7 @@ class ChinoAPIAuth {
         data : null,
         result : "error",
         result_code : 400
-      }
+      };
       throw new objects.ChinoException(err);
     }
 
@@ -51,7 +51,7 @@ class ChinoAPIAuth {
       grant_type : GRANT_TYPES.PASSWORD,
       username : username,
       password : password
-    }
+    };
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Auth"))
@@ -76,7 +76,7 @@ class ChinoAPIAuth {
       client_id: _(this).applicationId,
       client_secret: _(this).applicationSecret,
       scope: "read write"
-    }
+    };
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Auth"))
@@ -97,7 +97,7 @@ class ChinoAPIAuth {
       token : token,
       client_id: _(this).applicationId,
       client_secret: _(this).applicationSecret,
-    }
+    };
 
     return this.call.post(`/auth/token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Auth"))
@@ -118,7 +118,7 @@ class ChinoAPIAuth {
       token : token,
       client_id: _(this).applicationId,
       client_secret: _(this).applicationSecret,
-    }
+    };
 
     return this.call.post(`/auth/revoke_token/`, form, CONT_TYPES.FORM_DATA)
         .then((result) => objects.checkResult(result, "Success"))

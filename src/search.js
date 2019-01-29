@@ -1,10 +1,7 @@
 "use strict";
 
 const objects = require("./objects");
-// TODO add import for RESULT_TYPE (keep RESULT_TYPES as alias) to be compliant with other SDKs
 const RESULT_TYPES = require("./resultTypes");
-// const RESULT_TYPE =  = require("./resultTypes");
-// const RESULT_TYPES = RESULT_TYPE;
 const ChinoAPIBase = require("./chinoBase");
 
 class ChinoAPISearch extends ChinoAPIBase {

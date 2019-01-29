@@ -28,7 +28,7 @@ class ChinoAPIUserSchemas extends ChinoAPIBase {
     const params = {
       offset : offset,
       limit : limit
-    }
+    };
 
     return this.call.get(`/user_schemas`, params)
         .then((result) => objects.checkListResult(result, "user_schemas", "UserSchema"))

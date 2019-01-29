@@ -110,7 +110,7 @@ class ChinoAPIBlobs extends ChinoAPIBase {
                   };
 
                   // create an array of Promises upload
-                  chunks.push(this.call.chunk(`/blobs/${uploadId}`, chunk, params))
+                  chunks.push(this.call.chunk(`/blobs/${uploadId}`, chunk, params));
 
                   hash.update(chunk);
                   offset += chunk.length;

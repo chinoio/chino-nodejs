@@ -51,7 +51,7 @@ class Call {
           .accept("application/json")
           .query(params)
           .end(responseHandler.bind({resolve, reject}));
-    }
+    };
 
     return new Promise(makeCall);
   }
@@ -170,7 +170,7 @@ class Call {
       }
 
       req.end(responseHandler.bind({resolve, reject}));
-    }
+    };
 
     return new Promise(makeCall);
   }
@@ -191,7 +191,7 @@ class Call {
         .accept("application/json")
         .send(data)
         .end(responseHandler.bind({resolve, reject}));
-    }
+    };
 
     return new Promise(makeCall);
   }
@@ -215,7 +215,7 @@ class Call {
           .accept("application/json")
           .send(data)
           .end(responseHandler.bind({resolve, reject}));
-    }
+    };
 
     return new Promise(makeCall);
   }
@@ -235,7 +235,7 @@ class Call {
           .accept("application/json")
           .send(data)
           .end(responseHandler.bind({resolve, reject}));
-    }
+    };
 
     return new Promise(makeCall);
   }
@@ -256,7 +256,7 @@ class Call {
           .accept("application/json")
           .query(params)
           .end(responseHandler.bind({resolve, reject}));
-    }
+    };
 
     return new Promise(makeCall);
   }

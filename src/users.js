@@ -23,9 +23,9 @@ class ChinoAPIUsers extends ChinoAPIBase {
    *         or was not retrieved a success status
    */
   current() {
-     return this.call.get("/users/me")
-         .then((result) => objects.checkResult(result, "User"))
-         .catch((error) => { throw new objects.ChinoException(error); });
+    return this.call.get("/users/me")
+        .then((result) => objects.checkResult(result, "User"))
+        .catch((error) => { throw new objects.ChinoException(error); });
   }
 
   /** Return a list of current users inside the selected
