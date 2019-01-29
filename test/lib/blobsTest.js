@@ -98,10 +98,14 @@ describe('Chino Blobs API', function () {
 
         blobCaller.download(blobId, resultFile)
             .then((result) => {
+                // check result file is visible
               fs.access(resultFile, fs.constants.R_OK, (err) => {
-                throw new Error(err);
-                return done();
-              })
+                if (err) {
+                    throw new Error(err);
+                } else {
+                    return done();
+                }
+              });
             })
             .catch((error) =>{
                 should.fail(error);
