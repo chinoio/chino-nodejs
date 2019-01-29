@@ -7,12 +7,12 @@ module.exports.customerKey = process.env.customer_key; // insert here your Chino
 module.exports.filedata = "data.json";
 
 module.exports.data = function () {
-  try {
-    return jsonfile.readFileSync(path.join(__dirname, "lib/", this.filedata));
-  }
-  catch (error) {
-    throw new Error(`Data file impossible to read:\n${error}`);
-  }
+    try {
+        return jsonfile.readFileSync(path.join(__dirname, "lib/", this.filedata));
+    }
+    catch (error) {
+        throw new Error(`Data file impossible to read:\n${error}`);
+    }
 };
 
 // log unhandled Promise rejection

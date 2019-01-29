@@ -27,10 +27,7 @@ GOTO :return 0
 
 :cleanupAndRun
 :: clean up environment before start testing
-echo Cleanin' up...
 node test/after.js
-
-echo Starting tests...
 
 GOTO :runTest
 
