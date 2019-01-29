@@ -280,10 +280,10 @@ describe('Chino API Call', function () {
     });
   });
 
-  /* ==================================== */
-  after("Remove stub user schema and inserted user", function () {
-    // be sure to have enough time
-    this.timeout(10000);
+    /* ==================================== */
+    after("Remove stub user schema and inserted user", function (done) {
+        // be sure to have enough time
+        this.timeout(10000);
 
     function sleep (time) {
       return new Promise((resolve) => setTimeout(resolve, time));
@@ -291,16 +291,24 @@ describe('Chino API Call', function () {
 
     let apiCall = new Call(baseUrl, customerId, customerKey);
 
-    return sleep(500).then(() => {
-      if (ushId !== "" && usrId !== "") {
-        return apiCall.del(`/user_schemas/${ushId}?force=true`)
-            .then(res => {
-              return apiCall.del(`/auth/applications/${appId}`)
-                  .then( /* Removal of resources with success */ )
-                  .catch(err => { console.log(`Error removing application`) })
-            })
-            .catch(err => { console.log(`Error removing test resources`) });
-      }
-    });
-  })
+        sleep(500).then(() => {
+            if (ushId !== "" && usrId !== "") {
+                return apiCall.del(`/user_schemas/${ushId}?force=true`)
+                    .then(res => {
+                        return apiCall.del(`/auth/applications/${appId}`)
+                            .then( /* Removal of resources was successful */
+                                res => { done();}
+                            )
+                            .catch(err => {
+                                console.log(`Error removing application:\n` + err);
+                                return done(err);
+                            })
+                    })
+                    .catch(err => {
+                        console.log(`Error removing test resources\n` + err);
+                        return done(err);
+                    });
+            }
+        });
+    })
 });
