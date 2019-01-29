@@ -133,7 +133,6 @@ describe('Chino Applications API', function() {
         assert(appId1 !== "", "Application undefined");
         return appCaller.delete(appId1, true)
             .then((result) => {
-                console.log("Deleted 1!")
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
             })
@@ -144,7 +143,6 @@ describe('Chino Applications API', function() {
         assert(appId2 !== "", "Application undefined");
         return appCaller.delete(appId2, true)
             .then((result) => {
-                console.log("Deleted 2!")
               result.should.be.an.instanceOf(objects.Success);
               result.result_code.should.be.equal(200);
             })
