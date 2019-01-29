@@ -22,7 +22,7 @@ class Chino {
    */
 
   constructor(baseUrl = "", customerId = "", customerKey = null) {
-    this.baseUrl = baseUrl;
+    this.baseUrl = this._fixUrl(baseUrl);
 
     // create Chino objects
     this.users        = new ChinoUsers(this.baseUrl, customerId, customerKey);
@@ -46,6 +46,46 @@ class Chino {
    */
   setAuth(appId, appSecret) {
     this.auth = new ChinoAuth(this.baseUrl, appId, appSecret);
+  }
+
+  /** Check that the URL for calls made to Chino.io API is correct:
+   *  First, forces URL to https. This is done only for main Chino.io servers:
+   *  'api.test.chino.io' and 'api.chino.io'.
+   *  Then appends the version number "/v1", if required.
+   *
+   * @param uncheckedUrl   {String} the URL to Chino.io API
+   * @returns     {String} the complete URL
+   * @private
+   */
+  _fixUrl(uncheckedUrl) {
+    let hostUrl = uncheckedUrl;
+
+    // force HTTPS
+    if (hostUrl.startsWith("http://")) {
+        if (hostUrl.includes(".chino.io")) {
+            hostUrl = hostUrl.replace("http://", "https://");
+        } else {
+            console.log(
+                ">> WARNING: You are using Chino API over HTTP.\n" +
+                ">> The API will work as usual, but HTTPS is strongly recommended.\n"
+            );
+        }
+    }
+
+    if (hostUrl.includes("v1")) {
+      // remove trailing '/' (if any)
+      return hostUrl.replace("v1/", "v1");
+    }
+
+    // append version number
+    if (!hostUrl.endsWith("/")) {
+      hostUrl += "/";
+    }
+    if (!hostUrl.endsWith("/v1")) {
+      hostUrl += "v1";
+    }
+
+    return hostUrl;
   }
 }
 
