@@ -39,7 +39,7 @@ else {
     });
 }
 
-var testScriptName = "_test";
+let testScriptName = "_test";
 
 function runTest() {
     // use custom config for Windows. "win32" is returned also on 64bit versions of Windows.

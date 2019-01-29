@@ -53,7 +53,7 @@ describe('Chino Blobs API', function () {
                 ciao : "Hello! This is a blob test.",
                 number : 3
             }
-        }
+        };
 
         return apiCall.post(`/repositories/${repoId}/schemas`, schema)
             .then((res) => {
@@ -65,7 +65,7 @@ describe('Chino Blobs API', function () {
                 }
             })
             .catch((err) => console.log(`Error inserting doc\n${JSON.stringify(err)}`));
-    })
+    });
 
     /* upload */
     it("Test the upload of a blob: should return a Blob object",
@@ -143,7 +143,7 @@ describe('Chino Blobs API', function () {
                 return blobCaller.download(blobId, "")
                     .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
                     .catch((error) => {
-                        error.should.be.instanceOf(objects.ChinoException)
+                        error.should.be.instanceOf(objects.ChinoException);
                         error.result_code.should.be.equal(400)
                     })
             }
@@ -156,7 +156,7 @@ describe('Chino Blobs API', function () {
                 return blobCaller.upload(docId, "file", "")
                     .then((res) => {throw new Error("This promise shouldn't be fulfilled!")})
                     .catch((error) => {
-                        error.should.be.instanceOf(objects.ChinoException)
+                        error.should.be.instanceOf(objects.ChinoException);
                         error.result_code.should.be.equal(400)
                     })
             }
@@ -183,8 +183,7 @@ describe('Chino Blobs API', function () {
 
         return sleep(1000).then(() => {
             if (schemaId !== "") {
-                return
-                apiCall.del(`/schemas/${schemaId}?force=true&all_content=true`)
+                return apiCall.del(`/schemas/${schemaId}?force=true&all_content=true`)
                     .then(res => {
                         if (repoId !== "") {
                             return apiCall.del(`/repositories/${repoId}?force=true`)

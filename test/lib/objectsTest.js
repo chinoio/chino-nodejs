@@ -31,7 +31,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Group object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let group = new objects.Group(emptyResponse);
             group.should.instanceOf(objects.Group);
@@ -75,7 +75,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty User Schema object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let user_schema = new objects.UserSchema(emptyResponse);
             user_schema.should.instanceOf(objects.UserSchema);
@@ -115,7 +115,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty User object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let user = new objects.User(emptyResponse);
             user.should.instanceOf(objects.User);
@@ -146,7 +146,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Application object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let application = new objects.Application(emptyResponse);
             application.should.instanceOf(objects.Application);
@@ -177,7 +177,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Repository object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let repository = new objects.Repository(emptyResponse);
             repository.should.instanceOf(objects.Repository);
@@ -227,7 +227,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Schema object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let schema = new objects.Schema(emptyResponse);
             schema.should.instanceOf(objects.Schema);
@@ -265,7 +265,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Document object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let document = new objects.Document(emptyResponse);
             document.should.instanceOf(objects.Document);
@@ -296,7 +296,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Collection object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let collection = new objects.Collection(emptyResponse);
             collection.should.instanceOf(objects.Collection);
@@ -333,7 +333,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Perms object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let permissions = new objects.Perms(emptyResponse);
             permissions.should.instanceOf(objects.Perms);
@@ -362,7 +362,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Auth object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let auth = new objects.Auth(emptyResponse);
             auth.should.instanceOf(objects.Auth);
@@ -393,7 +393,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Blob object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let blob = new objects.Blob(emptyResponse);
             blob.should.instanceOf(objects.Blob);
@@ -412,7 +412,7 @@ describe("Chino API Objects", function () {
             const errorObject = {
                 "message": "Schema not found",
                 "result_code": 404
-            }
+            };
 
             let error = new objects.ChinoException(responseTest);
             error.should.instanceOf(objects.ChinoException);
@@ -420,7 +420,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty ChinoException object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let error = new objects.ChinoException(emptyResponse);
             error.should.instanceOf(objects.ChinoException);
@@ -443,7 +443,7 @@ describe("Chino API Objects", function () {
         });
 
         it("Should return an empty Success object", function () {
-            let emptyResponse = {}
+            let emptyResponse = {};
 
             let success = new objects.Success(emptyResponse);
             success.should.instanceOf(objects.Success);

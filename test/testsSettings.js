@@ -18,4 +18,4 @@ module.exports.data = function () {
 // log unhandled Promise rejection
 process.on('unhandledRejection', (reason, promise) => {
     console.log('Unhandled Rejection at:', reason.stack || reason)
-})
+});

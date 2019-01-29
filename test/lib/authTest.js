@@ -20,8 +20,8 @@ describe('Chino Auth API', function () {
     before(function () {
         const data = settings.data();
 
-        appId = data.appId;
-        appKey = data.appKey;
+        let appId = data.appId;
+        let appKey = data.appKey;
 
         auth = new Auth(baseUrl, appId, appKey);
     });

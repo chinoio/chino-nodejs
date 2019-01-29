@@ -15,62 +15,61 @@ describe('Chino Schemas API', function() {
     this.timeout(5000);
 
     const schemaCaller = new Schemas(baseUrl, customerId, customerKey);
-    // keep track of ids to delete them later
+    // IDs required for running tests -
     let repoId = "";
     let schemaId = "";
+    // ID of a Schema which is created during tests
+    let createdSchemaId = "";
+
+    function sleep (time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    const testSchemaStructure = {
+        "description": "Schema test",
+        "structure": {
+            "fields": [
+                {
+                    "name": "physician_id",
+                    "type": "string",
+                    "indexed": true
+                },
+                {
+                    "name": "patient_birth_date",
+                    "type": "date",
+                    "indexed": true
+                },
+                {
+                    "name": "observation",
+                    "type": "string"
+                },
+                {
+                    "name": "visit_date",
+                    "type": "datetime",
+                    "indexed": true
+                }
+            ]
+        }
+    };
 
     // prepare the environment
     before("Set up resources to test the lib", function () {
         repoId = settings.data()["repoId"];
+        schemaId = settings.data()["schemaId"];
     });
 
     /* create */
     it("Test the creation of a schema: should return a Schema object",
-        function () {
-            const schema = {
-                "description": "Schema test",
-                "structure": {
-                    "fields": [
-                        {
-                            "name": "physician_id",
-                            "type": "string",
-                            "indexed": true
-                        },
-                        {
-                            "name": "patient_birth_date",
-                            "type": "date",
-                            "indexed": true
-                        },
-                        {
-                            "name": "observation",
-                            "type": "string"
-                        },
-                        {
-                            "name": "visit_date",
-                            "type": "datetime",
-                            "indexed": true
-                        }
-                    ]
-                }
-            };
+        function (done) {
 
-            return schemaCaller.create(repoId, schema)
+            schemaCaller.create(repoId, testSchemaStructure)
                 .then((result) => {
-                    schemaId = result.schema_id;
+                    createdSchemaId = result.schema_id;
                     result.should.be.an.instanceOf(objects.Schema);
                     Object.keys(result).length.should.be.above(0);
+                    return done();
                 })
-        }
-    );
-    /* details */
-    it("Test the retrieving of schema information: should return a Schema object",
-        function () {
-            assert(schemaId !== "", "Schema undefined");
-            return schemaCaller.details(schemaId)
-                .then((result) => {
-                    result.should.be.an.instanceOf(objects.Schema);
-                    Object.keys(result).length.should.be.above(0);
-                })
+                .catch(error=> done(error));
         }
     );
     /* list */
@@ -90,9 +89,20 @@ describe('Chino Schemas API', function() {
                 });
         }
     );
+    /* details */
+    it("Test the retrieving of schema information: should return a Schema object",
+        function () {
+            assert(schemaId !== "", "Schema undefined");
+            return schemaCaller.details(schemaId)
+                .then((result) => {
+                    result.should.be.an.instanceOf(objects.Schema);
+                    Object.keys(result).length.should.be.above(0);
+                })
+        }
+    );
     /* update */
     it("Test the update of schema information: should return a Schema object",
-        function () {
+        function (done) {
             assert(repoId !== "", "Repository undefined");
             const schemaUpdate = {
                 "description": "Schema test Updated",
@@ -125,25 +135,62 @@ describe('Chino Schemas API', function() {
                 }
             };
 
-            assert(schemaId !== "", "Schema undefined");
-            return schemaCaller.update(schemaId, schemaUpdate)
-                .then((result) => {
-                    result.should.be.an.instanceOf(objects.Schema);
-                    Object.keys(result).length.should.be.above(0);
-                    result.description.should.be.equal("Schema test Updated");
-                })
+            // assert(schemaId !== "", "Schema undefined");
+            if (createdSchemaId === "") {
+                console.log("creating new Schema for UPDATE");
+                schemaCaller.create(repoId, testSchemaStructure)
+                    .then((newSchema) => {
+                        schemaCaller.update(newSchema.schema_id, schemaUpdate)
+                            .then((result) => {
+                                result.should.be.an.instanceOf(objects.Schema);
+                                Object.keys(result).length.should.be.above(0);
+                                result.description.should.be.equal("Schema test Updated");
+                                done();
+                            })
+                            .catch(err => done(err))
+                    })
+                    .catch(err => done("Unable to find Schema to delete ~ " + err));
+            } else {
+                schemaCaller.update(createdSchemaId, schemaUpdate)
+                    .then((result) => {
+                        result.should.be.an.instanceOf(objects.Schema);
+                        Object.keys(result).length.should.be.above(0);
+                        result.description.should.be.equal("Schema test Updated");
+                        done();
+                    })
+                    .catch(err => done(err))
+            }
+
         }
     );
 
     /* delete */
     it("Test the deletion of a schema: should return a success message",
-        function () {
-            assert(schemaId !== "", "Schema undefined");
-            return schemaCaller.delete(schemaId, true)
-                .then((result) => {
-                    result.should.be.an.instanceOf(objects.Success);
-                    result.result_code.should.be.equal(200);
-                })
+        function (done) {
+            if (createdSchemaId === "") {
+                console.log("creating new Schema for DELETE");
+                schemaCaller.create(repoId, testSchemaStructure)
+                    .then((newSchema) => {
+                        schemaCaller.delete(newSchema.schema_id, true)
+                            .then((result) => {
+                                result.should.be.an.instanceOf(objects.Success);
+                                result.result_code.should.be.equal(200);
+                                return done();
+                            })
+                            .catch(err => done(err))
+                    })
+                    .catch(err => done("Unable to find Schema to delete ~ " + err));
+
+            } else {
+                // delete existing schema
+                schemaCaller.delete(createdSchemaId, true)
+                    .then((result) => {
+                        result.should.be.an.instanceOf(objects.Success);
+                        result.result_code.should.be.equal(200);
+                        return done();
+                    })
+                    .catch(err => done(err))
+            }
         }
     );
 

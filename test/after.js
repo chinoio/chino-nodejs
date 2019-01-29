@@ -6,8 +6,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const Call = require("../src/apiCall.js")
-const settings = require("./testsSettings")
+const Call = require("../src/apiCall.js");
+const settings = require("./testsSettings");
 
 const baseUrl     = settings.baseUrl;
 const customerId  = settings.customerId;

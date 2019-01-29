@@ -136,7 +136,7 @@ describe('Chino Collections API', function() {
             const filter = {
                 name : "update",
                 contains : true
-            }
+            };
 
             return collectionCaller.search(filter)
                 .then((result) => {

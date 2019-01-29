@@ -8,7 +8,7 @@ const baseUrl     = settings.baseUrl;
 const customerId  = settings.customerId;
 const customerKey = settings.customerKey;
 
-const Chino             = require("../../src/chino")
+const Chino             = require("../../src/chino");
 const ChinoAuth         = require("../../src/auth");
 const ChinoUsers        = require("../../src/users");
 const ChinoUserSchemas  = require("../../src/userSchemas");
@@ -48,7 +48,7 @@ describe("Chino main class", function () {
             };
             return chino.applications.create(app)
                 .then((res) => {
-                    chino.setAuth(res.app_id, res.app_secret)
+                    chino.setAuth(res.app_id, res.app_secret);
 
                     chino.auth.should.be.instanceOf(ChinoAuth);
                 })
@@ -56,10 +56,13 @@ describe("Chino main class", function () {
     );
     it("Test Chino Object: force URL to HTTPS if using the .chino.io API server",
         function() {
+            console.log("* * * Some warnings should appear on console below: * * * * * *");
+
             // Test for official .chino.io server
             const expectedUrls = ["https://api.chino.io/v1", "https://api.test.chino.io/v1"];
             const chinoIoUrls = ["http://api.chino.io", "http://api.chino.io/", "http://api.chino.io/v1/",
                 "http://api.test.chino.io", "http://api.test.chino.io/", "http://api.test.chino.io/v1/"];
+
 
             for (i in chinoIoUrls) {
                 let badUrl = chinoIoUrls[i];
@@ -83,6 +86,8 @@ describe("Chino main class", function () {
                     customUrl.substr(0, 8)
                 );
             }
+
+            console.log("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
         }
     );
 });

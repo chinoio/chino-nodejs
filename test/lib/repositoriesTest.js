@@ -23,7 +23,7 @@ describe('Chino Repositories API', function() {
         function () {
             let repo = {
                 description : "This is a repository test"
-            }
+            };
 
             return repoCaller.create(repo)
                 .then((result) => {
@@ -65,7 +65,7 @@ describe('Chino Repositories API', function() {
         function () {
             let repoUpdate = {
                 description: "This repository was updated"
-            }
+            };
 
             assert(repoId !== "", "Repository undefined");
             return repoCaller.update(repoId, repoUpdate)

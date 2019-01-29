@@ -168,7 +168,7 @@ describe('Chino Search API', function() {
 
                 return searchCaller.users(usrSchemaId, params)
                     .then((result) => {
-                        result.should.be.an.instanceOf(objects.ChinoList)
+                        result.should.be.an.instanceOf(objects.ChinoList);
                         result.count.should.be.above(0);
                         result.total_count.should.be.above(0);
                         result.list.forEach((usr) => {

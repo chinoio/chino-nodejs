@@ -40,7 +40,7 @@ describe('Chino Groups API', function() {
                 attributes: {
                     description: "This is a test group"
                 }
-            }
+            };
 
             return groupCaller.create(group)
                 .then((result) => {
@@ -85,7 +85,7 @@ describe('Chino Groups API', function() {
                 attributes: {
                     description: "This is a test group"
                 }
-            }
+            };
 
             return groupCaller.update(gId, newGroup)
                 .then((result) => {

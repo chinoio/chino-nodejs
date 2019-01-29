@@ -26,4 +26,4 @@ describe('Chino API Base class', function() {
             done();
         }
     );
-})
+});

@@ -32,7 +32,7 @@ describe('Chino Users API', function () {
         elements = data.elements;
 
         auth = new Auth(baseUrl, appId, appKey);
-    })
+    });
 
     /* create */
     it("Test the creation of a user: should return a User object",

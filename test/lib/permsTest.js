@@ -52,7 +52,7 @@ describe('Chino Perms API', function() {
                 manage      : ["C", "R", "U", "D"],
                 authorize   : ["R"]
             }
-        }
+        };
 
         return permsCaller.onResources(data)
             .then((result) => {

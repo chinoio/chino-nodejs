@@ -44,9 +44,9 @@ let data = {
     appId : "",
     appKey : "",
     elements : 8
-}
+};
 
-console.log("Create resources for testing libs...")
+console.log("Create resources for testing libs...");
 
 // create an array of elements-1 (one will be created manually later)
 // from 1 to elements
@@ -111,12 +111,12 @@ const fixedUser = {
         user: data.elements + 1
     },
     is_active: true
-}
+};
 
 const application = {
     name : `applicationTest+${Date.now()}`,
     grant_type : "password"
-}
+};
 
 const group = {
     group_name : `groupTest+${Date.now()}`,
@@ -127,7 +127,7 @@ const group = {
 
 const collection = {
     name : `collectionTest+${Date.now()}`
-}
+};
 
 // Start 3 parallel async functions that
 // insert resources inside Chino customer environment

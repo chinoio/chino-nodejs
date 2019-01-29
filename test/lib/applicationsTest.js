@@ -43,7 +43,7 @@ describe('Chino Applications API', function() {
                 name: "Authorization code app test",
                 grant_type: "authorization-code",
                 redirect_url: "http://127.0.0.1/"
-            }
+            };
 
             return appCaller.create(app)
                 .then((result) => {
@@ -115,7 +115,7 @@ describe('Chino Applications API', function() {
                 name: "Application 2 was updated",
                 grant_type: "authorization-code",
                 redirect_url: "http://127.0.1.1/"
-            }
+            };
 
             assert(appId2 !== "", "Application undefined");
             return appCaller.update(appId2, appUpdate)

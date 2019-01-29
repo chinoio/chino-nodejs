@@ -30,7 +30,7 @@ else
 
     read run
 
-    if [[ $run = "y" || $run = "Y" ]]
+    if [[ ${run} = "y" || ${run} = "Y" ]]
     then
         # clean up environment before start testing
         node test/after.js
